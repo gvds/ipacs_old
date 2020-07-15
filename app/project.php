@@ -1,0 +1,24 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class project extends Model
+{
+  protected $fillable = [
+    'project',
+    'redcapProject_id',
+    'owner',
+    'subject_id_prefix',
+    'subject_id_digits',
+    'storageProjectName',
+    'label_id',
+  ];
+
+  public function projectOwner()
+  {
+    return $this->belongsTo('App\User', 'owner', 'id');
+  }
+
+}

@@ -5,4 +5,74 @@
 @import 'variables';
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
+
+/**
+ * This injects Tailwind's base styles, which is a combination of
+ * Normalize.css and some additional base styles.
+ *
+ * You can see the styles here:
+ * https://unpkg.com/tailwindcss/dist/base.css
+ */
+@tailwind base;
+
+/**
+ * This injects any component classes registered by plugins.
+ */
+@tailwind components;
+
+/**
+ * Here you would add any of your custom component classes; stuff that you'd
+ * want loaded *before* the utilities so that the utilities could still
+ * override them.
+ *
+ * Example:
+ *
+ * .btn { ... }
+ * .form-input { ... }
+ */
+
+input:not([type='checkbox']):not([type='radio']) {
+    @apply border border-gray-200 rounded shadow w-full mb-3 py-1 px-3 text-gray-600 leading-snug appearance-none;
+}
+
+select {
+    @apply border border-gray-200 rounded shadow w-full bg-white mb-3 py-1 px-3 text-gray-600 leading-snug;
+}
+
+input:focus, select:focus {
+    outline: none;
+    @apply shadow-outline;
+}
+
+label {
+    @apply block text-gray-700 font-bold mb-1;
+}
+
+td, th {
+    @apply px-3 py-1;
+}
+
+.errorbox {
+    box-shadow: 0px 0px 3px red;
+}
+
+.form {
+    @apply w-full max-w-sm bg-gray-100 border border-gray-300 rounded shadow px-8 py-6 text-sm;
+}
+
+/**
+ * This injects all of Tailwind's utility classes, generated based on your
+ * config file.
+ */
+@tailwind utilities;
+
+/**
+ * Here you would add any custom utilities you need that don't come out of the
+ * box with Tailwind.
+ *
+ * Example :
+ *
+ * .bg-pattern-graph-paper { ... }
+ * .skew-45 { ... }
+ */
