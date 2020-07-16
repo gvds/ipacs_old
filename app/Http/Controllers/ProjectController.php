@@ -27,7 +27,7 @@ class ProjectController extends Controller
      */
     public function create(Request $request)
     {
-        $users = \App\User::orderBy('name')->get()->pluck('full_name', 'id')->prepend('', '');
+        $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
         return view('projects.create', compact('users'));
     }
 
@@ -74,7 +74,7 @@ class ProjectController extends Controller
      */
     public function edit(project $project)
     {
-        $users = \App\User::orderBy('name')->get()->pluck('full_name', 'id')->prepend('', '');
+        $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
         return view('projects.edit', compact('project', 'users'));
     }
 

@@ -25,7 +25,7 @@
             <th>Active</th>
         </x-slot>
         @foreach ($projects as $project)
-        <tr class="even:bg-gray-200">
+        <tr class="odd:bg-gray-100">
             <td class="text-center">{{$project->id}}</td>
             <td>{{$project->project}}</td>
             <td>{{$project->projectOwner->full_name}}</td>
@@ -36,12 +36,12 @@
             <td>{{$project->label_id}}</td>
             <td>{{$project->last_subject_id}}</td>
             <td class="text-center">{{$project->active}}</td>
-            <td class='bg-white'>
+            <td>
                 <x-button href='/project/{{$project->id}}/edit'>Edit</x-button>
             </td>
-            <td class='bg-white'>
+            <td>
                 {{ Form::open(['url' => "/project/$project->id", 'method' => 'DELETE']) }}
-                {{ Form::submit('Delete', ['class' => 'text-sm font-bold bg-red-700 text-red-50 mb-0 py-1 px-2']) }}
+                {{ Form::button('Delete', ['class' => 'text-sm font-bold bg-red-700 text-red-50 mb-0 py-1 px-2 rounded shadow-md']) }}
                 {{ Form::close() }}
             </td>
         </tr>

@@ -31,9 +31,17 @@
  * .btn { ... }
  * .form-input { ... }
  */
+input {
+    @apply border border-gray-200 rounded shadow py-1 px-3 text-gray-600 leading-snug;
+}
 
-input:not([type='checkbox']):not([type='radio']) {
-    @apply border border-gray-200 rounded shadow w-full mb-3 py-1 px-3 text-gray-600 leading-snug appearance-none;
+input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
+    @apply w-full mb-3 appearance-none;
+}
+
+input[type='submit'] {
+    hover:text-indigo-500;
+    @apply font-bold bg-gray-300 mb-3;
 }
 
 select {

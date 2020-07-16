@@ -2,9 +2,10 @@
 
 namespace App;
 
-use Laratrust\Models\LaratrustPermission;
+use Illuminate\Database\Eloquent\Model;
 
-class Permission extends LaratrustPermission
+// class Role extends Model
+class Permission extends \Spatie\Permission\Models\Permission
 {
-    public $guarded = [];
+    //
 }

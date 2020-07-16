@@ -911,15 +911,13 @@ video {
  * .form-input { ... }
  */
 
-input:not([type=checkbox]):not([type=radio]) {
+input {
   border-width: 1px;
   --border-opacity: 1;
   border-color: #e5e7eb;
   border-color: rgba(229, 231, 235, var(--border-opacity));
   border-radius: 0.25rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  width: 100%;
-  margin-bottom: 0.75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
@@ -928,9 +926,23 @@ input:not([type=checkbox]):not([type=radio]) {
   color: #4b5563;
   color: rgba(75, 85, 99, var(--text-opacity));
   line-height: 1.375;
+}
+
+input:not([type=checkbox]):not([type=radio]):not([type=submit]) {
+  width: 100%;
+  margin-bottom: 0.75rem;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+}
+
+input[type=submit] {
+  hover: text-indigo-500;
+  font-weight: 700;
+  --bg-opacity: 1;
+  background-color: #d2d6dc;
+  background-color: rgba(210, 214, 220, var(--bg-opacity));
+  margin-bottom: 0.75rem;
 }
 
 select {

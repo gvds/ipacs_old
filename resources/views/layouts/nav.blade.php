@@ -94,8 +94,15 @@
         <x-slot name="nav_item">
           <div>Administration</div>
         </x-slot>
-        <x-nav.dropdown-link href="#">Users</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/laratrust">Access Control</x-nav.dropdown-link>
+        <x-nav.dropdown-submenu alignment="left">
+          <x-slot name="nav_item">
+            <div>Access Control</div>
+          </x-slot>
+          <x-nav.dropdown-link href="/users">Users</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/roles">Roles</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/permissions">Permissions</x-nav.dropdown-link>
+          {{-- <x-nav.dropdown-link href="/laratrust">Access Control</x-nav.dropdown-link> --}}
+        </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="/project">Projects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Freezer Layout</x-nav.dropdown-link>
         <x-nav.dropdown-submenu alignment="left">
@@ -108,10 +115,9 @@
       </x-nav.dropdown>
 
       <x-nav.link href="#">Manual</x-nav.link>
-      @if (Route::has('login'))
       <x-nav.dropdown alignment="right">
         <x-slot name="nav_item">
-          <div>{{Auth::user()->name}}</div>
+          <div>{{Auth::user()->firstname}}</div>
         </x-slot>
         <x-nav.dropdown-link href="/changePassword">Change Password</x-nav.dropdown-link>
         <x-nav.dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -119,23 +125,26 @@
           class="text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
           Log out
         </x-nav.dropdown-link>
-
+        
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
           @csrf
         </form>
       </x-nav.dropdown>
       @else
+      
+      {{-- @if (Route::has('login'))
       <a href="{{ route('login') }}"
         class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out duration-150">
         Log in
       </a>
+      @endif
 
       @if (Route::has('register'))
       <a href="{{ route('register') }}"
         class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out duration-150">Register</a>
-      @endif
+      @endif --}}
+      
       @endauth
-      @endif
     </div>
 
   </nav>

@@ -5,6 +5,7 @@
     </x-pageheader>
 
     @include('layouts.errormsg')
+
     {{ Form::model($project, ['url' => "/project/$project->id", 'method' => 'patch', 'class'=>'form']) }}
     {{ Form::label('project', 'Project Name') }}
     {{ Form::text('project', null, ['required','maxlength'=>'50']) }}
@@ -20,8 +21,8 @@
     {{ Form::text('storageProjectName', null, ['maxlength'=>'15']) }}
     {{ Form::label('label_id', 'Label Format') }}
     {{ Form::select('label_id', ['Large' => 'Large', 'Small' => 'Small']) }}
-    {{ Form::submit('Save', ['class' => 'bg-gray-300 mt-2 font-bold hover:text-indigo-500']) }}
-    <x-button href='/project' class='bg-gray-300 text-orange-500'>Cancel</x-button>
+    {{ Form::submit('Save', ['class' => 'w-full']) }}
+    <x-button href='/project' class='text-orange-500'>Cancel</x-button>
     {{ Form::close() }}
 
 </x-layout>

@@ -46,3 +46,12 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/subject', 'SubjectController');
 });
+
+Route::resource('/users', 'UserController', ['except' => ['show']]);
+Route::get('/users/{user}/roles', 'UserController@editroles');
+Route::post('/users/{user}/roles', 'UserController@updateroles');
+
+Route::resource('/roles', 'RoleController');
+Route::post('/roles/{role}/permissions', 'RoleController@updatepermissions');
+
+Route::resource('/permissions', 'PermissionController');

@@ -21,7 +21,8 @@
     {{ Form::text('storageProjectName', null, ['maxlength'=>'15']) }}
     {{ Form::label('label_id', 'Label Format') }}
     {{ Form::select('label_id', ['Large' => 'Large', 'Small' => 'Small'], null) }}
-    {{ Form::submit('Submit', ['class' => 'bg-gray-300 mt-2 font-bold hover:text-indigo-500']) }}
+    {{ Form::submit('Submit', ['class' => 'w-full']) }}
+    <x-button href='/project' class='text-orange-500'>Cancel</x-button>
     {{ Form::close() }}
 
 </x-layout>
