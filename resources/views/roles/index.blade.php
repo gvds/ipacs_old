@@ -27,11 +27,7 @@
           <x-button href="/roles/{{$role->id}}/edit">Edit</x-button>
         </td>
         <td>
-          {!! Form::open(['url' => "roles/$role->id", 'method' => 'DELETE']) !!}
-          {{ Form::button('Delete', ['class' => 'text-sm font-bold bg-red-700 text-red-50 mb-0 py-1 px-2 rounded shadow-md']) }}
-          {{-- {!! Form::button('Delete', ['class' => "",'onclick'=>"show_confirm($role->id)"]) !!}
-          {!! Form::submit('Confirm', ['class' => "",'id'=>'del_'.$role->id]) !!} --}}
-          {!! Form::close() !!}
+          <x-delConfirm url="/roles/{{$role->id}}" />
         </td>
       </tr>
       @endforeach
@@ -39,8 +35,4 @@
 
 </x-layout>
 
-<script>
-  function show_confirm(id){
-            $('#del_' + id).removeClass('invisible');
-          }
-</script>
+<x-delConfirmScript />

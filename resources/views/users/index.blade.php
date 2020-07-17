@@ -33,12 +33,15 @@
         <x-button href="/users/{{$user->id}}/edit">Edit</x-button>
       </td>
       <td>
-        {{ Form::open(['url' => "/users/$user->id", 'method' => 'DELETE']) }}
+        <x-delConfirm url='/users/{{$user->id}}' />
+        {{-- {{ Form::open(['url' => "/users/$user->id", 'method' => 'DELETE']) }}
         {{ Form::button('Delete', ['class' => 'text-sm font-bold bg-red-700 text-red-50 mb-0 py-1 px-2 rounded shadow-md']) }}
-        {{ Form::close() }}
+        {{ Form::close() }} --}}
       </td>
     </tr>
     @endforeach
   </x-table>
 
 </x-layout>
+
+<x-delConfirmScript />
