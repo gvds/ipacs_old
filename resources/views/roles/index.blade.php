@@ -3,9 +3,9 @@
   <x-pageheader>
     Roles
     <x-slot name='button'>
-      <x-button href="/roles/create">
+      <x-buttonlink href="/roles/create">
         Add New Role
-      </x-button>
+      </x-buttonlink>
     </x-slot>
   </x-pageheader>
 
@@ -21,10 +21,10 @@
         <td>{{$role->guard_name}}</td>
         <td>{{implode(" || ",$role->permissions->pluck('name')->toArray())}}</td>
         <td>
-          <x-button href="/roles/{{$role->id}}">Permissions</x-button>
+          <x-buttonlink href="/roles/{{$role->id}}">Permissions</x-buttonlink>
         </td>
         <td>
-          <x-button href="/roles/{{$role->id}}/edit">Edit</x-button>
+          <x-buttonlink href="/roles/{{$role->id}}/edit">Edit</x-buttonlink>
         </td>
         <td>
           <x-delConfirm url="/roles/{{$role->id}}" />

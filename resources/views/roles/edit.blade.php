@@ -13,7 +13,7 @@
   {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], []) }}
   <span class="mr-4 font-bold">Restricted</span> {{ Form::checkbox('restricted', 1) }}
   {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
-  <x-button href='/roles' class='text-orange-500'>Cancel</x-button>
+  <x-buttonlink href='/roles' class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>

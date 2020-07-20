@@ -3,9 +3,9 @@
     <x-pageheader>
         Projects
         <x-slot name='button'>
-            <x-button href="/project/create">
+            <x-buttonlink href="/project/create">
                 New Project
-            </x-button>
+            </x-buttonlink>
         </x-slot>
     </x-pageheader>
 
@@ -37,7 +37,7 @@
             <td>{{$project->last_subject_id}}</td>
             <td class="text-center">{{$project->active}}</td>
             <td>
-                <x-button href='/project/{{$project->id}}/edit'>Edit</x-button>
+                <x-buttonlink href='/project/{{$project->id}}/edit'>Edit</x-buttonlink>
             </td>
             <td>
                 <x-delConfirm url='/project/{{$project->id}}' />

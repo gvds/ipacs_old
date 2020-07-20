@@ -19,7 +19,7 @@
   {!! Form::label('site', 'Site') !!}
   {!! Form::text('site', null, ['required']) !!}
   {!! Form::submit('Save Record', ['class' => "w-full"]) !!}
-  <x-button href='/users' class='text-orange-500'>Cancel</x-button>
+  <x-buttonlink href='/users' class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}
 
 </x-layout>

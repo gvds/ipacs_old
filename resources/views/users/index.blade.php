@@ -3,9 +3,9 @@
   <x-pageheader>
     Users
     <x-slot name='button'>
-      <x-button href="/users/create">
+      <x-buttonlink href="/users/create">
         Add New User
-      </x-button>
+      </x-buttonlink>
     </x-slot>
   </x-pageheader>
 
@@ -27,10 +27,10 @@
       <td>{{$user->telephone}}</td>
       <td>{{implode(" || ",$user->roles->pluck('name')->toArray())}}</td>
       <td>
-        <x-button href="/users/{{$user->id}}/roles">Roles</x-button>
+        <x-buttonlink href="/users/{{$user->id}}/roles">Roles</x-buttonlink>
       </td>
       <td>
-        <x-button href="/users/{{$user->id}}/edit">Edit</x-button>
+        <x-buttonlink href="/users/{{$user->id}}/edit">Edit</x-buttonlink>
       </td>
       <td>
         <x-delConfirm url='/users/{{$user->id}}' />

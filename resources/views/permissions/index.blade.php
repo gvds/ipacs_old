@@ -3,9 +3,9 @@
   <x-pageheader>
     Permissions
     <x-slot name='button'>
-      <x-button href="/permissions/create">
+      <x-buttonlink href="/permissions/create">
         Add New Permission
-      </x-button>
+      </x-buttonlink>
     </x-slot>
   </x-pageheader>
   <x-table>
@@ -19,7 +19,7 @@
       <td>{{$permission->name}}</td>
       <td>{{$permission->guard_name}}</td>
       <td>
-        <x-button href="/permissions/{{$permission->id}}/edit">Edit</x-button>
+        <x-buttonlink href="/permissions/{{$permission->id}}/edit">Edit</x-buttonlink>
       </td>
       <td>
         <x-delConfirm url='/permissions/{{$permission->id}}' />

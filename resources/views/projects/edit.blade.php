@@ -22,7 +22,7 @@
     {{ Form::label('label_id', 'Label Format') }}
     {{ Form::select('label_id', ['Large' => 'Large', 'Small' => 'Small']) }}
     {{ Form::submit('Save', ['class' => 'w-full']) }}
-    <x-button href='/project' class='text-orange-500'>Cancel</x-button>
+    <x-buttonlink href='/project' class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>

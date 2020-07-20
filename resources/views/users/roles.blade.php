@@ -24,7 +24,7 @@
     @endforeach
   </x-table>
   {{ Form::submit('Update Roles', ['class' => "w-full"]) }}
-  <x-button href='/users' class='text-orange-500'>Cancel</x-button>
+  <x-buttonlink href='/users' class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>
