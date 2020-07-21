@@ -17,7 +17,7 @@
         "laravel/ui": "^2.1",
         "laravelcollective/html": "^6.1",
         "phpoffice/phpspreadsheet": "^1.14",
-        "spatie/laravel-permission": "^3.13"
+        "santigarcor/laratrust": "^6.1"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

@@ -42,7 +42,7 @@ class RoleController extends Controller {
   public function store(Request $request) {
     $request->validate([
       'name' => 'required|unique:roles|between:3,50',
-      'guard_name' => 'required|in:web,api'
+      'restricted' => 'required|boolean'
     ]);
     Role::create($request->all());
     return redirect('/roles');
@@ -87,7 +87,7 @@ class RoleController extends Controller {
   public function update(Request $request, Role $role) {
     $request->validate([
       'name' => 'required|between:3,50|unique:roles,name,'.$role->id,
-      'guard_name' => 'required|in:web,api'
+      'restricted' => 'required|boolean'
     ]);
     $role->update($request->all());
     return redirect('/roles');

@@ -19,6 +19,7 @@
         <x-slot name="nav_item">
           <div>Subject Management</div>
         </x-slot>
+        <x-nav.dropdown-link href="#">Manage Subjects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/subject/create">Generate Subject IDs</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Enrole Subject</x-nav.dropdown-link>
         <x-nav.dropdown-submenu>
@@ -33,7 +34,6 @@
         <x-nav.dropdown-link href="#">Switch Arm</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Update Switch Arm Date</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Revert Arm Switch</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Drop Subject</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>

@@ -11,13 +11,13 @@
   <x-table>
     <x-slot name="head">
       <th>Name</th>
-      <th>Guard</th>
+      <!-- <th>Guard</th> -->
       <th colspan=3></th>
     </x-slot>
     @foreach ($permissions as $permission)
     <tr class="odd:bg-gray-100">
       <td>{{$permission->name}}</td>
-      <td>{{$permission->guard_name}}</td>
+      <!-- <td>{{$permission->guard_name}}</td> -->
       <td>
         <x-buttonlink href="/permissions/{{$permission->id}}/edit">Edit</x-buttonlink>
       </td>

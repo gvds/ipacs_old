@@ -9,9 +9,10 @@
   {{ Form::model($role, ['route' => ['roles.update', $role], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}
   {{ Form::text('name', null, ['required'=>'required']) }}
-  {{ Form::label('guard_name', 'Guard Name') }}
-  {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], []) }}
-  <span class="mr-4 font-bold">Restricted</span> {{ Form::checkbox('restricted', 1) }}
+  <!-- {{ Form::label('guard_name', 'Guard Name') }}
+  {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], []) }} -->
+  {{ Form::label('restricted', 'Restricted') }}
+  {{ Form::radio('restricted', 0) }} No {{ Form::radio('restricted', 1) }} Yes
   {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
   <x-buttonlink href='/roles' class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}

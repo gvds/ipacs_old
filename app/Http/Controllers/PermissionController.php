@@ -39,8 +39,7 @@ class PermissionController extends Controller {
   */
   public function store(Request $request) {
     $request->validate([
-      'name' => 'required|unique:permissions|between:3,50',
-      'guard_name' => 'required|in:web,api'
+      'name' => 'required|unique:permissions|between:3,50'
     ]);
     Permission::create($request->all());
     return redirect('/permissions');
@@ -76,8 +75,7 @@ class PermissionController extends Controller {
   */
   public function update(Request $request, Permission $permission) {
     $request->validate([
-      'name' => 'required|between:3,50|unique:permissions,name,'.$permission->id,
-      'guard_name' => 'required|in:web,api'
+      'name' => 'required|between:3,50|unique:permissions,name,'.$permission->id
     ]);
     $permission->update($request->all());
     return redirect('/permissions');
