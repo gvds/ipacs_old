@@ -6,7 +6,8 @@ use App\Role;
 use \App\Permission;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller {
+class RoleController extends Controller
+{
 
   public function __construct()
   {
@@ -14,34 +15,39 @@ class RoleController extends Controller {
   }
 
   /**
-  * Display a listing of the resource.
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function index() {
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index()
+  {
     $roles = Role::orderBy('name')
-    ->get();
+      ->get();
     return view('roles.index', compact('roles'));
   }
 
   /**
-  * Show the form for creating a new resource.
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function create() {
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create()
+  {
     return view('roles.create');
   }
 
   /**
-  * Store a newly created resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @return \Illuminate\Http\Response
-  */
-  public function store(Request $request) {
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store(Request $request)
+  {
     $request->validate([
       'name' => 'required|unique:roles|between:3,50',
+      'display_name' => 'required|max:50',
+      'description' => 'nullable|max:100',
       'restricted' => 'required|boolean'
     ]);
     Role::create($request->all());
@@ -49,44 +55,50 @@ class RoleController extends Controller {
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  \App\Role  $role
-  * @return \Illuminate\Http\Response
-  */
-  public function show(Role $role) {
+   * Display the specified resource.
+   *
+   * @param  \App\Role  $role
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Role $role)
+  {
     $rolepermissions = $role->permissions->pluck('name', 'id')->toArray();
-    $permissions = \App\Permission::pluck('name', 'id');
-    return view('roles.show', compact('role','permissions','rolepermissions'));
+    $permissions = \App\Permission::where('scope', 'system')->pluck('name', 'id');
+    return view('roles.show', compact('role', 'permissions', 'rolepermissions'));
   }
 
-  public function updatepermissions(Request $request, Role $role){
+  public function updatepermissions(Request $request, Role $role)
+  {
     $permissions = array_keys($request->all());
-        array_shift($permissions);
-        $role->permissions()->sync($permissions);
+    array_shift($permissions);
+    $role->permissions()->sync($permissions);
     return redirect('/roles');
   }
 
   /**
-  * Show the form for editing the specified resource.
-  *
-  * @param  \App\Role  $role
-  * @return \Illuminate\Http\Response
-  */
-  public function edit(Role $role) {
+   * Show the form for editing the specified resource.
+   *
+   * @param  \App\Role  $role
+   * @return \Illuminate\Http\Response
+   */
+  public function edit(Role $role)
+  {
     return view('roles.edit', compact('role'));
   }
 
   /**
-  * Update the specified resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @param  \App\Role  $role
-  * @return \Illuminate\Http\Response
-  */
-  public function update(Request $request, Role $role) {
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\Role  $role
+   * @return \Illuminate\Http\Response
+   */
+  public function update(Request $request, Role $role)
+  {
     $request->validate([
-      'name' => 'required|between:3,50|unique:roles,name,'.$role->id,
+      'name' => 'required|between:3,50|unique:roles,name,' . $role->id,
+      'display_name' => 'required|max:50',
+      'description' => 'nullable|max:100',
       'restricted' => 'required|boolean'
     ]);
     $role->update($request->all());
@@ -94,12 +106,13 @@ class RoleController extends Controller {
   }
 
   /**
-  * Remove the specified resource from storage.
-  *
-  * @param  \App\Role  $role
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy(Role $role) {
+   * Remove the specified resource from storage.
+   *
+   * @param  \App\Role  $role
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy(Role $role)
+  {
     $role->delete();
     return redirect('/roles');
   }

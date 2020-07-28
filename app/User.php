@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'firstname', 'surname', 'username', 'email', 'password', 'telephone', 'site'
+        'firstname', 'surname', 'username', 'email', 'password', 'telephone', 'homesite'
     ];
 
     /**
@@ -43,5 +43,21 @@ class User extends Authenticatable
     {
         return $this->firstname . ' ' . $this->surname;
     }
-    
+
+    public function team()
+    {
+        return $this->belongsToMany(Team::class);
+    }
+
+    public function team_member_permissions()
+    {
+        return $this->belongsToMany(Permission::class)
+        ->withPivot('team_id');;
+    }
+
+    public function sites()
+    {
+        return $this->belongsToMany(site::class, 'team_user');
+    }
+
 }

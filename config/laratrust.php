@@ -172,7 +172,7 @@ return [
          * Method to be called in the middleware return case.
          * Available: abort|redirect
          */
-        'handling' => 'abort',
+        'handling' => 'redirect',
 
         /**
          * Handlers for the unauthorized method in the middlewares.
@@ -197,7 +197,7 @@ return [
                 'url' => '/',
                 'message' => [
                     'key' => 'error',
-                    'content' => ''
+                    'content' => 'You do not have the necessary access rights to do that'
                 ]
             ]
         ]

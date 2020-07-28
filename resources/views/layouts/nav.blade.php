@@ -73,10 +73,11 @@
         <x-slot name="nav_item">
           <div>Project Administration</div>
         </x-slot>
-        <x-nav.dropdown-link href="#">Users</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Arms</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Events</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/team">Team Members</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samples">Samples</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>

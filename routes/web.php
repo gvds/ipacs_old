@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     // Route::view('email/verify', 'auth.verify')->middleware('throttle:6,1')->name('verification.notice');
     // Route::get('email/verify/{id}/{hash}', 'Auth\EmailVerificationController')->middleware('signed')->name('verification.verify');
 
-//     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
+    //     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
 
     Route::post('/projectlist', 'ProjectController@list');
 
@@ -47,11 +48,26 @@ Route::middleware('auth')->group(function () {
     Route::resource('/subject', 'SubjectController');
 });
 
-Route::resource('/users', 'UserController', ['except' => ['show']]);
-Route::get('/users/{user}/roles', 'UserController@editroles');
-Route::post('/users/{user}/roles', 'UserController@updateroles');
+Route::group(['middleware' => ['permission:manage-users']], function () {
+    Route::resource('/users', 'UserController', ['except' => ['show']]);
+    Route::get('/users/{user}/roles', 'UserController@editroles');
+    Route::post('/users/{user}/roles', 'UserController@updateroles');
 
-Route::resource('/roles', 'RoleController');
-Route::post('/roles/{role}/permissions', 'RoleController@updatepermissions');
+    Route::resource('/roles', 'RoleController');
+    Route::post('/roles/{role}/permissions', 'RoleController@updatepermissions');
 
-Route::resource('/permissions', 'PermissionController');
+    Route::resource('/permissions', 'PermissionController');
+});
+
+// Route::group(['middleware' => ['permission:manage-teams,another_study']], function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/team', 'TeamController@index');
+    Route::get('/team/addmember', 'TeamController@addmember');
+    Route::post('/team', 'TeamController@storemember');
+    Route::get('/team/{user}', 'TeamController@showmember');
+    Route::get('/team/{user}/edit', 'TeamController@editmember');
+    Route::patch('/team/{user}/update', 'TeamController@updatemember');
+    Route::get('/team/{user}/permissions', 'TeamController@editpermissions');
+    Route::patch('/team/{user}/permissions', 'TeamController@updatepermissions');
+    Route::delete('/team/{user}', 'TeamController@destroymember');
+});

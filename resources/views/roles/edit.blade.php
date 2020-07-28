@@ -9,6 +9,10 @@
   {{ Form::model($role, ['route' => ['roles.update', $role], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}
   {{ Form::text('name', null, ['required'=>'required']) }}
+  {{ Form::label('display_name', 'Display Name') }}
+  {{ Form::text('display_name', null, ['required'=>'required']) }}
+  {{ Form::label('description', 'Description') }}
+  {{ Form::text('description', null) }}
   <!-- {{ Form::label('guard_name', 'Guard Name') }}
   {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], []) }} -->
   {{ Form::label('restricted', 'Restricted') }}

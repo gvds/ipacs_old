@@ -33,7 +33,7 @@ class CreateSampleTypesTable extends Migration
             $table->tinyInteger('parentSampletype_id')->unsigned()->nullable();
             $table->string('xtra_attribs',255)->nullable();
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 

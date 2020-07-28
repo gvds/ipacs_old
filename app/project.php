@@ -21,4 +21,9 @@ class project extends Model
     return $this->belongsTo('App\User', 'owner', 'id');
   }
 
+  public function team()
+    {
+        return $this->hasOne(Team::class,'id','id');
+    }
+
 }

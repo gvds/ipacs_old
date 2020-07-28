@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Ramsey\Uuid\Type\Integer;
+use App\Team;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -48,9 +49,15 @@ class ProjectController extends Controller
             'storageProjectName' => 'max:15|nullable',
             'label_id' => 'max:40|required'
         ]);
-        project::create($validatedData);
+
+        $project = project::create($validatedData);
 
         // Create corrosponding Team entry
+        Team::create([
+            'id' => $project->id, 
+            'name' => Str::snake($validatedData['project']),
+            'display_name' => $validatedData['project'],
+        ]);
 
         return redirect('/project');
     }
@@ -96,10 +103,16 @@ class ProjectController extends Controller
             'storageProjectName' => 'max:15|nullable',
             'label_id' => 'max:40|required'
         ]);
-        $project->update($validatedData);
 
         // Update corrosponding Team entry if necessary
+        if($validatedData['project'] != $project->project){
+            Team::find($project->id)->update([
+                'name' => Str::snake($validatedData['project']),
+                'display_name' => $validatedData['project']
+            ]);
+        }
 
+        $project->update($validatedData);
         return redirect('/project');
     }
 
@@ -114,6 +127,7 @@ class ProjectController extends Controller
         $project->delete();
 
         // Delete corrosponding Team entry
+        Team::find($project->id)->delete();
 
         return redirect('/project');
     }
@@ -127,7 +141,8 @@ class ProjectController extends Controller
 
     public function selectList()
     {
-        $projects = project::where('owner', Auth::user()->id)
+        $teams = \App\User::find(Auth::user()->id)->team()->pluck('id');
+        $projects = project::whereIn('id', $teams)
         ->where('active', true)
         ->orderBy('project')
         ->get();
@@ -136,10 +151,11 @@ class ProjectController extends Controller
 
     public function select(project $project)
     {
-        if ($project->owner === auth()->user()->id) {
+        if (in_array($project->id, \App\User::find(Auth::user()->id)->team()->pluck('id')->toArray())) {
             session(['currentProject' => $project->id]);
+        } else {
+            return redirect('/')->with('error','You do not have access to that project');
         }
-        
         return redirect('/');
     }
 }

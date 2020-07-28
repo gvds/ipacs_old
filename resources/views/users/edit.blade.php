@@ -17,8 +17,8 @@
   {!! Form::email('email', null, ['required']) !!}
   {!! Form::label('telephone', 'Telephone Number') !!}
   {!! Form::text('telephone', null, ['required','placeholder'=>'0## ###-####']) !!}
-  {!! Form::label('site', 'Site') !!}
-  {!! Form::text('site', null, ['required']) !!}
+  {!! Form::label('homesite', 'Site') !!}
+  {!! Form::text('homesite', null, ['required']) !!}
   {!! Form::submit('Save Record', ['class' => "w-full font-bold"]) !!}
   <x-buttonlink href='/users' class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}

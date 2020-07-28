@@ -1,8 +1,8 @@
 <x-layout>
-    {{-- <div class="flex flex-col justify-center bg-gray-100"> --}}
+    {{-- <div class="flex flex-col justify-center bg-gray-100">  --}}
 
     <div class="flex items-center justify-center">
-        {{-- <div class="flex flex-col justify-around"> --}}
+        {{-- <div class="flex flex-col justify-around">  --}}
         <div class="space-y-6">
             <a href="{{ route('home') }}">
                 <x-logo class="w-auto h-16 mx-auto text-indigo-600" />
@@ -16,6 +16,8 @@
                 {{ $currentProject->project }}
             </h2>
             @endif
+
+            @include('layouts.errormsg')
 
             <ul class="list-reset">
                 <li class="inline px-4">
@@ -33,18 +35,7 @@
                 </li>
             </ul>
         </div>
-        {{-- </div> --}}
+        {{-- </div>  --}}
     </div>
-    {{-- </div> --}}
+    {{-- </div>  --}}
 </x-layout>
-{{--
-    <div class="card-header">Dashboard</div>
-        <div class="card-body">
-            @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-</div>
-@endif
-</div>
-</div>
---}}

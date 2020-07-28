@@ -5,7 +5,7 @@
 
   @include('layouts.errormsg')
 
-  {{ Form::open(['url' => ["users/$user->id/roles"], 'method' => 'post', 'class'=>'form']) }}
+  {{ Form::open(['url' => ["/users/$user->id/roles"], 'method' => 'post', 'class'=>'form']) }}
   <x-table>
     <x-slot name="head">
       <th class='text-left'>Role</th>

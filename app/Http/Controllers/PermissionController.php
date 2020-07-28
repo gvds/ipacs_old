@@ -18,7 +18,7 @@ class PermissionController extends Controller {
   * @return \Illuminate\Http\Response
   */
   public function index() {
-    $permissions = Permission::orderBy('name')->get();
+    $permissions = Permission::orderBy('scope','desc')->orderBy('name')->get();
     return view('permissions.index', compact('permissions'));
   }
 
@@ -39,7 +39,10 @@ class PermissionController extends Controller {
   */
   public function store(Request $request) {
     $request->validate([
-      'name' => 'required|unique:permissions|between:3,50'
+      'name' => 'required|unique:permissions|between:3,50',
+      'display_name' => 'required|max:50',
+      'scope' => 'required|in:system,project',
+      'description' => 'nullable|max:100'
     ]);
     Permission::create($request->all());
     return redirect('/permissions');
@@ -75,7 +78,10 @@ class PermissionController extends Controller {
   */
   public function update(Request $request, Permission $permission) {
     $request->validate([
-      'name' => 'required|between:3,50|unique:permissions,name,'.$permission->id
+      'name' => 'required|between:3,50|unique:permissions,name,'.$permission->id,
+      'display_name' => 'required|max:50',
+      'scope' => 'required|in:system,project',
+      'description' => 'nullable|max:100'
     ]);
     $permission->update($request->all());
     return redirect('/permissions');

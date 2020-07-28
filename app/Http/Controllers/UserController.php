@@ -50,7 +50,7 @@ class UserController extends Controller
             'surname' => 'required|between:3,50',
             'email' => 'required|email|unique:users',
             'telephone' => 'required|regex:/^0\d{2} \d{3}-\d{4}$/',
-            'site' => 'required|between:3,20'
+            'homesite' => 'required|between:3,20'
         ]);
         $user = User::create(array_merge($validatedData, ['password' => bcrypt(Str::random(30))]));
         $message = "An account has been created for you in the IPACS.
@@ -60,10 +60,10 @@ class UserController extends Controller
         
         Thank you
         NEXUS Administrator";
-        Mail::raw("Dear {$user->firstname}\n\n{$message}", function ($mail) use ($user) {
-            $mail->to($user->email)
-                ->subject('IPACS account created');
-        });
+        // Mail::raw("Dear {$user->firstname}\n\n{$message}", function ($mail) use ($user) {
+        //     $mail->to($user->email)
+        //         ->subject('IPACS account created');
+        // });
 
         return redirect('/users');
     }
@@ -86,13 +86,6 @@ class UserController extends Controller
             $roles_restricted = \App\Role::where('restricted', true)->pluck('name', 'id');
         }
         return view('users.roles', compact('user', 'roles', 'roles_restricted', 'userroles'));
-    }
-
-    public function editlibraries(User $user)
-    {
-        $userlibraries = $user->libraries->pluck('libraryName', 'id')->toArray();
-        $libraries = \App\library::pluck('libraryName', 'id');
-        return view('users.libraries', compact('user', 'libraries', 'userlibraries'));
     }
 
     public function updateroles(Request $request, User $user)
@@ -136,7 +129,7 @@ class UserController extends Controller
             'surname' => 'required|between:3,50',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'telephone' => 'required|regex:/^0\d{2} \d{3}-\d{4}$/',
-            'site' => 'required|between:3,20'
+            'homesite' => 'required|between:3,20'
         ]);
         $user->update($validatedData);
         return redirect('/users');

@@ -11,14 +11,18 @@
 
   <x-table>
     <x-slot name="head">
-      <th>Name</th>
+      <th>Role</th>
       <!-- <th>Guard</th> -->
-      <th>Restricted</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Retricted</th>
       <th>Permissions</th>
     </x-slot>
       @foreach ($roles as $role)
       <tr class="odd:bg-gray-100">
         <td>{{$role->name}}</td>
+        <td>{{$role->display_name}}</td>
+        <td>{{$role->description}}</td>
         <!-- <td>{{$role->guard_name}}</td> -->
         <td>{{$role->restricted}}</td>
         <td>{{implode(" || ",$role->permissions->pluck('name')->toArray())}}</td>
