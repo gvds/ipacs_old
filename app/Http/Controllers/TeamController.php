@@ -188,6 +188,7 @@ class TeamController extends Controller
             $validatedData[$key] = ['user_type' => 'App\User', 'team_id' => $team->id];
         }
         $user->team_member_permissions()->sync($validatedData);
+        $user->flushCache();
         return redirect("/team/$user->id");
     }
 
@@ -202,6 +203,7 @@ class TeamController extends Controller
         $team = Team::findOrFail(session('currentProject'));
         $user->team_member_permissions()->detach();
         $team->users()->detach($user->id);
+        $user->flushCache();
         return redirect('/team');
     }
 }

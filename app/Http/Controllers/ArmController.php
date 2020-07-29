@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\armDef;
+use App\arm;
 use Illuminate\Http\Request;
 
-class ArmDefController extends Controller
+class ArmController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class ArmDefController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\armDef  $armDef
+     * @param  \App\arm  $arm
      * @return \Illuminate\Http\Response
      */
-    public function show(armDef $armDef)
+    public function show(arm $arm)
     {
         //
     }
@@ -52,10 +52,10 @@ class ArmDefController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\armDef  $armDef
+     * @param  \App\arm  $arm
      * @return \Illuminate\Http\Response
      */
-    public function edit(armDef $armDef)
+    public function edit(arm $arm)
     {
         //
     }
@@ -64,10 +64,10 @@ class ArmDefController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\armDef  $armDef
+     * @param  \App\arm  $arm
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, armDef $armDef)
+    public function update(Request $request, arm $arm)
     {
         //
     }
@@ -75,10 +75,10 @@ class ArmDefController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\armDef  $armDef
+     * @param  \App\arm  $arm
      * @return \Illuminate\Http\Response
      */
-    public function destroy(armDef $armDef)
+    public function destroy(arm $arm)
     {
         //
     }

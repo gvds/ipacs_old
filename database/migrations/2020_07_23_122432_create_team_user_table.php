@@ -21,9 +21,9 @@ class CreateTeamUserTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
-        ->onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('team_id')->references('id')->on('teams')
-        ->onUpdate('cascade')->onDelete('cascade');
+                ->onUpdate('cascade')->onDelete('cascade');
 
             $table->unique(['user_id', 'team_id']);
             $table->index('site');

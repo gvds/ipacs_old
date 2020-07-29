@@ -21,12 +21,14 @@ $factory->define(User::class, function (Faker $faker) {
     return [
 
         'username' => Str::random(5),
-        'name' => $faker->name,
+        'firstname' => $faker->firstName,
         'surname' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
+        'telephone' => $faker->phoneNumber,
+        'homesite' => strtoupper(Str::random(5)),
         'password' => bcrypt($faker->password()), // password
-        'remember_token' => Str::random(10),
+        'remember_token' => null,
 
     ];
 });

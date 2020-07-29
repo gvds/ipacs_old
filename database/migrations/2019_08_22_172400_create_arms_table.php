@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArmDefsTable extends Migration
+class CreateArmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateArmDefsTable extends Migration
      */
     public function up()
     {
-        Schema::create('arm_defs', function (Blueprint $table) {
-            $table->bigIncrements('armDef_id');
+        Schema::create('arms', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('description',50)->nullable();
             $table->bigInteger('project_id')->unsigned();
+            $table->bigInteger('redcap_arm_id')->unsigned()->nullable();
             $table->tinyInteger('arm_num')->unsigned()->nullable();
             $table->boolean('manual_enrole')->default(1);
             $table->string('switcharms',25)->nullable();
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 
@@ -32,6 +33,6 @@ class CreateArmDefsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('arm_defs');
+        Schema::dropIfExists('arms');
     }
 }

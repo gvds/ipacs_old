@@ -70,4 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/team/{user}/permissions', 'TeamController@editpermissions');
     Route::patch('/team/{user}/permissions', 'TeamController@updatepermissions');
     Route::delete('/team/{user}', 'TeamController@destroymember');
+
+    Route::resource('/sites', 'SiteController')->except('show');
+    Route::resource('/arms', 'ArmController')->except('show');
 });

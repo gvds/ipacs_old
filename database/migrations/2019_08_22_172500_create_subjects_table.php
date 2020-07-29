@@ -14,7 +14,7 @@ class CreateSubjectsTable extends Migration
     public function up()
     {
         Schema::create('subjects', function (Blueprint $table) {
-            $table->bigIncrements('subject_id');
+            $table->bigIncrements('id');
             $table->string('subjectID',10);
             $table->bigInteger('project_id')->unsigned();
             $table->string('site',15)->nullable();
@@ -26,7 +26,8 @@ class CreateSubjectsTable extends Migration
             $table->date('previousArmBaselineDate')->nullable();
             $table->tinyInteger('subject_status')->unsigned()->default(0);
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 

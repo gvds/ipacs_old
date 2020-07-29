@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -11,13 +12,15 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'username' => 'gvds',
-            'name' => 'Gian',
-            'surname' => 'van der Spuy',
-            'email' => 'gvds@sun.ac.za',
-            'password' => Hash::make('*baGGins0!'),
-        ]);
+        if (! \App\User::where('username','gvds')->exists()) {
+            DB::table('users')->insert([
+                'username' => 'gvds',
+                'firstname' => 'Gian',
+                'surname' => 'van der Spuy',
+                'email' => 'gvds@sun.ac.za',
+                'password' => bcrypt('*baGGins0!'),
+            ]);
+        }
         factory(App\User::class, 5)->create();
     }
 }

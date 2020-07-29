@@ -7,6 +7,23 @@ use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
+    public $currentProject;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->currentProject = \App\project::find(session('currentProject', null));
+            if (is_null($this->currentProject)) {
+                return redirect('/')->with('warning', 'There is currently no selected project');
+            }
+            $user = auth()->user();
+            if (!$user->isAbleTo('administer-projects', $this->currentProject->team->name)) {
+                return redirect('/')->with('error', 'You do not have the necessary access rights');
+            }
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +31,8 @@ class SiteController extends Controller
      */
     public function index()
     {
-        //
+        $sites = site::orderBy('name')->get();
+        return view('sites.index', compact('sites'));
     }
 
     /**
@@ -24,7 +42,7 @@ class SiteController extends Controller
      */
     public function create()
     {
-        //
+        return view('/sites.create');
     }
 
     /**
@@ -35,7 +53,13 @@ class SiteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|min:3|max:20',
+        ]);
+        $validatedData['team_id'] = $this->currentProject->id;
+        // dd($validatedData);
+        site::create($validatedData);
+        return redirect('/sites');
     }
 
     /**
@@ -57,7 +81,7 @@ class SiteController extends Controller
      */
     public function edit(site $site)
     {
-        //
+        return view('sites.edit', compact('site'));
     }
 
     /**
@@ -69,7 +93,11 @@ class SiteController extends Controller
      */
     public function update(Request $request, site $site)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|min:3|max:20',
+        ]);
+        $site->update($validatedData);
+        return redirect('/sites');
     }
 
     /**
@@ -80,6 +108,7 @@ class SiteController extends Controller
      */
     public function destroy(site $site)
     {
-        //
+        $site->delete();
+        return redirect('/sites');
     }
 }

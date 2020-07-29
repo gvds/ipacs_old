@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventDefsTable extends Migration
+class CreateEventsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateEventDefsTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_defs', function (Blueprint $table) {
-            $table->bigIncrements('eventDef_id');
-            $table->bigInteger('project_id')->unsigned();
-            $table->bigInteger('armDef_id')->unsigned();
-            $table->string('event_description',50)->nullable();
+        Schema::create('events', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('arm_id')->unsigned();
+            $table->bigInteger('redcap_event_id')->unsigned();
+            $table->string('description',50)->nullable();
             $table->boolean('autolog')->default(0);
             $table->mediumInteger('offset')->unsigned()->nullable();
             $table->mediumInteger('offset_min')->unsigned()->nullable();
@@ -28,7 +28,8 @@ class CreateEventDefsTable extends Migration
             $table->tinyInteger('event_order')->unsigned()->default(0);
             $table->boolean('active')->default(1);
             $table->timestamps();
-            $table->foreign('armDef_id')->references('armDef_id')->on('arm_defs');
+            
+            $table->foreign('arm_id')->references('id')->on('arms');
         });
     }
 
@@ -39,6 +40,6 @@ class CreateEventDefsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_defs');
+        Schema::dropIfExists('events');
     }
 }
