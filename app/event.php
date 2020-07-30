@@ -6,5 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class event extends Model
 {
-  protected $primaryKey = 'event_id';
+  protected $fillable = [
+    'name',
+    'arm_id',
+    'redcap_event_id',
+    'autolog',
+    'offset',
+    'offset_min',
+    'offset_max',
+    'name_labels',
+    'subject_event_labels',
+    'study_id_labels',
+    'event_order',
+    'active'
+  ];
+
+  public function arm()
+  {
+    return $this->belongsTo(arm::class);
+  }
+
 }

@@ -31,7 +31,7 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $sites = site::orderBy('name')->get();
+        $sites = site::where('project_id',$this->currentProject->id)->orderBy('name')->get();
         return view('sites.index', compact('sites'));
     }
 
@@ -57,7 +57,6 @@ class SiteController extends Controller
             'name' => 'required|min:3|max:20',
         ]);
         $validatedData['team_id'] = $this->currentProject->id;
-        // dd($validatedData);
         site::create($validatedData);
         return redirect('/sites');
     }

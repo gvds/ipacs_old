@@ -12,8 +12,8 @@
   {{ Form::text('display_name', null, ['required'=>'required']) }}
   {{ Form::label('description', 'Description') }}
   {{ Form::text('description', null) }}
-  <!-- {{ Form::label('guard_name', 'Guard Name') }} -->
-  <!-- {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], 'web') }} -->
+  {{-- {{ Form::label('guard_name', 'Guard Name') }} --}}
+  {{-- {{ Form::select('guard_name', ['web'=>'web','api'=>'api'], 'web') }} --}}
   {{ Form::label('restricted', 'Restricted') }}
   {{ Form::radio('restricted', 0, true) }} No {{ Form::radio('restricted', 1) }} Yes
   {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}

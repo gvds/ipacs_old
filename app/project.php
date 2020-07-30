@@ -18,12 +18,21 @@ class project extends Model
 
   public function projectOwner()
   {
-    return $this->belongsTo('App\User', 'owner', 'id');
+    return $this->belongsTo(User::class, 'owner', 'id');
   }
 
   public function team()
-    {
-        return $this->hasOne(Team::class,'id','id');
-    }
+  {
+    return $this->hasOne(Team::class, 'id', 'id');
+  }
 
+  public function arms()
+  {
+    return $this->hasMany(arm::class);
+  }
+  
+  public function events()
+  {
+    return $this->hasManyThrough(event::class, arm::class);
+  }
 }

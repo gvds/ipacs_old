@@ -12,7 +12,7 @@
   <x-table>
     <x-slot name="head">
       <th>Role</th>
-      <!-- <th>Guard</th> -->
+      {{-- <th>Guard</th> --}}
       <th>Name</th>
       <th>Description</th>
       <th>Retricted</th>
@@ -23,7 +23,7 @@
         <td>{{$role->name}}</td>
         <td>{{$role->display_name}}</td>
         <td>{{$role->description}}</td>
-        <!-- <td>{{$role->guard_name}}</td> -->
+        {{-- <td>{{$role->guard_name}}</td> --}}
         <td>{{$role->restricted}}</td>
         <td>{{implode(" || ",$role->permissions->pluck('name')->toArray())}}</td>
         <td>

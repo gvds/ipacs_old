@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class arm extends Model
 {
+    protected $fillable = [
+        'name',
+        'project_id',
+        'redcap_arm_id',
+        'arm_num',
+        'manual_enrole',
+        'switcharms'
+    ];
   
 }

@@ -16,8 +16,8 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('arm_id')->unsigned();
-            $table->bigInteger('redcap_event_id')->unsigned();
-            $table->string('description',50)->nullable();
+            $table->bigInteger('redcap_event_id')->unsigned()->nullable();
+            $table->string('name',50)->nullable();
             $table->boolean('autolog')->default(0);
             $table->mediumInteger('offset')->unsigned()->nullable();
             $table->mediumInteger('offset_min')->unsigned()->nullable();

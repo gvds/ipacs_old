@@ -15,12 +15,12 @@ class CreateArmsTable extends Migration
     {
         Schema::create('arms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('description',50)->nullable();
+            $table->string('name',50)->nullable();
             $table->bigInteger('project_id')->unsigned();
             $table->bigInteger('redcap_arm_id')->unsigned()->nullable();
             $table->tinyInteger('arm_num')->unsigned()->nullable();
             $table->boolean('manual_enrole')->default(1);
-            $table->string('switcharms',25)->nullable();
+            $table->string('switcharms',100)->nullable();
             $table->timestamps();
             $table->foreign('project_id')->references('id')->on('projects');
         });

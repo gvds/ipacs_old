@@ -73,4 +73,5 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/sites', 'SiteController')->except('show');
     Route::resource('/arms', 'ArmController')->except('show');
+    Route::resource('/events', 'EventController')->except('show');
 });
