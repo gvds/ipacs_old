@@ -35,4 +35,10 @@ class project extends Model
   {
     return $this->hasManyThrough(event::class, arm::class);
   }
+
+  public function samples()
+  {
+    return $this->hasMany(sample::class);
+  }
+
 }

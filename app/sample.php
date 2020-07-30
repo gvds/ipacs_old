@@ -6,5 +6,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class sample extends Model
 {
-  protected $primaryKey = 'sample_id';
+  protected $fillable = [
+    'name',
+    'project_id',
+    'primary',
+    'aliquots',
+    'pooled',
+    'defaultVolume',
+    'volumeUnit',
+    'tranferDestination',
+    'transferSource',
+    'sampleGroup',
+    'tubeLabelType',
+    'storageSampleType',
+    'parentSampleType_id'
+  ];
+  // protected $fillable = [
+  //   'barcode',
+  //   'event_id',
+  //   'site',
+  //   'sampletype_id',
+  //   'samplestatus_id',
+  //   'location',
+  //   'labelType',
+  //   'volume',
+  //   'volumeUnit',
+  //   'loggedBy',
+  //   'logTime',
+  //   'usedBy',
+  //   'usedTime',
+  //   'aliquot',
+  //   'parentBarcode'
+  // ];
 }
