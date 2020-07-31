@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\NewAccount;
 
 class UserController extends Controller
 {
@@ -15,33 +16,33 @@ class UserController extends Controller
     }
 
     /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $users = User::orderBy('firstname')
-        ->get();
+            ->get();
         return view('users.index', compact('users'));
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         return view('users.create');
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -53,27 +54,19 @@ class UserController extends Controller
             'homesite' => 'required|between:3,20'
         ]);
         $user = User::create(array_merge($validatedData, ['password' => bcrypt(Str::random(30))]));
-        $message = "An account has been created for you in the IPACS.
-        Please complete the process by resetting your password.
-        You can do this by visiting the IPACS home page at https://hermes.mb.sun.ac.za/ipacs
-        and clicking on the 'Forgot Your Password or New User' link.
-        
-        Thank you
-        NEXUS Administrator";
-        // Mail::raw("Dear {$user->firstname}\n\n{$message}", function ($mail) use ($user) {
-        //     $mail->to($user->email)
-        //         ->subject('IPACS account created');
-        // });
+
+        Mail::to($user->email)
+            ->queue(new NewAccount($user->firstname, 'Your new IPACS account has been created'));
 
         return redirect('/users');
     }
 
     /**
-    * Display the specified resource.
-    *
-    * @param  \App\User  $user
-    * @return \Illuminate\Http\Response
-    */
+     * Display the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function editroles(User $user)
     {
         $userroles = $user->roles->pluck('name', 'id')->toArray();
@@ -94,8 +87,8 @@ class UserController extends Controller
         array_shift($roles);
         $loginuser = \Auth::user();
         if (!$loginuser->hasRole('sysadmin')) { // Preventing non-sysadmin user from assigning or removing restricted roles
-            $restrictedRoles = \App\Role::where('restricted',true)->pluck('name')->toArray();
-            $userRestricted = $user->roles->where('restricted',true)->pluck('name')->toArray();
+            $restrictedRoles = \App\Role::where('restricted', true)->pluck('name')->toArray();
+            $userRestricted = $user->roles->where('restricted', true)->pluck('name')->toArray();
             $rolesUnrestricted = array_diff($roles, $restrictedRoles);
             $roles = array_merge($rolesUnrestricted, $userRestricted);
         }
@@ -104,23 +97,23 @@ class UserController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  \App\User  $user
-    * @return \Illuminate\Http\Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  \App\User  $user
-    * @return \Illuminate\Http\Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, User $user)
     {
         $validatedData = $request->validate([
@@ -136,14 +129,15 @@ class UserController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  \App\User  $user
-    * @return \Illuminate\Http\Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(User $user)
     {
         $user->delete();
         return redirect('/users');
     }
+
 }
