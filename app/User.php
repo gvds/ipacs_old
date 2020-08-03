@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
+use DB;
 
 class User extends Authenticatable
 {
@@ -52,12 +53,22 @@ class User extends Authenticatable
     public function team_member_permissions()
     {
         return $this->belongsToMany(Permission::class)
-        ->withPivot('team_id');;
+            ->withPivot('team_id');
     }
 
     public function sites()
     {
         return $this->belongsToMany(site::class, 'team_user');
+    }
+
+    public function projectSite($project_id)
+    {
+        $site = DB::table('team_user')
+            ->where('user_id', auth()->user()->id)
+            ->where('team_id', $project_id)
+            ->pluck('site_id')
+            ->first();
+        return $site;
     }
 
 }

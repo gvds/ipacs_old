@@ -17,3 +17,8 @@
     {{ $message }}
 </div>
 @endif
+@if ($message = Session::get('message'))
+<div class="max-w-lg border-2 border-green-500 bg-green-50 successbox rounded my-2 py-1 px-3 text-sm">
+    {{ $message }}
+</div>
+@endif

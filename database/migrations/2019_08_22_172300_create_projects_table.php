@@ -21,7 +21,7 @@ class CreateProjectsTable extends Migration
             $table->boolean('active')->default(true);
             $table->string('subject_id_prefix',10)->nullable();
             $table->smallInteger('subject_id_digits')->unsigned()->nullable();
-            $table->string('last_subject_id')->nullable();
+            $table->integer('last_subject_id')->unsigned()->nullable();
             $table->string('storageProjectName',40)->nullable();
             $table->string('label_id',40)->nullable();
             $table->timestamps();

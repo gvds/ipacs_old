@@ -3,10 +3,10 @@
     <x-pageheader>
         Generate Subject IDs
     </x-pageheader>
-    
+
     @include('layouts.errormsg')
 
-    {{ Form::open(['url' => '/subject', 'class' => 'form', 'method' => 'POST']) }}
+    {{ Form::open(['url' => '/subjects', 'class' => 'form', 'method' => 'POST']) }}
     <table>
         <thead>
             <tr>
@@ -19,9 +19,13 @@
                 <td>{{ Form::selectRange('records', 1, 20, 5) }}</td>
                 <td>{{ Form::select('arm', $arms) }}</td>
             </tr>
+            <tr>
+                <td>
+                    {{ Form::submit('Generate') }}
+                </td>
+            </tr>
         </tbody>
     </table>
-    {{ Form::submit('Generate') }}
     {{ Form::close() }}
 
 </x-layout>

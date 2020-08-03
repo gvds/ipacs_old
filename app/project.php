@@ -14,6 +14,7 @@ class project extends Model
     'subject_id_digits',
     'storageProjectName',
     'label_id',
+    'last_subject_id'
   ];
 
   public function projectOwner()
