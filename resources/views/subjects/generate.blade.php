@@ -17,7 +17,7 @@
         <tbody>
             <tr>
                 <td>{{ Form::selectRange('records', 1, 20, 5) }}</td>
-                <td>{{ Form::select('arm', []) }}</td>
+                <td>{{ Form::select('arm', $arms) }}</td>
             </tr>
         </tbody>
     </table>

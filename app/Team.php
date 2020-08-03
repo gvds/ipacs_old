@@ -21,7 +21,7 @@ class Team extends LaratrustTeam
 
     public function sites()
     {
-        return $this->hasMany(site::class);
+        return $this->hasMany(site::class,'project_id');
     }
 
 }

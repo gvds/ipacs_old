@@ -1,6 +1,6 @@
 <x-layout>
 
-    <div class='flex justify-center'>
+    <div class='flex items-center justify-center'>
         <form class='form' method="POST" action="{{ route('login') }}">
             @csrf
 

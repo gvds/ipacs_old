@@ -10,6 +10,7 @@
 
     <x-table>
         <x-slot name='head'>
+            <th>ID</th>
             <th>Name</th>
             <th>Primary</th>
             <th>Aliquots</th>
@@ -27,7 +28,8 @@
         </x-slot>
         @foreach ($samples as $sample)
         <tr class='odd:bg-gray-100'>
-            <td class='py-2'>{{$sample->name}}</td>
+            <td class='py-2'>{{$sample->id}}</td>
+            <td>{{$sample->name}}</td>
             <td>{{$sample->primary}}</td>
             <td>{{$sample->aliquots}}</td>
             <td>{{$sample->pooled}}</td>

@@ -12,32 +12,32 @@ use Illuminate\Validation\Rule;
 
 class TeamController extends Controller
 {
-    public $currentProject;
+    // public $currentProject;
 
-    public function __construct()
-    {
-        // $this->middleware('auth'); //Already done in router
-        $this->middleware(function ($request, $next) {
-            $this->currentProject = \App\project::find(session('currentProject', null));
-            if (is_null($this->currentProject)) {
-                return redirect('/')->with('warning', 'There is currently no selected project');
-            }
-            $user = auth()->user();
-            if (!$user->isAbleTo('manage-teams', $this->currentProject->team->name)) {
-                return redirect('/')->with('error', 'You do not have the necessary access rights');
-            }
-            return $next($request);
-        });
-    }
+    // public function __construct()
+    // {
+    //     // $this->middleware('auth'); //Already done in router
+    //     $this->middleware(function ($request, $next) {
+    //         $this->currentProject = \App\project::find(session('currentProject', null));
+    //         if (is_null($this->currentProject)) {
+    //             return redirect('/')->with('warning', 'There is currently no selected project');
+    //         }
+    //         $user = auth()->user();
+    //         if (!$user->isAbleTo('manage-teams', $this->currentProject->team->name)) {
+    //             return redirect('/')->with('error', 'You do not have the necessary access rights');
+    //         }
+    //         return $next($request);
+    //     });
+    // }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $currentProject = $this->currentProject;
+        $currentProject = $request->currentProject;
         $teammembers = Team::find($currentProject->id)->users()
             ->select('users.*', 'name')
             ->leftJoin('sites', 'site_id', 'sites.id')
@@ -80,7 +80,7 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function addmember()
+    public function addmember(Request $request)
     {
         $team = Team::findOrFail(session('currentProject'));
         $sites = $team->sites()->pluck('name', 'id')->prepend('', '');
@@ -175,7 +175,7 @@ class TeamController extends Controller
     public function updatepermissions(Request $request, User $user)
     {
         $requestData = $request->all();
-        unset($requestData['_method'], $requestData['_token']);
+        unset($requestData['_method'], $requestData['_token'], $requestData['currentProject']);
         $validpermissions = \App\Permission::where('scope', 'project')->pluck('id');
         $validatedData = Validator::make(array_keys($requestData), [
             '*' => [
@@ -183,11 +183,7 @@ class TeamController extends Controller
             ],
         ])->validate();
         $team = Team::findOrFail(session('currentProject'));
-        $validatedData = array_flip($validatedData);
-        foreach ($validatedData as $key => $value) {
-            $validatedData[$key] = ['user_type' => 'App\User', 'team_id' => $team->id];
-        }
-        $user->team_member_permissions()->sync($validatedData);
+        $user->syncPermissions($validatedData,$team->id);
         $user->flushCache();
         return redirect("/team/$user->id");
     }

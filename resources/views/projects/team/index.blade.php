@@ -1,7 +1,7 @@
 <x-layout>
 
     <x-pageheader>
-      Team Members for {{$currentProject->project}}
+      Team Members
       <x-slot name='button'>
         <x-buttonlink href="/team/addmember">
           Add New Member

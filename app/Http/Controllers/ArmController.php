@@ -7,22 +7,6 @@ use Illuminate\Http\Request;
 
 class ArmController extends Controller
 {
-    public $currentProject;
-
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->currentProject = \App\project::find(session('currentProject', null));
-            if (is_null($this->currentProject)) {
-                return redirect('/')->with('warning', 'There is currently no selected project');
-            }
-            $user = auth()->user();
-            if (!$user->isAbleTo('administer-projects', $this->currentProject->team->name)) {
-                return redirect('/')->with('error', 'You do not have the necessary access rights');
-            }
-            return $next($request);
-        });
-    }
 
     /**
      * Display a listing of the resource.
@@ -31,7 +15,8 @@ class ArmController extends Controller
      */
     public function index()
     {
-        $arms = arm::where('project_id', $this->currentProject->id)->orderBy('arm_num')->get();
+        $currentProject = request('currentProject');
+        $arms = arm::where('project_id', $currentProject->id)->orderBy('arm_num')->get();
         foreach ($arms as $armkey => $arm) {
             $switcharms = json_decode($arm->switcharms);
             if (isset($switcharms)) {
@@ -51,7 +36,8 @@ class ArmController extends Controller
      */
     public function create()
     {
-        $arms = $this->currentProject->arms;
+        $currentProject = request('currentProject');
+        $arms = $currentProject->arms;
         return view('/arms.create',compact('arms'));
     }
 
@@ -63,6 +49,7 @@ class ArmController extends Controller
      */
     public function store(Request $request)
     {
+        $currentProject = $request->currentProject;
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
             'redcap_arm_id' => 'nullable|integer',
@@ -70,7 +57,7 @@ class ArmController extends Controller
             'manual_enrole' => 'required|in:0,1',
             'switcharms' => 'nullable'
         ]);
-        $validatedData['project_id'] = $this->currentProject->id;
+        $validatedData['project_id'] = $currentProject->id;
         $validatedData['switcharms'] = isset($validatedData['switcharms']) ? json_encode($validatedData['switcharms']) : null;
         arm::create($validatedData);
         return redirect('/arms');
@@ -95,7 +82,8 @@ class ArmController extends Controller
      */
     public function edit(arm $arm)
     {
-        $arms = $this->currentProject->arms->where('id','!=',$arm->id);
+        $currentProject = request('currentProject');
+        $arms = $currentProject->arms->where('id','!=',$arm->id);
         $arm->switcharms = json_decode($arm->switcharms);
         return view('arms.edit', compact('arm','arms'));
     }

@@ -13,7 +13,7 @@
             <th>Name</th>
             <th>Arm</th>
             <th>Auto-log</th>
-            <th>Ofset</th>
+            <th>Offset</th>
             <th>Min Offset</th>
             <th>Max Offset</th>
             <th>Name Labels</th>

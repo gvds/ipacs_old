@@ -24,7 +24,8 @@ class SubjectController extends Controller
      */
     public function create()
     {
-        $arms = \App\armDef::where('project_id',);
+        $currentProject = request('currentProject');
+        $arms = $currentProject->arms->where('manual_enrole')->pluck('name','id');
         return view('subjects.generate', compact('arms'));
     }
 
@@ -36,7 +37,7 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

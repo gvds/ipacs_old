@@ -22,7 +22,7 @@
 
     <div class="flex flex-col min-h-screen">
       @include('layouts.nav')
-      <main class="flex-1 p-6 bg-gray-50 lg:px-8">
+      <main class="flex-col flex-1 p-6 bg-gray-50 lg:px-8">
         {{ $slot }}
       </main>
     </div>

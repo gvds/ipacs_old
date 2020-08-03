@@ -7,22 +7,6 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public $currentProject;
-
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->currentProject = \App\project::find(session('currentProject', null));
-            if (is_null($this->currentProject)) {
-                return redirect('/')->with('warning', 'There is currently no selected project');
-            }
-            $user = auth()->user();
-            if (!$user->isAbleTo('administer-projects', $this->currentProject->team->name)) {
-                return redirect('/')->with('error', 'You do not have the necessary access rights');
-            }
-            return $next($request);
-        });
-    }
 
     /**
      * Display a listing of the resource.
@@ -31,7 +15,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = $this->currentProject->events;
+        $currentProject = request('currentProject');
+        $events = $currentProject->events;
         return view('events.index', compact('events'));
     }
 
@@ -42,7 +27,8 @@ class EventController extends Controller
      */
     public function create()
     {
-        $arms = $this->currentProject->arms->pluck('name','id');
+        $currentProject = request('currentProject');
+        $arms = $currentProject->arms->pluck('name','id');
         return view('events.create',compact('arms'));
     }
 
@@ -92,7 +78,8 @@ class EventController extends Controller
      */
     public function edit(event $event)
     {
-        $arms = $this->currentProject->arms->pluck('name','id');
+        $currentProject = request('currentProject');
+        $arms = $currentProject->arms->pluck('name','id');
         return view('events.edit', compact('event','arms'));
     }
 

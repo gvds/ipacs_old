@@ -7,31 +7,16 @@ use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
-    public $currentProject;
-
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->currentProject = \App\project::find(session('currentProject', null));
-            if (is_null($this->currentProject)) {
-                return redirect('/')->with('warning', 'There is currently no selected project');
-            }
-            $user = auth()->user();
-            if (!$user->isAbleTo('administer-projects', $this->currentProject->team->name)) {
-                return redirect('/')->with('error', 'You do not have the necessary access rights');
-            }
-            return $next($request);
-        });
-    }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sites = site::where('project_id',$this->currentProject->id)->orderBy('name')->get();
+        $currentProject = $request->currentProject;
+        $sites = site::where('project_id',$currentProject->id)->orderBy('name')->get();
         return view('sites.index', compact('sites'));
     }
 
@@ -56,7 +41,8 @@ class SiteController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:20',
         ]);
-        $validatedData['team_id'] = $this->currentProject->id;
+        $currentProject = $request->currentProject;
+        $validatedData['project_id'] = $currentProject->id;
         site::create($validatedData);
         return redirect('/sites');
     }
