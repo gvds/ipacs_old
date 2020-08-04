@@ -17,7 +17,7 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        return view('subjects.index');
     }
 
     /**
@@ -77,7 +77,20 @@ class SubjectController extends Controller
      */
     public function show(subject $subject)
     {
-        //
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
+        $eventstatus = \App\eventStatus::all();
+        $events = $subject
+        ->events()
+        ->with('arm')
+        ->orderBy('event_order')
+        ->get()
+        ->sortBy(function($event){
+            return $event->arm->arm_num;
+        });
+
+        return view('subjects.show',compact('subject','events','eventstatus'));
     }
 
     /**
@@ -111,6 +124,15 @@ class SubjectController extends Controller
      */
     public function destroy(subject $subject)
     {
-        //
+        $subject->delete();
+        return redirect('/subjects');
+    }
+
+    public function search($searchterm)
+    {
+        return subject::where('subjectID','like',$searchterm . '%')
+        ->where('user_id',auth()->user()->id)
+        ->pluck('subjectID','id')
+        ->take(8);
     }
 }

@@ -78,5 +78,6 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
         Route::resource('/subjects', 'SubjectController');
+        Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
     });
 });

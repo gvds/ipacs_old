@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLuEventStatusTable extends Migration
+class CreateEventStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateLuEventStatusTable extends Migration
      */
     public function up()
     {
-        Schema::create('lu_event_status', function (Blueprint $table) {
+        Schema::create('eventStatus', function (Blueprint $table) {
             $table->bigInteger('id')->unsigned();
             $table->text('eventstatus',25);
         });
-        DB::unprepared("INSERT INTO `lu_event_status` (`id`, `eventstatus`) VALUES
+        DB::unprepared("INSERT INTO `eventStatus` (`id`, `eventstatus`) VALUES
         (0, 'Pending'),
         (1, 'Primed'),
         (2, 'Labels Generated'),
@@ -33,6 +33,6 @@ class CreateLuEventStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lu_event_status');
+        Schema::dropIfExists('eventStatus');
     }
 }

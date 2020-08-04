@@ -15,6 +15,25 @@ class subject extends Model
     'arm_id'
   ];
 
+  public function events(){
+    return $this->belongsToMany(event::class)
+    ->withPivot('eventstatus_id','reg_timestamp','log_timestamp');
+  }
+
+  public function arm()
+  {
+    return $this->belongsTo(arm::class);
+  }
+
+  public function previous_arm()
+  {
+    return $this->belongsTo(arm::class,'previous_arm_id');
+  }
+
+  public function site()
+  {
+    return $this->belongsTo(site::class);
+  }
 
   public static function createSubjects($validatedData)
   {

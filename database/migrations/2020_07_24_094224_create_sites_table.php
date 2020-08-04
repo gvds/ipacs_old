@@ -16,7 +16,7 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
             $table->string('name',20);
-            $table->bigInteger('team_id');
+            $table->unsignedBigInteger('project_id');
             $table->timestamps();
         });
     }

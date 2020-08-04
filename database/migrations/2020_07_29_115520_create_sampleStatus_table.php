@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLuSampleStatusTable extends Migration
+class CreateSampleStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateLuSampleStatusTable extends Migration
      */
     public function up()
     {
-        Schema::create('lu_sample_status', function (Blueprint $table) {
+        Schema::create('sampleStatus', function (Blueprint $table) {
             $table->bigInteger('id')->unsigned();
             $table->text('samplestatus',25);
         });
-        DB::unprepared("INSERT INTO `lu_sample_status` (`id`, `samplestatus`) VALUES
+        DB::unprepared("INSERT INTO `sampleStatus` (`id`, `samplestatus`) VALUES
         (0, 'Unassigned'),
         (1, 'Registered'),
         (2, 'Logged'),
@@ -38,6 +38,6 @@ class CreateLuSampleStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lu_sample_status');
+        Schema::dropIfExists('sampleStatus');
     }
 }

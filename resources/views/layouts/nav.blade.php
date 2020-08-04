@@ -19,7 +19,7 @@
         <x-slot name="nav_item">
           <div>Subject Management</div>
         </x-slot>
-        <x-nav.dropdown-link href="/subjects/1">Manage Subjects</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/subjects">Manage Subjects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/subjects/create">Generate Subject IDs</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Enrole Subject</x-nav.dropdown-link>
         <x-nav.dropdown-submenu>
