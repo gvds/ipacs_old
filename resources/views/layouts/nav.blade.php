@@ -19,7 +19,7 @@
         <x-slot name="nav_item">
           <div>Subject Management</div>
         </x-slot>
-        <x-nav.dropdown-link href="#">Manage Subjects</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/subjects/1">Manage Subjects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/subjects/create">Generate Subject IDs</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Enrole Subject</x-nav.dropdown-link>
         <x-nav.dropdown-submenu>
@@ -122,21 +122,21 @@
         </x-slot>
         <x-nav.dropdown-link href="/changePassword">Change Password</x-nav.dropdown-link>
         <x-nav.dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
-        document.getElementById('logout-form').submit();"
-          class="text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+        document.getElementById('logout-form').submit();">
           Log out
         </x-nav.dropdown-link>
-        
+
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
           @csrf
         </form>
       </x-nav.dropdown>
       @else
-      
+
       {{-- @if (Route::has('login'))
       <a href="{{ route('login') }}"
-        class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out duration-150">
-        Log in
+      class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out
+      duration-150">
+      Log in
       </a>
       @endif
 
@@ -144,7 +144,7 @@
       <a href="{{ route('register') }}"
         class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out duration-150">Register</a>
       @endif --}}
-      
+
       @endauth
     </div>
 

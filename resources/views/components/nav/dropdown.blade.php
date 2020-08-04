@@ -9,11 +9,12 @@ $alignmentClasses = [
 
 <div class="relative" x-data="{ open: false }" @mouseleave="open = false">
 
-    <div class="cursor-pointer hover:underline hover:text-cool-gray-300 pb-1" @mouseover="open = true">
+    <div class="text-white font-medium text-opacity-75 cursor-pointer hover:text-opacity-100 pb-1" @mouseover="open = true">
         {{ $nav_item }}
     </div>
 
-    <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white text-black rounded shadow-md py-2 mt-0 w-60"
+    {{-- <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white text-black rounded shadow-md py-2 mt-0 w-60" --}}
+    <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white rounded shadow-md py-2 mt-0 w-60"
         x-show="open"
         x-transition:enter="transition transform duration-300 ease-out"
         x-transition:enter-start="opacity-0 scale-95"

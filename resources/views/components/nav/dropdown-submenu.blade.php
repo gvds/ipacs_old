@@ -9,11 +9,12 @@ $alignmentStyle = [
 
 <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
 
-    <div class="cursor-pointer text-sm px-3 py-1 hover:bg-gray-400">
+    <div class="cursor-pointer text-sm px-3 py-1 hover:font-bold">
         {{ $nav_item }}
     </div>
 
-    <div class="absolute z-25 bg-white text-black rounded shadow-md py-1 mt-0 w-auto"
+    {{-- <div class="absolute z-25 bg-white text-black rounded shadow-md py-1 mt-0 w-auto" --}}
+    <div class="absolute z-25 bg-white rounded shadow-md py-1 mt-0 w-auto"
         style="{{ $alignmentStyle[$alignment] }}";
         {{-- style="right: 0px; top: 0em; transform:translateX(100%);" --}}
         x-show="open"
