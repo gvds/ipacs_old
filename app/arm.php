@@ -15,4 +15,8 @@ class arm extends Model
         'switcharms'
     ];
   
+    public function events()
+    {
+        return $this->hasMany(event::class);
+    }
 }

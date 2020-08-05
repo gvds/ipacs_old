@@ -16,9 +16,7 @@ class CreateEventSubjectTable extends Migration
         Schema::create('event_subject', function (Blueprint $table) {
             $table->bigIncrements('event_id');
             $table->bigInteger('subject_id')->unsigned();
-            // $table->bigInteger('project_id')->unsigned();
-            // $table->string('subjectID',10);
-            // $table->integer('event')->unsigned();
+            $table->tinyInteger('itteration')->unsigned()->default(1);
             $table->tinyInteger('eventstatus_id')->unsigned()->default(0);
             $table->dateTime('reg_timestamp')->nullable();
             $table->dateTime('log_timestamp')->nullable();
@@ -26,7 +24,6 @@ class CreateEventSubjectTable extends Migration
 
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
-            // $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 

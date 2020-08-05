@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\subject;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use DB;
+use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
@@ -80,17 +83,19 @@ class SubjectController extends Controller
         if ($subject->user_id !== auth()->user()->id) {
             return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
         }
+        $switcharms = is_null($subject->arm->switcharms) ? [] : json_decode($subject->arm->switcharms);
+        $switcharms = \App\arm::whereIn('id', $switcharms)->pluck('name', 'id');
         $eventstatus = \App\eventStatus::all();
         $events = $subject
-        ->events()
-        ->with('arm')
-        ->orderBy('event_order')
-        ->get()
-        ->sortBy(function($event){
-            return $event->arm->arm_num;
-        });
+            ->events()
+            ->with('arm')
+            ->orderBy('event_order')
+            ->get()
+            ->sortBy(function ($event) {
+                return $event->arm->arm_num;
+            });
 
-        return view('subjects.show',compact('subject','events','eventstatus'));
+        return view('subjects.show', compact('subject', 'events', 'eventstatus', 'switcharms'));
     }
 
     /**
@@ -128,11 +133,79 @@ class SubjectController extends Controller
         return redirect('/subjects');
     }
 
+    public function enrol(Request $request, Subject $subject)
+    {
+        $monthPrior = Carbon::today()->subMonth()->toDateString();
+        $validatedData = $request->validate([
+            'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior"
+        ]);
+        try {
+            DB::beginTransaction();
+
+            // Update subject record
+            $response = $subject->enrol($validatedData['enrolDate']);
+            if ($response !== true) {
+                throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
+            }
+
+            // Add event entries for the subject's arm to the event_subject table
+            $arm = $subject->arm()->with('events')->first();
+            $response = $subject->createArmEvents($arm);
+            if ($response !== true) {
+                throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage())->withInput();
+        }
+        return redirect()->back()->with('message', "Subject enrolled");
+    }
+
+    public function switch(Request $request, Subject $subject)
+    {
+        $monthPrior = Carbon::today()->subMonth()->toDateString();
+        $switcharms = json_decode($subject->arm->switcharms);
+        $validatedData = $request->validate([
+            'switchDate' => "required|date|before_or_equal:today|after:$monthPrior",
+            'switchArm' => [
+                'required',
+                Rule::in($switcharms),
+            ],
+        ]);
+        try {
+            DB::beginTransaction();
+
+            // Update subject record
+            $response = $subject->switchArm($validatedData['switchArm']);
+            if ($response !== true) {
+                throw new \ErrorException("Subject $subject->subjectID failed to switch : $response");
+            }
+
+            // Add event entries for the subject's arm to the event_subject table
+            $arm = \App\arm::with('events')->where('id',$validatedData['switchArm'])->first();
+            $response = $subject->createArmEvents($arm);
+            if ($response !== true) {
+                throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage())->withInput();
+        }
+        return redirect()->back()->with('message', "Subject switched");
+    }
+
+    /**
+     * Generate a search-list of the current user's subjects for retrieval
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function search($searchterm)
     {
-        return subject::where('subjectID','like',$searchterm . '%')
-        ->where('user_id',auth()->user()->id)
-        ->pluck('subjectID','id')
-        ->take(8);
+        return subject::where('subjectID', 'like', $searchterm . '%')
+            ->where('user_id', auth()->user()->id)
+            ->pluck('subjectID', 'id')
+            ->take(8);
     }
 }

@@ -15,9 +15,11 @@ class subject extends Model
     'arm_id'
   ];
 
-  public function events(){
+  public function events()
+  {
     return $this->belongsToMany(event::class)
-    ->withPivot('eventstatus_id','reg_timestamp','log_timestamp');
+      ->withPivot('eventstatus_id', 'reg_timestamp', 'log_timestamp')
+      ->withTimestamps();
   }
 
   public function arm()
@@ -27,12 +29,17 @@ class subject extends Model
 
   public function previous_arm()
   {
-    return $this->belongsTo(arm::class,'previous_arm_id');
+    return $this->belongsTo(arm::class, 'previous_arm_id');
   }
 
   public function site()
   {
     return $this->belongsTo(site::class);
+  }
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
   }
 
   public static function createSubjects($validatedData)
@@ -63,5 +70,54 @@ class subject extends Model
       return $th->getMessage();
     }
     return 0;
+  }
+
+  public function enrol($enrolDate)
+  {
+    $this->enrolDate = $enrolDate;
+    $this->subject_status = 1;
+    return $this->save();
+  }
+
+  public function switchArm(Int $switchArm)
+  {
+    $this->arm_id = $switchArm;
+    return $this->save();
+  }
+
+  public function createArmEvents($arm)
+  {
+    $existingEvents = $this->events()->get();
+    foreach ($existingEvents as $key => $existingEvent) {
+      if ($existingEvent->pivot->eventstatus_id === 0) {
+        $event = \App\event::find($existingEvent->id);
+        $this->events()->wherePivot('eventstatus_id', 0)->updateExistingPivot($existingEvent->id, ['eventstatus_id' => 6]);
+      }
+    }
+    foreach ($arm->events as $key => $event) {
+      if ($event->active) {
+        $timestamp = null;
+        if ($event->autolog === 1) {
+          $eventstatus = 3;
+          $timestamp = now();
+        } else {
+          if ($event->offset === 0) {
+            if ($arm->arm_num === 0) {
+              $eventstatus = 3;
+              $timestamp = now();
+            } else {
+              $eventstatus = 1;
+            }
+          } else {
+            $eventstatus = 0;
+          }
+        }
+      }
+      $response = $this->events()->attach($event->id, ['eventstatus_id' => $eventstatus, 'reg_timestamp' => $timestamp, 'log_timestamp' => $timestamp]);
+      if ($response) {
+        return ($response);
+      }
+    }
+    return true;
   }
 }

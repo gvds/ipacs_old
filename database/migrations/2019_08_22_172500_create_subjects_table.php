@@ -22,6 +22,7 @@ class CreateSubjectsTable extends Migration
             $table->string('surname',30)->nullable();
             $table->string('firstname',20)->nullable();
             $table->bigInteger('arm_id')->unsigned()->nullable();
+            $table->date('enrolDate')->nullable();
             $table->bigInteger('previous_arm_id')->unsigned()->nullable();
             $table->date('previousArmBaselineDate')->nullable();
             $table->tinyInteger('subject_status')->unsigned()->default(0);

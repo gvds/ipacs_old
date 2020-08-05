@@ -78,6 +78,10 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
         Route::resource('/subjects', 'SubjectController');
+        // Route::get('/subjects/enrol', 'SubjectController@enrol');
+        Route::post('/subjects/{subject}/enrol', 'SubjectController@enrol');
+        Route::post('/subjects/{subject}/switch', 'SubjectController@switch');
+
         Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
     });
 });
