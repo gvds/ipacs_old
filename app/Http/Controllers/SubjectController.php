@@ -129,12 +129,18 @@ class SubjectController extends Controller
      */
     public function destroy(subject $subject)
     {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
         $subject->delete();
         return redirect('/subjects');
     }
 
     public function enrol(Request $request, Subject $subject)
     {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $validatedData = $request->validate([
             'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior"
@@ -164,6 +170,9 @@ class SubjectController extends Controller
 
     public function switch(Request $request, Subject $subject)
     {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $switcharms = json_decode($subject->arm->switcharms);
         $validatedData = $request->validate([
@@ -177,7 +186,7 @@ class SubjectController extends Controller
             DB::beginTransaction();
 
             // Update subject record
-            $response = $subject->switchArm($validatedData['switchArm']);
+            $response = $subject->switchArm($validatedData['switchArm'],$validatedData['switchDate']);
             if ($response !== true) {
                 throw new \ErrorException("Subject $subject->subjectID failed to switch : $response");
             }
@@ -194,6 +203,61 @@ class SubjectController extends Controller
             return redirect()->back()->with('error', $th->getMessage())->withInput();
         }
         return redirect()->back()->with('message', "Subject switched");
+    }
+
+    public function reverseSwitch(Request $request, Subject $subject)
+    {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
+        try {
+            DB::beginTransaction();
+
+            $currentArm = $subject->arm_id;
+            $previousArm = $subject->previous_arm_id;
+            // Update subject record
+            $response = $subject->reverseArmSwitch();
+            if ($response !== true) {
+                throw new \ErrorException("Subject $subject->subjectID failed to reverse switch : $response");
+            }
+
+            // Delete current event entries and restore previous arm event entries in the event_subject table
+            $response = $subject->revertArmSwitchEvents($currentArm,$previousArm);
+            if ($response !== true) {
+                throw new \ErrorException("Events for $subject->subjectID could not be reverted : $response");
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage())->withInput();
+        }
+        return redirect()->back()->with('message', "Arm switch reversed");
+    }
+
+    public function drop(Request $request, Subject $subject)
+    {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
+        if ($subject->subject_status !== 1) {
+            return redirect()->back()->with('error', "This subject cannot be dropped");
+        }
+        $subject->subject_status = 2;
+        $subject->save();
+        return redirect()->back()->with('warning', "Subject dropped");
+    }
+
+    public function restore(Request $request, Subject $subject)
+    {
+        if ($subject->user_id !== auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
+        if ($subject->subject_status !== 2) {
+            return redirect()->back()->with('error', "This subject cannot be restored");
+        }
+        $subject->subject_status = 1;
+        $subject->save();
+        return redirect()->back()->with('message', "Subject Restored");
     }
 
     /**

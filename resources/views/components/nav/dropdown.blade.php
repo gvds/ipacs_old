@@ -7,7 +7,7 @@ $alignmentClasses = [
 ]
 @endphp
 
-<div class="relative" x-data="{ open: false }" @mouseleave="open = false">
+<div class="relative" x-data="{ open: false }" @mouseleave="open = false" @click.away="open = false ">
 
     <div class="text-white font-medium text-opacity-75 cursor-pointer hover:text-opacity-100 pb-1" @mouseover="open = true">
         {{ $nav_item }}

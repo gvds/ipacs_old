@@ -10,7 +10,7 @@ class subject extends Model
   protected $fillable = [
     'subjectID',
     'project_id',
-    'site',
+    'site_id',
     'user_id',
     'arm_id'
   ];
@@ -54,10 +54,10 @@ class subject extends Model
       for ($i = 0; $i < $validatedData['records']; $i++) {
         $last_subject_id = ++$last_subject_id;
         $subjectID = $subject_id_prefix . str_pad($last_subject_id, $subject_id_digits, '0', STR_PAD_LEFT);
-        $subject = subject::create([
+        subject::create([
           'subjectID' => $subjectID,
           'project_id' => $validatedData['currentProject']->id,
-          'site' => $user->projectSite($validatedData['currentProject']->id),
+          'site_id' => $user->projectSite($validatedData['currentProject']->id),
           'user_id' => $user->id,
           'arm_id' => $validatedData['arm'],
         ]);
@@ -75,14 +75,40 @@ class subject extends Model
   public function enrol($enrolDate)
   {
     $this->enrolDate = $enrolDate;
+    $this->armBaselineDate = $enrolDate;
     $this->subject_status = 1;
     return $this->save();
   }
 
-  public function switchArm(Int $switchArm)
+  public function switchArm(Int $switchArm, $switchDate)
   {
+    $this->previous_arm_id = $this->arm_id;
+    $this->previousArmBaselineDate = $this->armBaselineDate;
+    $this->armBaselineDate = $switchDate;
     $this->arm_id = $switchArm;
     return $this->save();
+  }
+
+  public function reverseArmSwitch()
+  {
+    $this->arm_id = $this->previous_arm_id;
+    $this->armBaselineDate = $this->previousArmBaselineDate;
+    $this->previous_arm_id = null;
+    $this->previousArmBaselineDate = null;
+    return $this->save();
+  }
+
+  public function revertArmSwitchEvents($currentArm,$previousArm)
+  {
+    $response = $this->events()->detach($this->events()->where('arm_id',$currentArm)->pluck('id'));
+    if ($response === 0) {
+      return (false);
+    }
+    $previousEvents = $this->events()->where('arm_id',$previousArm)->get();
+    foreach ($previousEvents as $key => $previousEvent) {
+      $response = $this->events()->wherePivot('eventstatus_id',6)->updateExistingPivot($previousEvent->id, ['eventstatus_id' => 0]);
+    }
+    return true;
   }
 
   public function createArmEvents($arm)

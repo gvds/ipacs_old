@@ -81,6 +81,9 @@ Route::middleware('auth')->group(function () {
         // Route::get('/subjects/enrol', 'SubjectController@enrol');
         Route::post('/subjects/{subject}/enrol', 'SubjectController@enrol');
         Route::post('/subjects/{subject}/switch', 'SubjectController@switch');
+        Route::post('/subjects/{subject}/reverseSwitch', 'SubjectController@reverseSwitch');
+        Route::post('/subjects/{subject}/drop', 'SubjectController@drop');
+        Route::post('/subjects/{subject}/restore', 'SubjectController@restore');
 
         Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
     });

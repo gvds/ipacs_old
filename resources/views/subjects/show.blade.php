@@ -27,12 +27,24 @@
             <td>{{$subject->user->fullname}}</td>
           </tr>
           <tr>
+            <td class='font-bold'>Enrol Date</td>
+            <td>{{$subject->enrolDate}}</td>
+          </tr>
+          <tr>
+            <td class='font-bold'>Arm Baseline Date</td>
+            <td>{{$subject->armBaselineDate}}</td>
+          </tr>
+          <tr>
             <td class='font-bold'>Previous Arm</td>
             <td>
               @if ($subject->previous_arm)
               {{$subject->previous_arm->name}}
               @endif
             </td>
+          </tr>
+          <tr>
+            <td class='font-bold'>Previous Arm Baseline Date</td>
+            <td>{{$subject->previousArmBaselineDate}}</td>
           </tr>
           <tr>
             <td class='font-bold'>Status</td>
@@ -54,18 +66,44 @@
           </tr>
         </x-table>
       </div>
+      @if ($subject->subject_status === 1)
+      <span x-data="confirmDrop()"">
+        {{ Form::open(['url' => "/subjects/$subject->id/drop", 'method' => 'POST', 'x-on:click.away'=>'clear()']) }}
+        <x-buttonlink @click=" del()" x-text=" getDeleteText()" class="text-red-50" x-bind:class="getDeleteBg()">Drop
+        Subject</x-buttonlink>
+        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-red-600 text-red-50 text-sm font-bold px-2 py-1 rounded shadow-md leading-tight hover:text-indigo-500"]) }}
+        {{ Form::close() }}
+      </span>
+      @endif
+      @if ($subject->subject_status === 2)
+      <span x-data="confirmDrop()"">
+        {{ Form::open(['url' => "/subjects/$subject->id/restore", 'method' => 'POST', 'x-on:click.away'=>'clear()']) }}
+        <x-buttonlink @click=" restore()" x-text=" getRestoreText()" class="text-red-50"
+        x-bind:class="getRestoreBg()">Restore Subject</x-buttonlink>
+        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-indigo-600 text-red-50 text-sm font-bold px-2 py-1 rounded shadow-md leading-tight hover:text-white"]) }}
+        {{ Form::close() }}
+      </span>
+      @endif
     </div>
 
-    @if ($subject->subject_status === 1 & count($switcharms) > 0)
     <div class='ml-20'>
+      @if ($subject->subject_status === 1 & count($switcharms) > 0)
       <div class='text-lg font-bold'>Switch Arm</div>
-      {{ Form::open(['url' => "/subjects/$subject->id/switch", 'class' => 'form', 'method' => 'POST']) }}
+      {{ Form::open(['url' => "/subjects/$subject->id/switch", 'class' => 'form mb-2', 'method' => 'POST']) }}
       {{ Form::select('switchArm', $switcharms, null, ['required','placeholder' => 'Select new arm...']) }}
       {{ Form::date('switchDate', today(), ['required']) }}
       {{ Form::submit('Switch', ['class' => 'w-full mt-2']) }}
       {{ Form::close() }}
+      @endif
+      @if ($subject->previous_arm)
+      <div class='text-lg font-bold'>Reverse Previous Arm Switch</div>
+      {{ Form::open(['url' => "/subjects/$subject->id/reverseSwitch", 'class' => 'form', 'method' => 'POST']) }}
+      {{ Form::submit('Reverse Switch', ['class' => 'w-full mt-2']) }}
+      {{ Form::close() }}
+      @endif
     </div>
-    @endif
+
+
 
   </div>
 
@@ -114,3 +152,57 @@
 
   @endif
 </x-layout>
+
+<script>
+  function confirmDrop() {
+    return {
+      showConfirm: false,
+      deleteText: "Drop Subject",
+      deleteBgCol: "bg-red-600",
+      restoreText: "Restore Subject",
+      restoreBgCol: "bg-indigo-600",
+      del() {
+        this.showConfirm = !this.showConfirm;
+        if (this.showConfirm) {
+          this.deleteBgCol = 'bg-green-600';
+          this.deleteText = "Cancel";
+        } else {
+          this.deleteBgCol = 'bg-red-600';
+          this.deleteText = "Drop Subject";
+        }
+      },
+      restore() {
+        this.showConfirm = !this.showConfirm;
+        if (this.showConfirm) {
+          this.restoreBgCol = 'bg-green-600';
+          this.restoreText = "Cancel";
+        } else {
+          this.restoreBgCol = 'bg-indigo-600';
+          this.restoreText = "Restore Subject";
+        }
+      },
+      clear() {
+        this.showConfirm = false;
+        this.deleteBgCol = 'bg-red-600';
+        this.deleteText = "Drop Subject";
+        this.restoreBgCol = 'bg-indigo-600';
+        this.restoreText = "Restore Subject";
+      },
+      confirming() {
+        return this.showConfirm === true
+      },
+      getDeleteText() {
+        return this.deleteText
+      },
+      getDeleteBg() {
+        return this.deleteBgCol
+      },
+      getRestoreText() {
+        return this.restoreText
+      },
+      getRestoreBg() {
+        return this.restoreBgCol
+      },
+    }
+  }
+</script>
