@@ -20,7 +20,7 @@
     </x-slot>
       @foreach ($roles as $role)
       <tr class="odd:bg-gray-100">
-        <td>{{$role->name}}</td>
+        <td class='py-2'>{{$role->name}}</td>
         <td>{{$role->display_name}}</td>
         <td>{{$role->description}}</td>
         {{-- <td>{{$role->guard_name}}</td> --}}

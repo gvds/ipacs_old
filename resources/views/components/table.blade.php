@@ -1,12 +1,14 @@
-{{-- <div {{ $attributes->merge(['class'=>'inline-block border border-gray-300 rounded shadow-md']) }}> --}}
-    <table class="table-auto p-3 border-b mb-3 text-sm">
+<div {{ $attributes->merge(['class'=>'inline-block border border-gray-300 rounded shadow-md mb-3']) }}>
+    <table class="table-auto text-sm">
         <thead>
+            @if ($head ?? null)
             <tr class="border-b border-gray-300 text-center">
-                {{ $head ?? '' }}
+                {{ $head }}
             </tr>
+            @endif
         </thead>
         <tbody>
             {{$slot}}
         </tbody>
     </table>
-{{-- </div> --}}
+</div>

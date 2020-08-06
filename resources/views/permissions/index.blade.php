@@ -19,7 +19,7 @@
     </x-slot>
     @foreach ($permissions as $permission)
     <tr class="odd:bg-gray-100">
-      <td>{{$permission->name}}</td>
+      <td class='py-2'>{{$permission->name}}</td>
       <td>{{$permission->display_name}}</td>
       <td>{{$permission->scope}}</td>
       <td>{{$permission->description}}</td>

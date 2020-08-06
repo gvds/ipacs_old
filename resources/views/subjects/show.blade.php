@@ -82,7 +82,7 @@
   @else
 
   <div class='mt-5'>
-    <div class='text-lg font-bold'>Events</div>
+    <div class='text-lg font-bold w-auto'>Events</div>
     <x-table>
       <x-slot name='head'>
         <th>Arm</th>
