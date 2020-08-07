@@ -85,7 +85,7 @@ class ScheduleController extends Controller
 
             // Get scheduled subjects
             $subjects = \App\subject::with(['events' => function ($query) use ($enddate) {
-                $query->where('minDate', '>=', $enddate); // change to <=
+                $query->where('minDate', '<=', $enddate);
             }])
         ->where('project_id', $currentProject->id)
         ->where('user_id', auth()->user()->id)

@@ -143,13 +143,18 @@ class SubjectController extends Controller
         }
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $validatedData = $request->validate([
-            'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior"
+            'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior",
+            'firstname' => "present|max:30",
+            'surname' => "present|max:30",
+            'address1' => "present|max:50",
+            'address2' => "present|max:50",
+            'address3' => "present|max:50",
         ]);
         try {
             DB::beginTransaction();
 
             // Update subject record
-            $response = $subject->enrol($validatedData['enrolDate']);
+            $response = $subject->enrol($validatedData);
             if ($response !== true) {
                 throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
             }

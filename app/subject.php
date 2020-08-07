@@ -13,7 +13,12 @@ class subject extends Model
     'project_id',
     'site_id',
     'user_id',
-    'arm_id'
+    'arm_id',
+    'firstname',
+    'surname',
+    'address1',
+    'address2',
+    'address3'
   ];
 
   public function events()
@@ -78,11 +83,16 @@ class subject extends Model
     return 0;
   }
 
-  public function enrol($enrolDate)
+  public function enrol($validatedData)
   {
-    $this->enrolDate = $enrolDate;
-    $this->armBaselineDate = $enrolDate;
+    $this->enrolDate = $validatedData['enrolDate'];
+    $this->armBaselineDate = $validatedData['enrolDate'];
     $this->subject_status = 1;
+    $this->firstname = $validatedData['firstname'];
+    $this->surname = $validatedData['surname'];
+    $this->address1 = $validatedData['address1'];
+    $this->address2 = $validatedData['address2'];
+    $this->address3 = $validatedData['address3'];
     return $this->save();
   }
 

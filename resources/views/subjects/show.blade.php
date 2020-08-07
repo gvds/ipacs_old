@@ -15,8 +15,16 @@
       <div>
         <x-table class="table table-sm">
           <tr>
+            <td class='font-bold'>Name</td>
+            <td>{{$subject->fullname}}</td>
+          </tr>
+          <tr>
             <td class='font-bold'>Current Arm</td>
             <td>{{$subject->arm->name}}</td>
+          </tr>
+          <tr>
+            <td class='font-bold flex'>Address</td>
+            <td>{{$subject->address1}}<br />{{$subject->address2}}<br />{{$subject->address3}}</td>
           </tr>
           <tr>
             <td class='font-bold'>Site</td>
@@ -114,6 +122,14 @@
   {!! Form::open(['url' => "/subjects/$subject->id/enrol", 'class' => 'form', 'method' => 'POST']) !!}
   {{ Form::label('enrolDate','Enrolment Date')}}
   {{ Form::date('enrolDate') }}
+  {{ Form::label('firstname','First Name')}}
+  {{ Form::text('firstname') }}
+  {{ Form::label('surname','Surname')}}
+  {{ Form::text('surname') }}
+  {{ Form::label('address','Address')}}
+  {{ Form::text('address1') }}
+  {{ Form::text('address2') }}
+  {{ Form::text('address3') }}
   {{ Form::submit('Enrol', ['class' => 'w-full mt-1']) }}
   {{ Form::close() }}
 
