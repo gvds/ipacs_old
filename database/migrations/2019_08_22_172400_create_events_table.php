@@ -20,8 +20,8 @@ class CreateEventsTable extends Migration
             $table->string('name',50)->nullable();
             $table->boolean('autolog')->default(0);
             $table->mediumInteger('offset')->unsigned()->nullable();
-            $table->mediumInteger('offset_min')->unsigned()->nullable();
-            $table->mediumInteger('offset_max')->unsigned()->nullable();
+            $table->mediumInteger('offset_ante_window')->unsigned()->nullable();
+            $table->mediumInteger('offset_post_window')->unsigned()->nullable();
             $table->tinyInteger('name_labels')->unsigned()->default(0);
             $table->tinyInteger('subject_event_labels')->unsigned()->default(0);
             $table->tinyInteger('study_id_labels')->unsigned()->default(0);

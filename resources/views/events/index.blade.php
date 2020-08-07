@@ -14,8 +14,8 @@
             <th>Arm</th>
             <th>Auto-log</th>
             <th>Offset</th>
-            <th>Min Offset</th>
-            <th>Max Offset</th>
+            <th>Prior Window</th>
+            <th>Post Window</th>
             <th>Name Labels</th>
             <th>Subject Event Labels</th>
             <th>Study ID Labels</th>
@@ -28,8 +28,8 @@
             <td>{{$event->arm->name}}</td>
             <td>{{$event->autolog}}</td>
             <td>{{$event->offset}}</td>
-            <td>{{$event->offset_min}}</td>
-            <td>{{$event->offset_max}}</td>
+            <td>{{$event->offset_ante_window}}</td>
+            <td>{{$event->offset_post_window}}</td>
             <td>{{$event->name_labels}}</td>
             <td>{{$event->subject_event_labels}}</td>
             <td>{{$event->study_id_labels}}</td>

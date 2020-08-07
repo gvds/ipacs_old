@@ -16,10 +16,10 @@
     {{ Form::radio('autolog', 0, true, ['class'=>'mb-3']) }} No {{ Form::radio('autolog', 1) }} Yes
     {{ Form::label('offset', 'Offset') }}
     {{ Form::text('offset', null, ['required'=>'required']) }}
-    {{ Form::label('offset_min', 'Min Offset') }}
-    {{ Form::text('offset_min', null, ['required'=>'required']) }}
-    {{ Form::label('offset_max', 'Max Offset') }}
-    {{ Form::text('offset_max', null, ['required'=>'required']) }}
+    {{ Form::label('offset_ante_window', 'Prior Offset Window') }}
+    {{ Form::text('offset_ante_window', null, ['required'=>'required']) }}
+    {{ Form::label('offset_post_window', 'Post Offset Window') }}
+    {{ Form::text('offset_post_window', null, ['required'=>'required']) }}
     {{ Form::label('name_labels', 'Name Labels') }}
     {{ Form::text('name_labels', null) }}
     {{ Form::label('subject_event_labels', 'Study Event Labels') }}

@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/subjects/{subject}/drop', 'SubjectController@drop');
         Route::post('/subjects/{subject}/restore', 'SubjectController@restore');
 
+        Route::get('/schedule/{week}', 'ScheduleController@generate');
+
         Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
     });
 });

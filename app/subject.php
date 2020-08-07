@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
@@ -18,7 +19,7 @@ class subject extends Model
   public function events()
   {
     return $this->belongsToMany(event::class)
-      ->withPivot('eventstatus_id', 'reg_timestamp', 'log_timestamp')
+      ->withPivot('eventstatus_id', 'reg_timestamp', 'log_timestamp', 'eventDate', 'minDate', 'maxDate', 'itteration')
       ->withTimestamps();
   }
 
@@ -41,6 +42,11 @@ class subject extends Model
   {
     return $this->belongsTo(User::class);
   }
+
+  public function getFullNameAttribute()
+    {
+        return $this->firstname . ' ' . $this->surname;
+    }
 
   public static function createSubjects($validatedData)
   {
@@ -98,20 +104,20 @@ class subject extends Model
     return $this->save();
   }
 
-  public function revertArmSwitchEvents($currentArm,$previousArm)
+  public function revertArmSwitchEvents($currentArm, $previousArm)
   {
-    $response = $this->events()->detach($this->events()->where('arm_id',$currentArm)->pluck('id'));
+    $response = $this->events()->detach($this->events()->where('arm_id', $currentArm)->pluck('id'));
     if ($response === 0) {
       return (false);
     }
-    $previousEvents = $this->events()->where('arm_id',$previousArm)->get();
+    $previousEvents = $this->events()->where('arm_id', $previousArm)->get();
     foreach ($previousEvents as $key => $previousEvent) {
-      $response = $this->events()->wherePivot('eventstatus_id',6)->updateExistingPivot($previousEvent->id, ['eventstatus_id' => 0]);
+      $response = $this->events()->wherePivot('eventstatus_id', 6)->updateExistingPivot($previousEvent->id, ['eventstatus_id' => 0]);
     }
     return true;
   }
 
-  public function createArmEvents($arm)
+  public function createArmEvents($arm, $baselineDate)
   {
     $existingEvents = $this->events()->get();
     foreach ($existingEvents as $key => $existingEvent) {
@@ -138,10 +144,20 @@ class subject extends Model
             $eventstatus = 0;
           }
         }
-      }
-      $response = $this->events()->attach($event->id, ['eventstatus_id' => $eventstatus, 'reg_timestamp' => $timestamp, 'log_timestamp' => $timestamp]);
-      if ($response) {
-        return ($response);
+        $eventDate = Carbon::parse($baselineDate)->addDays($event->offset, 'days');
+        $minDate = $eventDate->copy()->subDays($event->offset_ante_window, 'days');
+        $maxDate = $eventDate->copy()->addDays($event->offset_post_window, 'days');
+        $response = $this->events()->attach($event->id, [
+          'eventstatus_id' => $eventstatus,
+          'eventDate' => $eventDate,
+          'minDate' => $minDate,
+          'maxDate' => $maxDate,
+          'reg_timestamp' => $timestamp,
+          'log_timestamp' => $timestamp
+        ]);
+        if ($response) {
+          return ($response);
+        }
       }
     }
     return true;

@@ -156,7 +156,7 @@ class SubjectController extends Controller
 
             // Add event entries for the subject's arm to the event_subject table
             $arm = $subject->arm()->with('events')->first();
-            $response = $subject->createArmEvents($arm);
+            $response = $subject->createArmEvents($arm,$validatedData['enrolDate']);
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
             }
@@ -193,7 +193,7 @@ class SubjectController extends Controller
 
             // Add event entries for the subject's arm to the event_subject table
             $arm = \App\arm::with('events')->where('id',$validatedData['switchArm'])->first();
-            $response = $subject->createArmEvents($arm);
+            $response = $subject->createArmEvents($arm,$validatedData['switchDate']);
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
             }

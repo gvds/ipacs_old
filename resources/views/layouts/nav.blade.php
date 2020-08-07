@@ -26,8 +26,8 @@
           <x-slot name="nav_item">
             <div>Follow-up Schedule</div>
           </x-slot>
-          <x-nav.dropdown-link href="#">This Week's Schedule</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="#">Next Week's Schedule</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/schedule/thisweek">This Week's Schedule</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/schedule/nextweek">Next Week's Schedule</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="#">Print Labels</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Manage Label Print Queue</x-nav.dropdown-link>

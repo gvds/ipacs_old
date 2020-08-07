@@ -127,6 +127,9 @@
         <th>Event ID</th>
         <th>Event</th>
         <th>Status</th>
+        <th>Min Date</th>
+        <th>Date</th>
+        <th>Max Date</th>
         <th>Registered</th>
         <th>Logged</th>
       </x-slot>
@@ -136,6 +139,15 @@
         <td>{{$event->id}}</td>
         <td>{{$event->name}}</td>
         <td>{{$eventstatus[$event->pivot->eventstatus_id]->eventstatus}}</td>
+        <td>
+          {{$event->pivot->minDate}}
+        </td>
+        <td>
+          {{$event->pivot->eventDate}}
+        </td>
+        <td>
+          {{$event->pivot->maxDate}}
+        </td>
         <td>
           @if ($event->pivot->reg_timestamp)
           {{Carbon\Carbon::parse($event->pivot->reg_timestamp)->format('Y-m-d H:i')}}
