@@ -18,6 +18,7 @@ class CreateEventSubjectTable extends Migration
             $table->bigInteger('subject_id')->unsigned();
             $table->tinyInteger('itteration')->unsigned()->default(1);
             $table->tinyInteger('eventstatus_id')->unsigned()->default(0);
+            $table->tinyInteger('labelStatus')->default(0);
             $table->date('eventDate');
             $table->date('minDate');
             $table->date('maxDate');

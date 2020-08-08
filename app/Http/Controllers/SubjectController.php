@@ -159,12 +159,15 @@ class SubjectController extends Controller
                 throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
             }
 
-            // Add event entries for the subject's arm to the event_subject table
-            $arm = $subject->arm()->with('events')->first();
-            $response = $subject->createArmEvents($arm,$validatedData['enrolDate']);
-            if ($response !== true) {
-                throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
+            // Schedule event dates
+            $events = $subject->arm()->first()->events()->get();
+            foreach ($events as $event) {
+                $response = $subject->setEventDates($event, $validatedData['enrolDate']);
+                if ($response !== true) {
+                    throw new \ErrorException("Event dates for $subject->subjectID could not be set : $response");
+                }
             }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -191,17 +194,24 @@ class SubjectController extends Controller
             DB::beginTransaction();
 
             // Update subject record
-            $response = $subject->switchArm($validatedData['switchArm'],$validatedData['switchDate']);
+            $response = $subject->switchArm($validatedData['switchArm'], $validatedData['switchDate']);
             if ($response !== true) {
                 throw new \ErrorException("Subject $subject->subjectID failed to switch : $response");
             }
 
             // Add event entries for the subject's arm to the event_subject table
-            $arm = \App\arm::with('events')->where('id',$validatedData['switchArm'])->first();
-            $response = $subject->createArmEvents($arm,$validatedData['switchDate']);
+            $arm = $subject->arm()->with('events')->first();
+            $response = $subject->createArmEvents($arm);
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
             }
+
+            // Schedule event dates
+            $events = $arm->events()->get();
+            foreach ($events as $event) {
+                $response = $subject->setEventDates($event, $validatedData['switchDate']);
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -227,7 +237,7 @@ class SubjectController extends Controller
             }
 
             // Delete current event entries and restore previous arm event entries in the event_subject table
-            $response = $subject->revertArmSwitchEvents($currentArm,$previousArm);
+            $response = $subject->revertArmSwitchEvents($currentArm, $previousArm);
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be reverted : $response");
             }

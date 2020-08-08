@@ -86,11 +86,13 @@ class ScheduleController extends Controller
             // Get scheduled subjects
             $subjects = \App\subject::with(['events' => function ($query) use ($enddate) {
                 $query->where('minDate', '<=', $enddate);
+                $query->where('eventstatus_id', '<', 3);
+                $query->where('active', true);
             }])
-        ->where('project_id', $currentProject->id)
-        ->where('user_id', auth()->user()->id)
-        ->where('subject_status', 1)
-        ->get();
+                ->where('project_id', $currentProject->id)
+                ->where('user_id', auth()->user()->id)
+                ->where('subject_status', 1)
+                ->get();
 
             $fill = 1;
             foreach ($subjects as $subject) {
@@ -111,7 +113,6 @@ class ScheduleController extends Controller
             }
 
             $this->fpdf->Output("schedule.pdf", "I");
-        
         } catch (\Throwable $th) {
             return redirect('/')->with('error', $th->getMessage());
         }

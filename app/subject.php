@@ -49,9 +49,9 @@ class subject extends Model
   }
 
   public function getFullNameAttribute()
-    {
-        return $this->firstname . ' ' . $this->surname;
-    }
+  {
+    return $this->firstname . ' ' . $this->surname;
+  }
 
   public static function createSubjects($validatedData)
   {
@@ -65,16 +65,23 @@ class subject extends Model
       for ($i = 0; $i < $validatedData['records']; $i++) {
         $last_subject_id = ++$last_subject_id;
         $subjectID = $subject_id_prefix . str_pad($last_subject_id, $subject_id_digits, '0', STR_PAD_LEFT);
-        subject::create([
+        $subject = subject::create([
           'subjectID' => $subjectID,
           'project_id' => $validatedData['currentProject']->id,
           'site_id' => $user->projectSite($validatedData['currentProject']->id),
           'user_id' => $user->id,
           'arm_id' => $validatedData['arm'],
         ]);
+        // Add event entries for the subject's arm to the event_subject table
+        $arm = $subject->arm()->with('events')->first();
+        $response = $subject->createArmEvents($arm);
+        if ($response !== true) {
+          throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
+        }
       }
       $currentProject->last_subject_id = $last_subject_id;
       $currentProject->save();
+
       DB::commit();
     } catch (\Throwable $th) {
       DB::rollback();
@@ -127,49 +134,64 @@ class subject extends Model
     return true;
   }
 
-  public function createArmEvents($arm, $baselineDate)
+  public function createArmEvents($arm, $baselineDate = null)
   {
     $existingEvents = $this->events()->get();
-    foreach ($existingEvents as $key => $existingEvent) {
+    foreach ($existingEvents as $existingEvent) {
       if ($existingEvent->pivot->eventstatus_id === 0) {
         $event = \App\event::find($existingEvent->id);
         $this->events()->wherePivot('eventstatus_id', 0)->updateExistingPivot($existingEvent->id, ['eventstatus_id' => 6]);
       }
     }
-    foreach ($arm->events as $key => $event) {
+    foreach ($arm->events as $event) {
       if ($event->active) {
-        $timestamp = null;
-        if ($event->autolog === 1) {
-          $eventstatus = 3;
-          $timestamp = now();
-        } else {
-          if ($event->offset === 0) {
-            if ($arm->arm_num === 0) {
-              $eventstatus = 3;
-              $timestamp = now();
-            } else {
-              $eventstatus = 1;
-            }
-          } else {
-            $eventstatus = 0;
-          }
-        }
-        $eventDate = Carbon::parse($baselineDate)->addDays($event->offset, 'days');
-        $minDate = $eventDate->copy()->subDays($event->offset_ante_window, 'days');
-        $maxDate = $eventDate->copy()->addDays($event->offset_post_window, 'days');
-        $response = $this->events()->attach($event->id, [
-          'eventstatus_id' => $eventstatus,
-          'eventDate' => $eventDate,
-          'minDate' => $minDate,
-          'maxDate' => $maxDate,
-          'reg_timestamp' => $timestamp,
-          'log_timestamp' => $timestamp
-        ]);
+        $response = $this->events()->attach($event->id);
         if ($response) {
           return ($response);
         }
+        if ($baselineDate) {
+          $response = $this->setEventDates($event, $baselineDate);
+        }
       }
     }
+    // Could run label queue update function here
     return true;
+  }
+
+  public function setEventDates(Event $event, $baselineDate)
+  {
+    if ($event->active) {
+      $timestamp = null;
+      if ($event->autolog === 1) {
+        $eventstatus = 3;
+        $timestamp = now();
+      } else {
+        if ($event->offset === 0) {
+          if ($event->arm->arm_num === 0) {
+            $eventstatus = 3;
+            $timestamp = now();
+          } else {
+            $eventstatus = 1;
+          }
+        } else {
+          $eventstatus = 0;
+        }
+      }
+      $eventDate = Carbon::parse($baselineDate)->addDays($event->offset, 'days');
+      $minDate = $eventDate->copy()->subDays($event->offset_ante_window, 'days');
+      $maxDate = $eventDate->copy()->addDays($event->offset_post_window, 'days');
+      $response = $this->events()->updateExistingPivot($event->id, [
+        'eventstatus_id' => $eventstatus,
+        'eventDate' => $eventDate,
+        'minDate' => $minDate,
+        'maxDate' => $maxDate,
+        'reg_timestamp' => $timestamp,
+        'log_timestamp' => $timestamp
+      ]);
+
+      if ($response) {
+        return ($response);
+      }
+    }
   }
 }

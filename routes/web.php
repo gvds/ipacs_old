@@ -86,6 +86,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/subjects/{subject}/restore', 'SubjectController@restore');
 
         Route::get('/schedule/{week}', 'ScheduleController@generate');
+        
+        // Route::get('/labels', 'EventSubjectController@index');
+        Route::get('/labels', 'LabelController@createPDF');
+        Route::get('/labels/queue', 'EventSubjectController@addEventsToLabelQueue');
 
         Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
     });
