@@ -14,7 +14,8 @@ class CreateEventSubjectTable extends Migration
     public function up()
     {
         Schema::create('event_subject', function (Blueprint $table) {
-            $table->bigIncrements('event_id');
+            $table->bigIncrements('id');
+            $table->bigInteger('event_id')->unsigned();
             $table->bigInteger('subject_id')->unsigned();
             $table->tinyInteger('itteration')->unsigned()->default(1);
             $table->tinyInteger('eventstatus_id')->unsigned()->default(0);
@@ -22,10 +23,12 @@ class CreateEventSubjectTable extends Migration
             $table->date('eventDate');
             $table->date('minDate');
             $table->date('maxDate');
-            $table->dateTime('reg_timestamp')->nullable();
-            $table->dateTime('log_timestamp')->nullable();
+            // $table->dateTime('reg_timestamp')->nullable();
+            // $table->dateTime('log_timestamp')->nullable();
+            $table->date('logDate')->nullable();
             $table->timestamps();
 
+            $table->index(['event_id', 'subject_id', 'itteration']);
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });

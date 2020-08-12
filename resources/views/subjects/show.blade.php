@@ -2,8 +2,22 @@
 
   <x-pageheader>
     Subject: {{$subject->subjectID}}
-    <x-slot name='button'>
-      <x-buttonlink href='/subjects' class='text-orange-700'>Return</x-buttonlink>
+    <x-slot name='secondary'>
+      <div x-data='subjectSearch()' class="flex flex-row">
+        <div>
+          <input type="text" placeholder="Search for subject ID..." name="subjectSearch" x-model="subjectSearch" x-on:keyup="fetchSubject()"
+            class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg px-4" autofocus />
+          <template x-if="subjects">
+            <div
+              class="text-sm flex flex-col bg-white border border-gray-300 rounded shadow-md position absolute w-1/5">
+              <template x-for="[id, subject] in Object.entries(subjects)">
+                <a x-text="subject" x-bind:href=`/subjects/${id}`
+                  class="flex px-3 py-1 text-xs font-semibold text-gray-700"></a>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
     </x-slot>
   </x-pageheader>
 
@@ -111,10 +125,7 @@
       @endif
     </div>
 
-
-
   </div>
-
 
   @if ($subject->subject_status === 0)
 
@@ -142,19 +153,56 @@
         <th>Arm</th>
         <th>Event ID</th>
         <th>Event</th>
+        <th>Itteration</th>
         <th>Status</th>
+        <th>Label Status</th>
         <th>Min Date</th>
         <th>Date</th>
         <th>Max Date</th>
-        <th>Registered</th>
+        {{-- <th>Registered</th> --}}
         <th>Logged</th>
       </x-slot>
       @foreach ($events as $event)
-      <tr class='odd:bg-gray-100'>
+      <tr class='odd:bg-gray-100 text-xs'>
         <td>{{$event->arm->name}}</td>
         <td>{{$event->id}}</td>
         <td>{{$event->name}}</td>
+        <td class='text-left'>
+          {{$event->pivot->itteration}}
+          @if (in_array($event->pivot->eventstatus_id, [3,4]))
+          <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
+            <x-buttonlink>
+              +
+            </x-buttonlink>
+            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>Add
+              Itteration</span>
+          </span>
+          @endif
+        </td>
         <td>{{$eventstatus[$event->pivot->eventstatus_id]->eventstatus}}</td>
+        <td>
+          @switch($event->pivot->labelStatus)
+          @case(1)
+          Queued
+          @break
+          @case(2)
+          Printed
+          @break
+          @default
+          Pending
+          @endswitch
+          @if ($event->pivot->labelStatus === 2)
+          <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
+            @csrf
+            <x-buttonlink href="/labels/{{$event->pivot->id}}/queue">
+              Q
+            </x-buttonlink>
+            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>Add
+              to label
+              queue</span>
+          </span>
+          @endif
+        </td>
         <td>
           {{$event->pivot->minDate}}
         </td>
@@ -165,14 +213,10 @@
           {{$event->pivot->maxDate}}
         </td>
         <td>
-          @if ($event->pivot->reg_timestamp)
-          {{Carbon\Carbon::parse($event->pivot->reg_timestamp)->format('Y-m-d H:i')}}
+          @if ($event->pivot->logDate)
+          {{Carbon\Carbon::parse($event->pivot->logDate)->format('Y-m-d')}}
           @endif
         </td>
-        <td>
-          @if ($event->pivot->log_timestamp)
-          {{Carbon\Carbon::parse($event->pivot->log_timestamp)->format('Y-m-d H:i')}}</td>
-        @endif
       </tr>
       @endforeach
     </x-table>
@@ -232,5 +276,28 @@
         return this.restoreBgCol
       },
     }
+  }
+</script>
+
+<script>
+  function subjectSearch() {
+    return {
+      subjectSearch: "",
+      subjects: null,
+      isLoading: false,
+      fetchSubject() {
+        if (this.subjectSearch == "") {
+          this.subjects = null;
+        } else {
+          this.isLoading = true;
+          fetch(`/subjectsearch/${this.subjectSearch}`)
+          .then(response => response.json())
+          .then(data => {
+            this.isLoading = false;
+            this.subjects = data;
+          });
+        }
+      }
+    };
   }
 </script>

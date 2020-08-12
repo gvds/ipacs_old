@@ -31,7 +31,7 @@ class SubjectController extends Controller
     public function create()
     {
         $currentProject = request('currentProject');
-        $arms = $currentProject->arms->where('manual_enrole')->pluck('name', 'id');
+        $arms = $currentProject->arms->where('manual_enrol')->pluck('name', 'id');
         return view('subjects.generate', compact('arms'));
     }
 
@@ -50,7 +50,7 @@ class SubjectController extends Controller
                 'integer',
                 function ($attribute, $value, $fail) {  // Does this arm accept new IDs?
                     $arm = \App\arm::find($value)->first();
-                    if ($arm->manual_enrole === 0) {
+                    if ($arm->manual_enrol === 0) {
                         $fail('Subjects cannot be enroled into this ' . $attribute);
                     }
                 },

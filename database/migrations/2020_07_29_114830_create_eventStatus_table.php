@@ -14,13 +14,13 @@ class CreateEventStatusTable extends Migration
     public function up()
     {
         Schema::create('eventStatus', function (Blueprint $table) {
-            $table->bigInteger('id')->unsigned();
+            $table->bigInteger('id')->unsigned()->primary();
             $table->text('eventstatus',25);
         });
         DB::unprepared("INSERT INTO `eventStatus` (`id`, `eventstatus`) VALUES
         (0, 'Pending'),
         (1, 'Primed'),
-        (2, 'Labels Generated'),
+        (2, 'Scheduled'),
         (3, 'Logged'),
         (4, 'Logged Late'),
         (5, 'Missed'),

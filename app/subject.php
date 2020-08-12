@@ -4,7 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class subject extends Model
 {
@@ -24,7 +24,7 @@ class subject extends Model
   public function events()
   {
     return $this->belongsToMany(event::class)
-      ->withPivot('eventstatus_id', 'reg_timestamp', 'log_timestamp', 'eventDate', 'minDate', 'maxDate', 'itteration')
+      ->withPivot('id', 'eventstatus_id', 'logDate', 'eventDate', 'minDate', 'maxDate', 'itteration', 'labelStatus')
       ->withTimestamps();
   }
 
@@ -123,7 +123,7 @@ class subject extends Model
 
   public function revertArmSwitchEvents($currentArm, $previousArm)
   {
-    $response = $this->events()->detach($this->events()->where('arm_id', $currentArm)->pluck('id'));
+    $response = $this->events()->detach($this->events()->where('arm_id', $currentArm)->pluck('events.id'));
     if ($response === 0) {
       return (false);
     }
@@ -185,11 +185,12 @@ class subject extends Model
         'eventDate' => $eventDate,
         'minDate' => $minDate,
         'maxDate' => $maxDate,
-        'reg_timestamp' => $timestamp,
-        'log_timestamp' => $timestamp
+        'logDate' => $timestamp
       ]);
-
-      if ($response) {
+      
+      if ($response === 1) {
+        return true;
+      } else {
         return ($response);
       }
     }

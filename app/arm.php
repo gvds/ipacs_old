@@ -11,7 +11,7 @@ class arm extends Model
         'project_id',
         'redcap_arm_id',
         'arm_num',
-        'manual_enrole',
+        'manual_enrol',
         'switcharms'
     ];
   

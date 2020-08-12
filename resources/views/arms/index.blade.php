@@ -12,14 +12,14 @@
         <x-slot name='head'>
             <th>Name</th>
             <th>Number</th>
-            <th>Manual Enrole</th>
+            <th>Manual Enrol</th>
             <th>Switch Arms</th>
         </x-slot>
         @foreach ($arms as $arm)
         <tr class='odd:bg-gray-100'>
             <td class='py-2'>{{$arm->name}}</td>
             <td>{{$arm->arm_num}}</td>
-            <td>{{$arm->manual_enrole}}</td>
+            <td>{{$arm->manual_enrol}}</td>
             <td>{{$arm->switcharms}}</td>
             <td>
                 <x-buttonlink href="/arms/{{$arm->id}}/edit">

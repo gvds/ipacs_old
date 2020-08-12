@@ -87,10 +87,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/schedule/{week}', 'ScheduleController@generate');
         
-        // Route::get('/labels', 'EventSubjectController@index');
-        Route::get('/labels', 'LabelController@createPDF');
-        Route::get('/labels/queue', 'EventSubjectController@addEventsToLabelQueue');
+        Route::get('/labels', 'LabelController@labelqueue');
+        Route::post('/labels', 'LabelController@clear');
+        Route::get('/labels/queue', 'LabelController@addEventsToLabelQueue');
+        Route::get('/labels/{event_subject}/queue', 'LabelController@addEventToLabelQueue');
+        Route::get('/labels/print', 'LabelController@printLabels');
 
         Route::get('/subjectsearch/{searchterm}', 'SubjectController@search');
+
+        Route::get('/event_subject', 'EventSubjectController@index');
+        Route::get('/event_subject/retrieve', 'EventSubjectController@show');
+        Route::post('/event_subject/{event_subject}', 'EventSubjectController@update');
     });
 });

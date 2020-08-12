@@ -12,8 +12,8 @@
     {{ Form::text('redcap_arm_id', null) }}
     {{ Form::label('arm_num', 'Arm Number') }}
     {{ Form::text('arm_num', null, ['required'=>'required']) }}
-    {{ Form::label('manual_enrole', 'Manual Enrole') }}
-    {{ Form::radio('manual_enrole', 0, true, ['class'=>'mb-3']) }} No {{ Form::radio('manual_enrole', 1) }} Yes
+    {{ Form::label('manual_enrol', 'Manual Enrol') }}
+    {{ Form::radio('manual_enrol', 0, true, ['class'=>'mb-3']) }} No {{ Form::radio('manual_enrol', 1) }} Yes
     {{ Form::label('switcharms', 'Switch to Arms') }}
     @foreach ($arms as $arm)
     {{ Form::checkbox('switcharms[]', $arm->id) }} {{$arm->name}}<br />

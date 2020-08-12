@@ -54,7 +54,7 @@ class ArmController extends Controller
             'name' => 'required|min:3|max:50',
             'redcap_arm_id' => 'nullable|integer',
             'arm_num' => 'required|integer',
-            'manual_enrole' => 'required|in:0,1',
+            'manual_enrol' => 'required|in:0,1',
             'switcharms' => 'nullable'
         ]);
         $validatedData['project_id'] = $currentProject->id;
@@ -101,7 +101,7 @@ class ArmController extends Controller
             'name' => 'required|min:3|max:50',
             'redcap_arm_id' => 'nullable|integer',
             'arm_num' => 'required|integer',
-            'manual_enrole' => 'required|in:0,1',
+            'manual_enrol' => 'required|in:0,1',
             'switcharms' => 'nullable'
         ]);
         $validatedData['switcharms'] = isset($validatedData['switcharms']) ? json_encode($validatedData['switcharms']) : null;
