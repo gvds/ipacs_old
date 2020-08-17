@@ -13,7 +13,7 @@
     {{ Form::label('redcap_event_id', 'REDCap Event ID') }}
     {{ Form::text('redcap_event_id', null) }}
     {{ Form::label('autolog', 'Auto-Log') }}
-    {{ Form::radio('autolog', 0, true, ['class'=>'mb-3']) }} No {{ Form::radio('autolog', 1) }} Yes
+    {{ Form::radio('autolog', 0, true) }} No {{ Form::radio('autolog', 1) }} Yes
     {{ Form::label('offset', 'Offset') }}
     {{ Form::text('offset', null, ['required'=>'required']) }}
     {{ Form::label('offset_ante_window', 'Prior Offset Window') }}
@@ -29,7 +29,7 @@
     {{ Form::label('event_order', 'Event Order') }}
     {{ Form::text('event_order', null) }}
     {{ Form::label('active', 'Active') }}
-    {{ Form::radio('active', 0, ['class'=>'mb-3']) }} No {{ Form::radio('active', 1, true) }} Yes
+    {{ Form::radio('active', 0) }} No {{ Form::radio('active', 1, true) }} Yes
     {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
     <x-buttonlink href='/events' class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}

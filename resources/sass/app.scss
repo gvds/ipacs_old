@@ -36,7 +36,7 @@ input {
 }
 
 input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
-    @apply w-full mb-3 appearance-none;
+    @apply w-full appearance-none leading-snug;
 }
 
 input[type='submit'] {
@@ -45,7 +45,7 @@ input[type='submit'] {
 }
 
 select {
-    @apply border border-gray-200 rounded shadow w-full bg-white mb-3 py-1 px-3 text-gray-600 leading-snug;
+    @apply border border-gray-200 rounded shadow w-full bg-white py-1 px-3 text-gray-600 leading-snug;
 }
 
 input:focus, select:focus {
@@ -54,7 +54,7 @@ input:focus, select:focus {
 }
 
 label {
-    @apply block text-gray-700 font-bold mb-1;
+    @apply block text-gray-700 font-bold mb-1 mt-3;
 }
 
 td, th {
@@ -74,7 +74,7 @@ td, th {
 }
 
 .form {
-    @apply w-full max-w-sm bg-gray-100 border border-gray-300 rounded shadow px-6 pt-4 pb-2 text-sm;
+    @apply w-full max-w-sm bg-gray-100 border border-gray-300 rounded shadow px-6 py-2 text-sm;
 }
 
 /**

@@ -13,7 +13,7 @@
     {{ Form::label('arm_num', 'Arm Number') }}
     {{ Form::text('arm_num', null, ['required'=>'required']) }}
     {{ Form::label('manual_enrol', 'Manual Enrol') }}
-    {{ Form::radio('manual_enrol', 0, true, ['class'=>'mb-3']) }} No {{ Form::radio('manual_enrol', 1) }} Yes
+    {{ Form::radio('manual_enrol', 0, true) }} No {{ Form::radio('manual_enrol', 1) }} Yes
     {{ Form::label('switcharms', 'Switch to Arms') }}
     @foreach ($arms as $arm)
     {{ Form::checkbox('switcharms[]', $arm->id) }} {{$arm->name}}<br />

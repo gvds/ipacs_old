@@ -61,8 +61,9 @@ class User extends Authenticatable
         return $this->belongsToMany(site::class, 'team_user');
     }
 
-    public function projectSite($project_id)
+    public function getProjectSiteAttribute()
     {
+        $project_id = session('currentProject');
         $site = DB::table('team_user')
             ->where('user_id', auth()->user()->id)
             ->where('team_id', $project_id)

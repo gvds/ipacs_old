@@ -17,7 +17,7 @@ class EventSubjectController extends Controller
     public function show(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
         ]);
         try {
             list($project_id, $subjectID, $id) = explode('_', $validatedData['pse']);

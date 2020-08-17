@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/subjects/{subject}/restore', 'SubjectController@restore');
 
         Route::get('/schedule/{week}', 'ScheduleController@generate');
-        
+
         Route::get('/labels', 'LabelController@labelqueue');
         Route::post('/labels', 'LabelController@clear');
         Route::get('/labels/queue', 'LabelController@addEventsToLabelQueue');
@@ -99,4 +99,26 @@ Route::middleware('auth')->group(function () {
         Route::get('/event_subject/retrieve', 'EventSubjectController@show');
         Route::post('/event_subject/{event_subject}', 'EventSubjectController@update');
     });
+
+    Route::middleware('project.auth:register-samples')->group(function () {
+        Route::view('/primary', 'primarysamples.register');
+        Route::get('/primary/retrieve', 'PrimarySampleController@primary');
+        Route::post('/primary', 'PrimarySampleController@registerprimary');
+    });
+
+    Route::middleware('project.auth:log-samples')->group(function () {
+        Route::view('/primary.log', 'primarysamples.log');
+        Route::get('/primary.log/retrieve', 'PrimarySampleController@primarylogging');
+        Route::post('/primary.log', 'PrimarySampleController@log');
+    });
+
+    Route::middleware('project.auth:log-samples')->group(function () {
+        Route::view('/derivative/parent', 'derivativesamples.parent');
+        Route::view('/derivative/pse', 'derivativesamples.pse');
+        Route::post('/derivative/pse', 'DerivativeSampleController@primaries');
+        Route::post('/derivative/parent', 'DerivativeSampleController@parent');
+        Route::get('/derivative/{event_sample}', 'DerivativeSampleController@retrieve');
+        Route::post('/derivative', 'DerivativeSampleController@log');
+    });
+
 });

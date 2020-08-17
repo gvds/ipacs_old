@@ -42,8 +42,15 @@
           <div>Event & Sample Logging</div>
         </x-slot>
         <x-nav.dropdown-link href="/event_subject">Log Event Status</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Prmary Samples</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Derivative Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/primary">Register Primary Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/primary.log">Log Primary Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-submenu>
+          <x-slot name="nav_item">
+            <div>Log Derivative Samples</div>
+          </x-slot>
+          <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
+        </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="#">Change Sample Volume</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Unlog Samples</x-nav.dropdown-link>
       </x-nav.dropdown>

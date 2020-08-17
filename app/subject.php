@@ -68,7 +68,7 @@ class subject extends Model
         $subject = subject::create([
           'subjectID' => $subjectID,
           'project_id' => $validatedData['currentProject']->id,
-          'site_id' => $user->projectSite($validatedData['currentProject']->id),
+          'site_id' => $user->projectSite,
           'user_id' => $user->id,
           'arm_id' => $validatedData['arm'],
         ]);

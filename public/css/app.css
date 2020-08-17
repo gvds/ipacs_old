@@ -930,10 +930,10 @@ input {
 
 input:not([type=checkbox]):not([type=radio]):not([type=submit]) {
   width: 100%;
-  margin-bottom: 0.75rem;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+  line-height: 1.375;
 }
 
 input[type=submit] {
@@ -956,7 +956,6 @@ select {
   --bg-opacity: 1;
   background-color: #ffffff;
   background-color: rgba(255, 255, 255, var(--bg-opacity));
-  margin-bottom: 0.75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
@@ -979,6 +978,7 @@ label {
   color: rgba(55, 65, 81, var(--text-opacity));
   font-weight: 700;
   margin-bottom: 0.25rem;
+  margin-top: 0.75rem;
 }
 
 td, th {
@@ -1014,7 +1014,7 @@ td, th {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 0.875rem;
 }

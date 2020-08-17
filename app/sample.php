@@ -38,4 +38,8 @@ class sample extends Model
   //   'aliquot',
   //   'parentBarcode'
   // ];
+  public function event_samples()
+  {
+    return $this->hasMany(eventSubject_sample::class);
+  }
 }
