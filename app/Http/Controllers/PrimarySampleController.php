@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\event_subject;
-use App\eventSubject_sample;
+use App\event_sample;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -100,7 +100,7 @@ class PrimarySampleController extends Controller
                 if (count($barcodes) > 0) {
                     foreach ($barcodes as $number => $barcode) {
                         if ($barcode != null) {
-                            $sample = new eventSubject_sample;
+                            $sample = new event_sample;
                             $sample->sample_id = $sample_id;
                             $sample->event_subject_id = $validatedData['event_subject_id'];
                             $sample->barcode = $barcode;
@@ -191,16 +191,16 @@ class PrimarySampleController extends Controller
             if ($subject->user_id !== auth()->user()->id) {
                 throw new Exception("You do not have permission to access this subject's record");
             }
-            $eventSubject_sample = eventSubject_sample::where('barcode', $validatedData['barcode'])
+            $event_sample = event_sample::where('barcode', $validatedData['barcode'])
                 ->where('event_subject_id', $validatedData['event_subject_id'])
                 ->first();
-            if (is_null($eventSubject_sample)) {
+            if (is_null($event_sample)) {
                 throw new Exception("This barcode does not exist in this event", 1);
             }
-            if (!$eventSubject_sample->sample->primary) {
+            if (!$event_sample->sample->primary) {
                 throw new Exception("This is not a primary sample");
             }
-            switch ($eventSubject_sample->samplestatus_id) {
+            switch ($event_sample->samplestatus_id) {
                 case 0:
                     throw new Exception("This sample had not been registered");
                     break;
@@ -210,8 +210,8 @@ class PrimarySampleController extends Controller
                     throw new Exception("Sample " . $validatedData['barcode'] . " has already been logged");
                     break;
             }
-            $eventSubject_sample->samplestatus_id = 2;
-            $eventSubject_sample->save();
+            $event_sample->samplestatus_id = 2;
+            $event_sample->save();
         } catch (\Throwable $th) {
             return back()->withErrors($th->getMessage());
         }

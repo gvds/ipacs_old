@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\eventSubject_sample;
+use App\event_sample;
 use App\sample;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -71,7 +71,7 @@ class DerivativeSampleController extends Controller
         $validatedData = $request->validate([
             'parent' => 'required|exists:event_sample,barcode'
         ]);
-        $parentsampletype = eventSubject_sample::join('samples', 'sample_id', '=', 'samples.id')
+        $parentsampletype = event_sample::join('samples', 'sample_id', '=', 'samples.id')
             ->select('event_sample.id')
             ->where('barcode', $validatedData['parent'])
             ->where('project_id', session('currentProject'))
@@ -82,7 +82,7 @@ class DerivativeSampleController extends Controller
         );
     }
 
-    public function retrieve(eventSubject_sample $event_sample)
+    public function retrieve(event_sample $event_sample)
     {
         $parentsampletype = sample::find($event_sample->sample_id);
 
@@ -131,7 +131,7 @@ class DerivativeSampleController extends Controller
                 if (count($barcodes) > 0) {
                     foreach ($barcodes as $number => $barcode) {
                         if ($barcode != null) {
-                            $sample = new eventSubject_sample;
+                            $sample = new event_sample;
                             $sample->sample_id = $sample_id;
                             $sample->event_subject_id = $validatedData['event_subject_id'];
                             $sample->barcode = $barcode;

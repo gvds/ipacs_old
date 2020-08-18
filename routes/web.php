@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/sites', 'SiteController')->except('show');
         Route::resource('/arms', 'ArmController')->except('show');
         Route::resource('/events', 'EventController')->except('show');
-        Route::resource('/samples', 'SampleController')->except('show');
+        Route::resource('/sampletypes', 'SampleTypesController')->except('show');
     });
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
@@ -119,6 +119,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/derivative/parent', 'DerivativeSampleController@parent');
         Route::get('/derivative/{event_sample}', 'DerivativeSampleController@retrieve');
         Route::post('/derivative', 'DerivativeSampleController@log');
+
+        Route::get('/event_sample', 'EventSampleController@index');
+        Route::get('/event_sample/{event_sample}', 'EventSampleController@show');
+        Route::post('/event_sample/{event_sample}/unlog', 'EventSampleController@unlog');
+        Route::post('/event_sample/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
 
+    Route::middleware('project.auth:manage-samples')->group(function () {
+    });
 });

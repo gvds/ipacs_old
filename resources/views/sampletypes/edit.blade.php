@@ -1,11 +1,11 @@
 <x-layout>
     <x-pageheader>
-        Edit Sample Types
+        Edit Sample Type
     </x-pageheader>
 
     @include('layouts.errormsg')
 
-    {{ Form::model($sample, ['route' => ['samples.update', $sample], 'method' => 'PATCH', 'class'=>'form']) }}
+    {{ Form::model($sampletype, ['route' => ['sampletypes.update', $sampletype], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Sample Name') }}
     {{ Form::text('name', null, ['required'=>'required']) }}
     {{ Form::label('primary', 'Primary') }}

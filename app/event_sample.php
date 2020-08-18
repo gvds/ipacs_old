@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class eventSubject_sample extends Pivot
+class event_sample extends Pivot
 {
     protected $table = 'event_sample';
 

@@ -4,8 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class sample extends Model
+class sampletype extends Model
 {
+  protected $table = 'samples';
+  
   protected $fillable = [
     'name',
     'project_id',
@@ -40,6 +42,6 @@ class sample extends Model
   // ];
   public function event_samples()
   {
-    return $this->hasMany(eventSubject_sample::class);
+    return $this->hasMany(event_sample::class);
   }
 }

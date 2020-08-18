@@ -51,8 +51,7 @@
           <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="#">Change Sample Volume</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Unlog Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/event_sample">Manage Sample</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>
@@ -85,7 +84,7 @@
         <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/samples">Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sampletypes">Samples</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>
