@@ -23,15 +23,25 @@
   $currentProject = \App\project::find(session('currentProject', null));
   @endphp
   <div class="flex flex-col min-h-screen">
-    @if ($currentProject)
-    <div class="text-xl font-bold bg-gray-600 text-white px-6">
-      {{ $currentProject->project }}
-    </div>
-    @endif
-    @include('layouts.nav')
-    <main class="flex-col flex-1 bg-gray-50 py-6 px-6 justify-center items-center">
-      {{ $slot }}
+    <header class='bg-gray-600'>
+      @if ($currentProject)
+      <div class="text-xl font-bold text-white px-6">
+        {{ $currentProject->project }}
+      </div>
+      @endif
+      @include('layouts.nav')
+    </header>
+    <main class="flex flex-1 bg-gray-50 py-6 px-6">
+      {{ $centred ?? ''}}
+      <div class="w-max-content">
+        {{ $slot }}
+      </div>
     </main>
+    <footer class='bg-gray-600'>
+      <div class='text-white text-opacity-75 text-xs font-semibold text-right italic'>
+        Created by: GD van der Spuy
+      </div>
+    </footer>
   </div>
 
 </body>

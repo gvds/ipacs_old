@@ -1,23 +1,23 @@
 <x-layout>
 
-        <div class="flex justify-center items-center">
-            <div class="space-y-6">
-                <a href="{{ route('home') }}">
-                    <x-logo class="w-auto h-16 mx-auto text-indigo-600" />
-                </a>
+    <x-slot name='centred'>
+        <div class="flex w-full flex-col justify-center items-center space-y-6">
+            <a href="{{ route('home') }}">
+                <x-logo class="w-auto h-16 mx-auto text-indigo-600" />
+            </a>
 
-                <h1 class="text-5xl font-extrabold tracking-wider text-center text-gray-600">
-                    {{ config('app.name') }}
-                </h1>
-                @if ($currentProject)
-                <h2 class="text-3xl font-bold text-center text-indigo-600">
-                    {{ $currentProject->project }}
-                </h2>
-                @endif
+            <h1 class="text-5xl font-extrabold tracking-wider text-center text-gray-600">
+                {{ config('app.name') }}
+            </h1>
+            @if ($currentProject)
+            <h2 class="text-3xl font-bold text-center text-indigo-600">
+                {{ $currentProject->project }}
+            </h2>
+            @endif
 
-                @include('layouts.errormsg')
+            @include('layouts.errormsg')
 
-                {{-- <ul class="list-reset">
+            {{-- <ul class="list-reset">
                     <li class="inline px-4">
                         <a href="https://tailwindcss.com"
                             class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">Tailwind
@@ -32,7 +32,7 @@
                             class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">Laravel</a>
                     </li>
                 </ul> --}}
-            </div>
         </div>
+    </x-slot>
 
-    </x-layout>
+</x-layout>
