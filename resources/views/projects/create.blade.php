@@ -9,8 +9,6 @@
     {{ Form::open(['url' => '/project', 'class' => 'form']) }}
     {{ Form::label('project', 'Project Name') }}
     {{ Form::text('project', null, ['required','maxlength'=>'50']) }}
-    {{ Form::label('redcapProject_id', 'REDCap Project') }}
-    {{ Form::select('redcapProject_id', $redcap_projects, null) }}
     {{ Form::label('owner', 'Owner', ['class'=>'text-sm']) }}
     {{ Form::select('owner', $users, null, ['required']) }}
     {{ Form::label('subject_id_prefix', 'SubjectID Prefix') }}

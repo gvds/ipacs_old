@@ -29,16 +29,8 @@ class ProjectController extends Controller
      */
     public function create(Request $request)
     {
-        $query = "select app_title, project_id from redcap_projects";
-        $linked_redcap_projects = project::where('redcapProject_id','<>','null')->pluck('redcapProject_id')->toArray();
-        if (count($linked_redcap_projects) > 0) {
-            $query .= " where project_id not in (" . implode(",",$linked_redcap_projects) . ")";
-        }
-        $redcap_projects = DB::connection('redcap')
-        ->select($query);
-        $redcap_projects = collect($redcap_projects)->pluck('app_title','project_id')->prepend('', '');
         $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
-        return view('projects.create', compact('users','redcap_projects'));
+        return view('projects.create', compact('users'));
     }
 
     /**
@@ -51,7 +43,6 @@ class ProjectController extends Controller
     {
         $validatedData = $request->validate([
             'project' => 'required|max:50|unique:projects,project',
-            'redcapProject_id' => 'numeric|nullable|unique:projects,redcapProject_id',
             'owner' => 'required|numeric',
             'subject_id_prefix' => 'max:6|nullable',
             'subject_id_digits' => 'numeric|min:2|max:6',
@@ -90,19 +81,8 @@ class ProjectController extends Controller
      */
     public function edit(project $project)
     {
-        $current_project_id = $project->redcapProject_id;
-        $query = "select app_title, project_id from redcap_projects";
-        $linked_redcap_projects = project::where('redcapProject_id','<>','null')
-        ->pluck('redcapProject_id')
-        ->toArray();
-        if (count($linked_redcap_projects) > 0) {
-            $query .= " where project_id = $current_project_id or project_id not in (" . implode(",",$linked_redcap_projects) . ")";
-        }
-        $redcap_projects = DB::connection('redcap')
-        ->select($query);
-        $redcap_projects = collect($redcap_projects)->pluck('app_title','project_id')->prepend('', '');
         $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
-        return view('projects.edit', compact('project', 'users','redcap_projects'));
+        return view('projects.edit', compact('project', 'users'));
     }
 
     /**
@@ -116,7 +96,6 @@ class ProjectController extends Controller
     {
         $validatedData = $request->validate([
             'project' => 'required|max:50|unique:projects,project,' . $project->id . ',id',
-            'redcapProject_id' => 'numeric|nullable|unique:projects,redcapProject_id,' . $project->id . ',id',
             'owner' => 'required|numeric',
             'subject_id_prefix' => 'max:6|nullable',
             'subject_id_digits' => 'numeric|min:2|max:6',
