@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\event_sample;
-use App\sample;
+use App\sampletype;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,7 +50,7 @@ class DerivativeSampleController extends Controller
                 throw new Exception("This event has been cancelled");
             }
 
-            $sampletypes = \App\sample::with(['event_samples' => function ($query) use ($event_subject) {
+            $sampletypes = sampletype::with(['event_samples' => function ($query) use ($event_subject) {
                 $query->where('event_subject_id', $event_subject->id)
                     ->whereIn('samplestatus_id', [2, 3, 9]);
             }])
@@ -59,7 +59,6 @@ class DerivativeSampleController extends Controller
                 ->orderBy('sampleGroup')
                 ->orderBy('name')
                 ->get();
-            // dd($sampletypes);
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -71,7 +70,7 @@ class DerivativeSampleController extends Controller
         $validatedData = $request->validate([
             'parent' => 'required|exists:event_sample,barcode'
         ]);
-        $parentsampletype = event_sample::join('samples', 'sample_id', '=', 'samples.id')
+        $parentsampletype = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
             ->select('event_sample.id')
             ->where('barcode', $validatedData['parent'])
             ->where('project_id', session('currentProject'))
@@ -84,9 +83,9 @@ class DerivativeSampleController extends Controller
 
     public function retrieve(event_sample $event_sample)
     {
-        $parentsampletype = sample::find($event_sample->sample_id);
+        $parentsampletype = sampletype::find($event_sample->sampletype_id);
 
-        $sampletypes = sample::with(['event_samples' => function ($query) use ($event_sample) {
+        $sampletypes = sampletype::with(['event_samples' => function ($query) use ($event_sample) {
             $query->where('event_subject_id', $event_sample->event_subject_id);
         }])
             ->where('parentSampleType_id', $parentsampletype->id)
@@ -96,7 +95,6 @@ class DerivativeSampleController extends Controller
             ->orderBy('name')
             ->get();
         return view('derivativesamples.log', compact('sampletypes', 'event_sample'));
-        dd($sampletypes);
     }
 
     public function log(Request $request)
@@ -127,20 +125,20 @@ class DerivativeSampleController extends Controller
         $user = auth()->user();
         $records = 0;
         if (isset($validatedData['type'])) {
-            foreach ($validatedData['type'] as $sample_id => $barcodes) {
+            foreach ($validatedData['type'] as $sampletype_id => $barcodes) {
                 if (count($barcodes) > 0) {
                     foreach ($barcodes as $number => $barcode) {
                         if ($barcode != null) {
                             $sample = new event_sample;
-                            $sample->sample_id = $sample_id;
+                            $sample->sampletype_id = $sampletype_id;
                             $sample->event_subject_id = $validatedData['event_subject_id'];
                             $sample->barcode = $barcode;
-                            $sample->volume = $validatedData['vol'][$sample_id][$number];
+                            $sample->volume = $validatedData['vol'][$sampletype_id][$number];
                             $sample->site = $user->projectSite;
                             $sample->loggedBy = $user->id;
                             $sample->logTime = now();
                             $sample->samplestatus_id = 2;
-                            $sample->aliquot = $validatedData['aliquot'][$sample_id][$number];
+                            $sample->aliquot = $validatedData['aliquot'][$sampletype_id][$number];
                             $sample->save();
                             $records++;
                         }
@@ -148,6 +146,6 @@ class DerivativeSampleController extends Controller
                 }
             }
         }
-        return back()->withInput($request->input())->with('message', "$records samples registered");
+        return back()->withInput($request->input())->with('message', "$records samples logged");
     }
 }

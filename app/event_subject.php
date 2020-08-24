@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class event_subject extends Pivot
 {
+
     public function subject()
     {
         return $this->belongsTo(subject::class);
@@ -20,4 +21,5 @@ class event_subject extends Pivot
     {
         return $this->belongsTo(eventStatus::class,'eventstatus_id','id');
     }
+
 }

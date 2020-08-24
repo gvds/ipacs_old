@@ -31,6 +31,7 @@
  * .btn { ... }
  * .form-input { ... }
  */
+
 input {
     @apply border border-gray-200 rounded shadow py-1 px-3 text-gray-600 leading-snug;
 }
@@ -58,7 +59,7 @@ label {
 }
 
 td, th {
-    @apply px-3 py-1;
+    @apply px-3 py-2;
 }
 
 .errorbox {

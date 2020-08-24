@@ -10,11 +10,26 @@ class event_sample extends Pivot
 
     public function event_subject()
     {
-        return $this->belongsTo('event_subject','event_subject_id','id');
+        return $this->belongsTo('event_subject', 'event_subject_id', 'id');
     }
 
-    public function sample()
+    public function sampletype()
     {
-        return $this->belongsTo(sample::class,'sample_id','id');
+        return $this->belongsTo(sampletype::class, 'sampletype_id', 'id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(sampleStatus::class, 'samplestatus_id', 'id');
+    }
+
+    public function derivativeCount()
+    {
+        return event_sample::where('parentBarcode',$this->barcode)->count();
+    }
+
+    public function sampleActor($user_id)
+    {
+        return \App\User::find($user_id);
     }
 }

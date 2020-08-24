@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style='font-size:16px'>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- CSRF Token -->
-  <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>{{ config('app.name') }}</title>
 
@@ -19,13 +19,20 @@
 </head>
 
 <body>
-
-    <div class="flex flex-col min-h-screen">
-      @include('layouts.nav')
-      <main class="flex-col flex-1 p-6 bg-gray-50 lg:px-8">
-        {{ $slot }}
-      </main>
+  @php
+  $currentProject = \App\project::find(session('currentProject', null));
+  @endphp
+  <div class="flex flex-col min-h-screen">
+    @if ($currentProject)
+    <div class="text-xl font-bold bg-gray-600 text-white px-6">
+      {{ $currentProject->project }}
     </div>
+    @endif
+    @include('layouts.nav')
+    <main class="flex-col flex-1 bg-gray-50 py-6 px-6 justify-center items-center">
+      {{ $slot }}
+    </main>
+  </div>
 
 </body>
 

@@ -12,9 +12,20 @@ class EventSampleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('sample')
+        $validatedData = $request->validate([
+            'barcode' => 'nullable|regex:/^[A-Z]{0,6}\d{3,8}$/|exists:event_sample,barcode'
+        ]);
+        if (array_key_exists('barcode',$validatedData)) {
+            $sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            ->select('event_sample.*')
+            ->where('barcode', $validatedData['barcode'])
+            ->where('project_id', session('currentProject'))
+            ->first();
+           return redirect("/samples/$sample->id");
+        }
+        return view('samples.index');
     }
 
     /**
@@ -46,7 +57,10 @@ class EventSampleController extends Controller
      */
     public function show(event_sample $event_sample)
     {
-        if()
+        if ($event_sample->samplestatus_id == 0) {
+            return back()->withErrors("Sample barcode " . $event_sample->barcode . " is currently unassigned");
+        }
+        return view('samples.show', compact('event_sample'));
     }
 
     /**
@@ -81,5 +95,35 @@ class EventSampleController extends Controller
     public function destroy(event_sample $event_sample)
     {
         //
+    }
+
+    /**
+     * Unlog the specified sample.
+     *
+     * @param  \App\event_sample  $event_sample
+     * @return \Illuminate\Http\Response
+     */
+    public function unlog(event_sample $event_sample)
+    {
+        $event_sample->samplestatus_id = 0;
+        $event_sample->save();
+        return redirect('/samples')->with('message',"Sample $event_sample->barcode has been unlogged");
+    }
+
+     /**
+     * Update the specified sample's volume.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\event_sample  $event_sample
+     * @return \Illuminate\Http\Response
+     */
+    public function volumeUpdate(Request $request, event_sample $event_sample)
+    {
+        $validatedData = $request->validate([
+            'volume' => 'required|numeric'
+        ]);
+        $event_sample->volume = $validatedData['volume'];
+        $event_sample->save();
+        return back()->with('message',"Volume has been updated");
     }
 }

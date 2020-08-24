@@ -26,8 +26,6 @@
     {{ Form::text('subject_event_labels', null) }}
     {{ Form::label('study_id_labels', 'Study ID Labels') }}
     {{ Form::text('study_id_labels', null) }}
-    {{ Form::label('event_order', 'Event Order') }}
-    {{ Form::text('event_order', null) }}
     {{ Form::label('active', 'Active') }}
     {{ Form::radio('active', 0) }} No {{ Form::radio('active', 1, true) }} Yes
     {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}

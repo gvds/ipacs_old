@@ -18,6 +18,7 @@ class CreateSitesTable extends Migration
             $table->string('name',20);
             $table->unsignedBigInteger('project_id');
             $table->timestamps();
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 

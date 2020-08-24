@@ -7,23 +7,7 @@ use Illuminate\Http\Request;
 
 class SampleTypesController extends Controller
 {
-    public $currentProject;
-
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->currentProject = \App\project::find(session('currentProject', null));
-            if (is_null($this->currentProject)) {
-                return redirect('/')->with('warning', 'There is currently no selected project');
-            }
-            $user = auth()->user();
-            if (!$user->isAbleTo('administer-projects', $this->currentProject->team->name)) {
-                return redirect('/')->with('error', 'You do not have the necessary access rights');
-            }
-            return $next($request);
-        });
-    }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +15,8 @@ class SampleTypesController extends Controller
      */
     public function index()
     {
-        $sampletypes = $this->currentProject->sampletypes;
+        $currentProject = request('currentProject');
+        $sampletypes = $currentProject->sampletypes;
         return view('sampletypes.index', compact('sampletypes'));
     }
 
@@ -42,8 +27,9 @@ class SampleTypesController extends Controller
      */
     public function create()
     {
+        $currentProject = request('currentProject');
         $tubeLabelTypes = ['1'=>'Adhesive','2'=>'FluidX 1ml','3'=>'FluidX 300ul'];
-        $sampleTypes = $this->currentProject->sampletypes->pluck('name','id')->prepend('','');
+        $sampleTypes = $currentProject->sampletypes->pluck('name','id')->prepend('','');
         return view('sampletypes.create', compact('tubeLabelTypes','sampleTypes'));
     }
 
@@ -55,6 +41,7 @@ class SampleTypesController extends Controller
      */
     public function store(Request $request)
     {
+        $currentProject = request('currentProject');
         $validatedData = $request->validate([
             'name' => 'required|max:50',
             'primary' => 'required|boolean',
@@ -69,7 +56,7 @@ class SampleTypesController extends Controller
             'storageSampleType' => 'nullable|max:25',
             'parentSampleType_id' => 'nullable|integer'
         ]);
-        $validatedData['project_id'] = $this->currentProject->id;
+        $validatedData['project_id'] = $currentProject->id;
         sampletype::create($validatedData);
         return redirect('sampletypes');
     }
@@ -93,8 +80,9 @@ class SampleTypesController extends Controller
      */
     public function edit(sampletype $sampletype)
     {
+        $currentProject = request('currentProject');
         $tubeLabelTypes = ['1'=>'Adhesive','2'=>'FluidX 1ml','3'=>'FluidX 300ul'];
-        $sampleTypes = $this->currentProject->sampletypes->pluck('name','id')->prepend('','');
+        $sampleTypes = $currentProject->sampletypes->pluck('name','id')->prepend('','');
         return view('sampletypes.edit', compact('sampletype','tubeLabelTypes','sampleTypes'));
     }
 

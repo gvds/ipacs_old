@@ -14,11 +14,11 @@ class CreateEventSampleTable extends Migration
     public function up()
     {
         Schema::create('event_sample', function (Blueprint $table) {
-            $table->bigInteger('sample_id')->unsigned();
+            $table->bigInteger('id')->unsigned();
             $table->bigInteger('event_subject_id')->unsigned();
             $table->string('barcode',20);
             $table->unsignedBigInteger('site_id')->nullable();
-            $table->unsignedBigInteger('sample_id')->nullable();
+            $table->unsignedBigInteger('sampletype_id')->nullable();
             $table->unsignedBigInteger('samplestatus_id')->default(0);
             $table->unsignedBigInteger('location')->nullable();
             $table->string('labelType',15);
@@ -31,7 +31,7 @@ class CreateEventSampleTable extends Migration
             $table->tinyInteger('aliquot')->unsigned()->nullable();
             $table->string('parentBarcode',20)->nullable();
             $table->timestamps();
-            $table->foreign('sample_id')->references('id')->on('samples')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('sampletype_id')->references('id')->on('sampletypes')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('event_subject_id')->references('id')->on('event_subject')->onDelete('restrict')->onUpdate('cascade');
         });
     }

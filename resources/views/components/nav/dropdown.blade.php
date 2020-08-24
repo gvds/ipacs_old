@@ -14,7 +14,7 @@ $alignmentClasses = [
     </div>
 
     {{-- <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white text-black rounded shadow-md py-2 mt-0 w-60" --}}
-    <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white rounded shadow-md py-2 mt-0 w-60"
+    <div class="absolute {{ $alignmentClasses[$alignment] }} z-20 bg-white rounded shadow-md py-2 mt-0 w-max-content"
         x-show="open"
         x-transition:enter="transition transform duration-300 ease-out"
         x-transition:enter-start="opacity-0 scale-95"

@@ -6,6 +6,8 @@ use Laratrust\Models\LaratrustTeam;
 
 class Team extends LaratrustTeam
 {
+    public $incrementing = false;
+    
     public $guarded = [];
 
     // public function permission_users()
@@ -16,7 +18,7 @@ class Team extends LaratrustTeam
     public function users()
     {
         return $this->belongsToMany(User::class)->withTimestamps()
-        ->withPivot('site_id');
+        ->withPivot('site_id','redcap_api_token');
     }
 
     public function sites()

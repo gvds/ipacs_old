@@ -3,7 +3,9 @@
 namespace App;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class subject extends Model
@@ -112,6 +114,16 @@ class subject extends Model
     return $this->save();
   }
 
+  public function cancelEvents()
+  {
+    $this->events()
+      ->whereNotIn('eventstatus_id', [3, 4, 5])
+      ->update(['eventstatus_id' => 6]);
+    $this->events()
+      ->where('labelStatus', '1')
+      ->update(['labelStatus' => 0]);
+  }
+
   public function reverseArmSwitch()
   {
     $this->arm_id = $this->previous_arm_id;
@@ -128,21 +140,21 @@ class subject extends Model
       return (false);
     }
     $previousEvents = $this->events()->where('arm_id', $previousArm)->get();
-    foreach ($previousEvents as $key => $previousEvent) {
-      $response = $this->events()->wherePivot('eventstatus_id', 6)->updateExistingPivot($previousEvent->id, ['eventstatus_id' => 0]);
+    foreach ($previousEvents as $previousEvent) {
+      if (Carbon::parse($previousEvent->pivot->maxDate) < Carbon::today()) {
+        $evenstatus_id = 5;
+      } else {
+        $evenstatus_id = 0;
+      }
+      $response = $this->events()
+        ->wherePivot('eventstatus_id', 6)
+        ->updateExistingPivot($previousEvent->id, ['eventstatus_id' => $evenstatus_id]);
     }
     return true;
   }
 
   public function createArmEvents($arm, $baselineDate = null)
   {
-    $existingEvents = $this->events()->get();
-    foreach ($existingEvents as $existingEvent) {
-      if ($existingEvent->pivot->eventstatus_id === 0) {
-        $event = \App\event::find($existingEvent->id);
-        $this->events()->wherePivot('eventstatus_id', 0)->updateExistingPivot($existingEvent->id, ['eventstatus_id' => 6]);
-      }
-    }
     foreach ($arm->events as $event) {
       if ($event->active) {
         $response = $this->events()->attach($event->id);
@@ -154,9 +166,9 @@ class subject extends Model
         }
       }
     }
-    // Could run label queue update function here
     return true;
   }
+
 
   public function setEventDates(Event $event, $baselineDate)
   {
@@ -187,12 +199,68 @@ class subject extends Model
         'maxDate' => $maxDate,
         'logDate' => $timestamp
       ]);
-      
+
       if ($response === 1) {
         return true;
       } else {
         return ($response);
       }
+    }
+  }
+
+  private function curl(array $params, array $data = [])
+  {
+    $user = Auth::user()->teams()->where('teams.id', session('currentProject'))->first();
+    $token = $user->pivot->redcap_api_token;
+
+    $fields = array(
+      'token'   => $token,
+      'format'  => 'json',
+      'type'    => 'flat',
+      'data'    => json_encode([$data]),
+    );
+
+    $fields = array_merge($fields, $params);
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, config('services.redcap.url'));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // Set to TRUE for production use
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+
+    return curl_exec($ch);
+  }
+
+  public function createREDCapRecord()
+  {
+    $arm_num = arm::find($this->arm_id)->arm_num; // Have to do it this way because changes are not reflected in relations
+    $params = [
+      'content' => 'event',
+      'arms' => [$arm_num]
+    ];
+    $events = $this->curl($params);
+    $event_name = json_decode($events)[0]->unique_event_name;
+
+    // New SubjectID for REDCap database
+    $params = [
+      'content' => 'record',
+    ];
+    $data = [
+      'record_id' => $this->subjectID,
+      'redcap_event_name' => $event_name,
+    ];
+    $response = $this->curl($params, $data);
+    $returnmsg = json_decode($response, true);
+    if (array_key_exists("error", $returnmsg)) {
+      throw new Exception($returnmsg['error']);
+    } elseif ($returnmsg['count'] === 0) {
+      throw new Exception('REDCap record was not created');
     }
   }
 }

@@ -51,7 +51,7 @@ class PrimarySampleController extends Controller
                 throw new Exception("This event has been cancelled");
             }
 
-            $sampletypes = \App\sample::with(['event_samples' => function ($query) use ($event_subject) {
+            $sampletypes = \App\sampletype::with(['event_samples' => function ($query) use ($event_subject) {
                 $query->where('event_subject_id', $event_subject->id);
             }])
                 ->where('project_id', $project_id)
@@ -96,22 +96,22 @@ class PrimarySampleController extends Controller
         $user = auth()->user();
         $records = 0;
         if (isset($validatedData['type'])) {
-            foreach ($validatedData['type'] as $sample_id => $barcodes) {
+            foreach ($validatedData['type'] as $sampletype_id => $barcodes) {
                 if (count($barcodes) > 0) {
                     foreach ($barcodes as $number => $barcode) {
                         if ($barcode != null) {
                             $sample = new event_sample;
-                            $sample->sample_id = $sample_id;
+                            $sample->sampletype_id = $sampletype_id;
                             $sample->event_subject_id = $validatedData['event_subject_id'];
                             $sample->barcode = $barcode;
-                            $sample->volume = $validatedData['vol'][$sample_id][$number];
+                            $sample->volume = $validatedData['vol'][$sampletype_id][$number];
                             $sample->site = $user->projectSite;
                             if ($validatedData['log'] == 1) {
                                 $sample->loggedBy = $user->id;
                                 $sample->logTime = now();
                             }
                             $sample->samplestatus_id = $validatedData['log'] + 1;
-                            $sample->aliquot = $validatedData['aliquot'][$sample_id][$number];
+                            $sample->aliquot = $validatedData['aliquot'][$sampletype_id][$number];
                             $sample->save();
                             $records++;
                         }
@@ -162,7 +162,7 @@ class PrimarySampleController extends Controller
                 throw new Exception("This event has been cancelled");
             }
 
-            $samples = \App\sample::join('event_sample', 'samples.id', '=', 'sample_id')
+            $sampletypes = \App\sampletype::join('event_sample', 'sampletypes.id', '=', 'sampletype_id')
                 ->where('event_subject_id', $event_subject->id)
                 ->where('project_id', $project_id)
                 ->where('primary', true)
@@ -174,7 +174,7 @@ class PrimarySampleController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
         $samplestatuses = \App\sampleStatus::pluck('samplestatus', 'id');
-        return view('primarysamples.log', compact('samples', 'samplestatuses', 'event_subject'));
+        return view('primarysamples.log', compact('sampletypes', 'samplestatuses', 'event_subject'));
     }
 
     public function log(Request $request)
@@ -197,7 +197,7 @@ class PrimarySampleController extends Controller
             if (is_null($event_sample)) {
                 throw new Exception("This barcode does not exist in this event", 1);
             }
-            if (!$event_sample->sample->primary) {
+            if (!$event_sample->sampletype->primary) {
                 throw new Exception("This is not a primary sample");
             }
             switch ($event_sample->samplestatus_id) {

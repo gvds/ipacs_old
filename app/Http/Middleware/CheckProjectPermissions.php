@@ -23,7 +23,7 @@ class CheckProjectPermissions
             return redirect('/')->with('warning', 'There is currently no selected project');
         }
         $user = auth()->user();
-        if (!$user->isAbleTo($permission, $this->currentProject->team->name)) {
+        if (!$user->isAbleTo($permission, $this->currentProject->team->name) and $user->id !== $this->currentProject->owner) {
             return redirect('/')->with('error', 'You do not have the necessary rights to do access that function in this project');
         }
         $request->request->add(['currentProject' => $this->currentProject]);

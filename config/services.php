@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'redcap' => [
+        'url' => env('REDCAP_URL'),
+        'api_super_token' => env('REDCAP_API_TOKEN'),
+    ],
+
 ];

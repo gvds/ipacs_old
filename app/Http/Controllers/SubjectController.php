@@ -6,7 +6,7 @@ use App\subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
@@ -49,13 +49,13 @@ class SubjectController extends Controller
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {  // Does this arm accept new IDs?
-                    $arm = \App\arm::find($value)->first();
+                    $arm = \App\arm::find($value);
                     if ($arm->manual_enrol === 0) {
                         $fail('Subjects cannot be enroled into this ' . $attribute);
                     }
                 },
                 function ($attribute, $value, $fail) {  // Does this arm belong to the current project?
-                    $arm = \App\arm::find($value)->first();
+                    $arm = \App\arm::find($value);
                     if ($arm->project_id !== request('currentProject')->id) {
                         $fail('This ' . $attribute . ' does not belong to the current project');
                     }
@@ -69,6 +69,7 @@ class SubjectController extends Controller
         if ($response !== 0) {
             return redirect()->back()->with('error', $response . ' - No new IDs created')->withInput();
         }
+
         return redirect('/')->with('message', $validator->valid()['records'] . ' new subject IDs created');
     }
 
@@ -89,7 +90,7 @@ class SubjectController extends Controller
         $events = $subject
             ->events()
             ->with('arm')
-            ->orderBy('event_order')
+            ->orderBy('offset')
             ->get()
             ->sortBy(function ($event) {
                 return $event->arm->arm_num;
@@ -168,6 +169,12 @@ class SubjectController extends Controller
                 }
             }
 
+            if (isset($request->currentProject->redcapProject_id)) {
+                $subject->createREDCapRecord();
+            }
+
+            \App\Label::addEventsToLabelQueue();
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -199,6 +206,9 @@ class SubjectController extends Controller
                 throw new \ErrorException("Subject $subject->subjectID failed to switch : $response");
             }
 
+            // Cancel all outstanding events
+            $subject->cancelEvents();
+
             // Add event entries for the subject's arm to the event_subject table
             $arm = $subject->arm()->with('events')->first();
             $response = $subject->createArmEvents($arm);
@@ -211,6 +221,12 @@ class SubjectController extends Controller
             foreach ($events as $event) {
                 $response = $subject->setEventDates($event, $validatedData['switchDate']);
             }
+
+            if (isset($request->currentProject->redcapProject_id)) {
+                $subject->createREDCapRecord();
+            }
+
+            \App\Label::addEventsToLabelQueue();
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -241,6 +257,9 @@ class SubjectController extends Controller
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be reverted : $response");
             }
+
+            \App\Label::addEventsToLabelQueue();
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -273,6 +292,8 @@ class SubjectController extends Controller
         $subject->subject_status = 1;
         $subject->save();
         return redirect()->back()->with('message', "Subject Restored");
+
+        \App\Label::addEventsToLabelQueue();
     }
 
     /**

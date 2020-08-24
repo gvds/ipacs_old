@@ -6,7 +6,7 @@
 
     @include('layouts.errormsg')
 
-    @if(!isset($samples))
+    @if(!isset($sampletypes))
 
     {{ Form::open(['url' => '/primary.log/retrieve', 'class' => 'form', 'method' => 'GET']) }}
     {{ Form::text('pse', null, ['placeholder'=>'Scan PSE barcode...','autocomplete'=>'off', 'autofocus']) }}
@@ -31,30 +31,30 @@
             @php
             $type = "";
             @endphp
-            @foreach ($samples as $sample)
-            @if ($sample->name != $type)
+            @foreach ($sampletypes as $sampletype)
+            @if ($sampletype->name != $type)
             @if (!$loop->first)
             </tr>
             @endif
             <tr>
                 <td>
-                    <div class='font-medium w-max-content'>{{$sample->name}}</div>
+                    <div class='font-medium w-max-content'>{{$sampletype->name}}</div>
                 </td>
                 @endif
                 <td class='justify-start'>
-                    @if ($sample->samplestatus_id == 2)
+                    @if ($sampletype->samplestatus_id == 2)
                     <div class='text-sm text-gray-600 bg-green-200 px-2 border-cool-gray-300 border rounded shadow'>
-                        {{$sample->barcode}}</div>
+                        {{$sampletype->barcode}}</div>
                     @else
                     <div class='text-sm text-gray-600 bg-cool-gray-200 px-2 border-cool-gray-300 border rounded shadow'>
-                        {{$sample->barcode}}</div>
+                        {{$sampletype->barcode}}</div>
                     @endif
                     <div
                         class='flex text-gray-500 text-xs px-2 my-1 mr-1 w-full bg-indigo-200 border border-gray-300 rounded shadow'>
-                        {{$sample->volume}}</div>
+                        {{$sampletype->volume}}</div>
                 </td>
                 @php
-                $type = $sample->name;
+                $type = $sampletype->name;
                 @endphp
                 @if ($loop->last)
             </tr>

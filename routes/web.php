@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/{project}/select', 'ProjectController@select');
     Route::resource('/project', 'ProjectController');
 
+    Route::get('/redcapproject/new', 'RedcapController@create');
+    Route::post('/redcapproject', 'RedcapController@store');
+    Route::get('/redcapproject/{project}/edit', 'RedcapController@edit');
+    Route::patch('/redcapproject/{project}', 'RedcapController@update');
+
     Route::group(['middleware' => ['permission:manage-users']], function () {
         Route::resource('/users', 'UserController', ['except' => ['show']]);
         Route::get('/users/{user}/roles', 'UserController@editroles');
@@ -69,7 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/team/{user}', 'TeamController@destroymember');
     });
 
-    Route::middleware('project.auth:administer-projects')->group(function () {
+    Route::middleware('project.auth:administer-project')->group(function () {
         Route::resource('/sites', 'SiteController')->except('show');
         Route::resource('/arms', 'ArmController')->except('show');
         Route::resource('/events', 'EventController')->except('show');
@@ -120,12 +125,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/derivative/{event_sample}', 'DerivativeSampleController@retrieve');
         Route::post('/derivative', 'DerivativeSampleController@log');
 
-        Route::get('/event_sample', 'EventSampleController@index');
-        Route::get('/event_sample/{event_sample}', 'EventSampleController@show');
-        Route::post('/event_sample/{event_sample}/unlog', 'EventSampleController@unlog');
-        Route::post('/event_sample/{event_sample}/volume', 'EventSampleController@volumeUpdate');
+        Route::get('/samples', 'EventSampleController@index');
+        Route::get('/samples/{event_sample}', 'EventSampleController@show');
+        Route::get('/samples/{event_sample}/unlog', 'EventSampleController@unlog');
+        Route::post('/samples/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
 
     Route::middleware('project.auth:manage-samples')->group(function () {
+    });
+
+    Route::middleware('project.auth:administer-project')->group(function () {
+    // Route::group(['middleware' => ['role:admin|sysadmin']], function () {
+        Route::get('/redcap/arms', 'RedcapController@arms');
+        Route::get('/redcap/events', 'RedcapController@events');
+        Route::get('/redcap/users', 'RedcapController@users');
+        Route::get('/redcap/users/direct', 'RedcapController@usersdirect');
+        Route::get('/redcap/project', 'RedcapController@project');
+        Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
 });

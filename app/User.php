@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laratrust\Traits\LaratrustUserTrait;
-use DB;
 
 class User extends Authenticatable
 {
@@ -45,9 +45,10 @@ class User extends Authenticatable
         return $this->firstname . ' ' . $this->surname;
     }
 
-    public function team()
+    public function teams()
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsToMany(Team::class)
+            ->withPivot('site_id','redcap_api_token');
     }
 
     public function team_member_permissions()
@@ -71,5 +72,4 @@ class User extends Authenticatable
             ->first();
         return $site;
     }
-
 }

@@ -10,7 +10,7 @@
     {{ Form::label('project', 'Project Name') }}
     {{ Form::text('project', null, ['required','maxlength'=>'50']) }}
     {{ Form::label('redcapProject_id', 'REDCap Project') }}
-    {{ Form::select('redcapProject_id', ['' => '', '1' => '1', '2' => '2', '3' => '3', '4' => '4']) }}
+    {{ Form::select('redcapProject_id', $redcap_projects) }}
     {{ Form::label('owner', 'Owner', ['class'=>'text-sm']) }}
     {{ Form::select('owner', $users, null, ['required']) }}
     {{ Form::label('subject_id_prefix', 'SubjectID Prefix') }}
@@ -20,8 +20,8 @@
     {{ Form::label('storageProjectName', 'Storage Project Name') }}
     {{ Form::text('storageProjectName', null, ['maxlength'=>'15']) }}
     {{ Form::label('label_id', 'Label Format') }}
-    {{ Form::select('label_id', ['Large' => 'Large', 'Small' => 'Small']) }}
-    {{ Form::submit('Save', ['class' => 'w-full']) }}
+    {{ Form::select('label_id', ['L7651_mod' => 'L7651_mod', 'L7651' => 'L7651'], null) }}
+    {{ Form::submit('Save', ['class' => 'w-full mt-2']) }}
     <x-buttonlink href='/project' class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 

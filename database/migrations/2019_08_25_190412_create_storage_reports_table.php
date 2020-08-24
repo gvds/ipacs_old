@@ -17,7 +17,7 @@ class CreateStorageReportsTable extends Migration
             $table->bigIncrements('storageReport_id');
             $table->bigInteger('project_id')->unsigned();
             $table->string('loggedBy',15);
-            $table->bigInteger('sample_id')->unsigned();
+            $table->bigInteger('sampletype_id')->unsigned();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->timestamps();
             $table->foreign('project_id')->references('project_id')->on('projects');

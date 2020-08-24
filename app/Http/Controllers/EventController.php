@@ -44,7 +44,6 @@ class EventController extends Controller
             'name' => 'required|min:3|max:50',
             'redcap_event_id' => 'nullable|integer',
             'arm_id' => 'required|exists:arms,id',
-            'redcap_event_id' => 'nullable|integer',
             'autolog' => 'required|boolean',
             'offset' => 'required|integer|min:0',
             'offset_ante_window' => 'required|integer|min:0',
@@ -52,7 +51,6 @@ class EventController extends Controller
             'name_labels' => 'required|integer|min:0',
             'subject_event_labels' => 'required|integer|min:0',
             'study_id_labels' => 'required|integer|min:0',
-            'event_order' => 'required|integer|min:0',
             'active' => 'required|boolean'
         ]);
         event::create($validatedData);
@@ -96,7 +94,6 @@ class EventController extends Controller
             'name' => 'required|min:3|max:50',
             'redcap_event_id' => 'nullable|integer',
             'arm_id' => 'required|exists:arms,id',
-            'redcap_event_id' => 'nullable|integer',
             'autolog' => 'required|boolean',
             'offset' => 'required|integer|min:0',
             'offset_ante_window' => 'required|integer|min:0',
@@ -104,7 +101,6 @@ class EventController extends Controller
             'name_labels' => 'required|integer|min:0',
             'subject_event_labels' => 'required|integer|min:0',
             'study_id_labels' => 'required|integer|min:0',
-            'event_order' => 'required|integer|min:0',
             'active' => 'required|boolean'
         ]);
         $event->update($validatedData);

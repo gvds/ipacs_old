@@ -7,6 +7,11 @@
                 New Project
             </x-buttonlink>
         </x-slot>
+        <x-slot name='button2'>
+            <x-buttonlink href="/redcapproject/new">
+                New REDCap Project
+            </x-buttonlink>
+        </x-slot>
     </x-pageheader>
 
     @if (count($projects))
@@ -37,7 +42,11 @@
             <td>{{$project->last_subject_id}}</td>
             <td class="text-center">{{$project->active}}</td>
             <td>
+                @if (isset($project->redcapProject_id))
+                <x-buttonlink href='/redcapproject/{{$project->id}}/edit'>Edit</x-buttonlink>
+                @else
                 <x-buttonlink href='/project/{{$project->id}}/edit'>Edit</x-buttonlink>
+                @endif
             </td>
             <td>
                 <x-delConfirm url='/project/{{$project->id}}' />

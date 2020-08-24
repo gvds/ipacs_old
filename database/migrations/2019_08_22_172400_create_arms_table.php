@@ -19,10 +19,11 @@ class CreateArmsTable extends Migration
             $table->bigInteger('project_id')->unsigned();
             $table->bigInteger('redcap_arm_id')->unsigned()->nullable();
             $table->tinyInteger('arm_num')->unsigned()->nullable();
-            $table->boolean('manual_enrol')->default(1);
+            $table->boolean('manual_enrol')->default(0);
             $table->string('switcharms',100)->nullable();
             $table->timestamps();
             $table->foreign('project_id')->references('id')->on('projects');
+            $table->unique(['project_id','arm_num'],'project_id_arm_num');
         });
     }
 

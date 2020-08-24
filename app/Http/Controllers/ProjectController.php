@@ -6,6 +6,7 @@ use App\project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Team;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -28,8 +29,16 @@ class ProjectController extends Controller
      */
     public function create(Request $request)
     {
+        $query = "select app_title, project_id from redcap_projects";
+        $linked_redcap_projects = project::where('redcapProject_id','<>','null')->pluck('redcapProject_id')->toArray();
+        if (count($linked_redcap_projects) > 0) {
+            $query .= " where project_id not in (" . implode(",",$linked_redcap_projects) . ")";
+        }
+        $redcap_projects = DB::connection('redcap')
+        ->select($query);
+        $redcap_projects = collect($redcap_projects)->pluck('app_title','project_id')->prepend('', '');
         $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
-        return view('projects.create', compact('users'));
+        return view('projects.create', compact('users','redcap_projects'));
     }
 
     /**
@@ -54,7 +63,7 @@ class ProjectController extends Controller
 
         // Create corrosponding Team entry
         Team::create([
-            'id' => $project->id, 
+            'id' => $project->id,
             'name' => Str::snake($validatedData['project']),
             'display_name' => $validatedData['project'],
         ]);
@@ -81,8 +90,19 @@ class ProjectController extends Controller
      */
     public function edit(project $project)
     {
+        $current_project_id = $project->redcapProject_id;
+        $query = "select app_title, project_id from redcap_projects";
+        $linked_redcap_projects = project::where('redcapProject_id','<>','null')
+        ->pluck('redcapProject_id')
+        ->toArray();
+        if (count($linked_redcap_projects) > 0) {
+            $query .= " where project_id = $current_project_id or project_id not in (" . implode(",",$linked_redcap_projects) . ")";
+        }
+        $redcap_projects = DB::connection('redcap')
+        ->select($query);
+        $redcap_projects = collect($redcap_projects)->pluck('app_title','project_id')->prepend('', '');
         $users = \App\User::orderBy('firstname')->get()->pluck('full_name', 'id')->prepend('', '');
-        return view('projects.edit', compact('project', 'users'));
+        return view('projects.edit', compact('project', 'users','redcap_projects'));
     }
 
     /**
@@ -105,7 +125,7 @@ class ProjectController extends Controller
         ]);
 
         // Update corrosponding Team entry if necessary
-        if($validatedData['project'] != $project->project){
+        if ($validatedData['project'] != $project->project) {
             Team::find($project->id)->update([
                 'name' => Str::snake($validatedData['project']),
                 'display_name' => $validatedData['project']
@@ -129,6 +149,8 @@ class ProjectController extends Controller
         // Delete corrosponding Team entry
         Team::find($project->id)->delete();
 
+        session()->forget('currentProject');
+
         return redirect('/project');
     }
 
@@ -141,20 +163,23 @@ class ProjectController extends Controller
 
     public function selectList()
     {
-        $teams = \App\User::find(Auth::user()->id)->team()->pluck('id');
-        $projects = project::whereIn('id', $teams)
-        ->where('active', true)
-        ->orderBy('project')
-        ->get();
+        $teams = \App\User::find(Auth::user()->id)->teams()->pluck('id');
+        $projects = project::where('active', true)
+            ->where(function ($query) use ($teams) {
+                $query->whereIn('id', $teams)
+                    ->orWhere('owner', Auth::user()->id);
+            })
+            ->orderBy('project')
+            ->get();
         return view('projectSelector', compact('projects'));
     }
 
     public function select(project $project)
     {
-        if (in_array($project->id, \App\User::find(Auth::user()->id)->team()->pluck('id')->toArray())) {
+        if (in_array($project->id, \App\User::find(Auth::user()->id)->teams()->pluck('id')->toArray()) or $project->owner === Auth::user()->id) {
             session(['currentProject' => $project->id]);
         } else {
-            return redirect('/')->with('error','You do not have access to that project');
+            return redirect('/')->with('error', 'You do not have access to that project');
         }
         return redirect('/');
     }

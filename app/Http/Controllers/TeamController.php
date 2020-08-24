@@ -143,10 +143,14 @@ class TeamController extends Controller
     public function updatemember(Request $request, User $user)
     {
         $request->validate([
-            'site' => 'nullable'
+            'site' => 'nullable',
+            'redcap_api_token' => 'nullable|regex:/^[0-9A-F]{32}$/'
         ]);
         $team = Team::findOrFail(session('currentProject'));
-        $team->users()->sync([$user->id => ['site_id' => $request->site]], false);
+        $team->users()->sync([$user->id => [
+            'site_id' => $request->site,
+            'redcap_api_token' => $request->redcap_api_token
+            ]], false);
         return redirect('/team');
     }
 

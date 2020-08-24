@@ -29,7 +29,7 @@
           <x-nav.dropdown-link href="/schedule/thisweek">This Week's Schedule</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/schedule/nextweek">Next Week's Schedule</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/labels/queue">Add Upcomming Labels to Queue</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels">Manage Label Print Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels/print">Print Labels</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Switch Arm</x-nav.dropdown-link> --}}
@@ -51,16 +51,16 @@
           <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/event_sample">Manage Sample</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samples">Manage Sample</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>
         <x-slot name="nav_item">
           <div>Sample Management</div>
         </x-slot>
-        <x-nav.dropdown-link href="#">Identify Sample</x-nav.dropdown-link>
+        {{-- <x-nav.dropdown-link href="#">Identify Sample</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Lookup</x-nav.dropdown-link>
-        <hr />
+        <hr /> --}}
         <x-nav.dropdown-link href="#">Allocate Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Storage Reports</x-nav.dropdown-link>
         <hr />
@@ -78,8 +78,25 @@
 
       <x-nav.dropdown>
         <x-slot name="nav_item">
+          <div>Data Management</div>
+        </x-slot>
+        <x-nav.dropdown-link href="#/datastore/manage">Manage Datastore</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="#/datastore/upload">Upload Data File</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="#/datastore/retrieve">Retrieve Data File</x-nav.dropdown-link>
+      </x-nav.dropdown>
+
+      <x-nav.dropdown>
+        <x-slot name="nav_item">
           <div>Project Administration</div>
         </x-slot>
+        <x-nav.dropdown-submenu>
+          <x-slot name="nav_item">
+            <div>REDCap</div>
+          </x-slot>
+          <x-nav.dropdown-link href="/redcap/arms">Arms</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/redcap/events">Events</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/redcap/users">Users</x-nav.dropdown-link>
+        </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="/team">Team Members</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
@@ -89,15 +106,6 @@
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
-      </x-nav.dropdown>
-
-      <x-nav.dropdown>
-        <x-slot name="nav_item">
-          <div>Data Management</div>
-        </x-slot>
-        <x-nav.dropdown-link href="#/datastore/manage">Manage Datastore</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#/datastore/upload">Upload Data File</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#/datastore/retrieve">Retrieve Data File</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       @endif
