@@ -194,7 +194,7 @@
           @if ($event->pivot->labelStatus === 2)
           <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
             @csrf
-            <x-buttonlink href="/labels/{{$event->pivot->id}}/queue">
+            <x-buttonlink href="labels/{{$event->pivot->id}}/queue">
               Q
             </x-buttonlink>
             <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>Add

@@ -2,7 +2,7 @@
     <x-pageheader>
         Sample Types
         <x-slot name='button'>
-            <x-buttonlink href="/sampletypes/create">
+            <x-buttonlink href="sampletypes/create">
                 Add New Sample Type
             </x-buttonlink>
         </x-slot>
@@ -44,7 +44,7 @@
             <td>{{$sampletype->parentSampleType_id}}</td>
             <td>{{$sampletype->active}}</td>
             <td>
-                <x-buttonlink href="/sampletypes/{{$sampletype->id}}/edit">
+                <x-buttonlink href="sampletypes/{{$sampletype->id}}/edit">
                     Edit
                 </x-buttonlink>
             </td>

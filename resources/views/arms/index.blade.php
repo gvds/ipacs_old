@@ -2,7 +2,7 @@
     <x-pageheader>
         Arms
         <x-slot name='button'>
-            <x-buttonlink href="/arms/create">
+            <x-buttonlink href="arms/create">
                 Add New Arm
             </x-buttonlink>
         </x-slot>
@@ -22,7 +22,7 @@
             <td>{{$arm->manual_enrol}}</td>
             <td>{{$arm->switcharms}}</td>
             <td>
-                <x-buttonlink href="/arms/{{$arm->id}}/edit">
+                <x-buttonlink href="arms/{{$arm->id}}/edit">
                     Edit
                 </x-buttonlink>
             </td>

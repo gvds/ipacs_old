@@ -2,7 +2,7 @@
     <x-pageheader>
         Sites
         <x-slot name='button'>
-            <x-buttonlink href="/sites/create">
+            <x-buttonlink href="sites/create">
                 Add New Site
             </x-buttonlink>
         </x-slot>
@@ -16,7 +16,7 @@
         <tr class="odd:bg-gray-100">
             <td class='py-2'>{{$site->name}}</td>
             <td>
-                <x-buttonlink href="/sites/{{$site->id}}/edit">
+                <x-buttonlink href="sites/{{$site->id}}/edit">
                     Edit
                 </x-buttonlink>
             </td>

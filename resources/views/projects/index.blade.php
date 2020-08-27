@@ -3,12 +3,12 @@
     <x-pageheader>
         Projects
         <x-slot name='button'>
-            <x-buttonlink href="/project/create">
+            <x-buttonlink href="project/create">
                 New Project
             </x-buttonlink>
         </x-slot>
         <x-slot name='button2'>
-            <x-buttonlink href="/redcapproject/new">
+            <x-buttonlink href="redcapproject/new">
                 New REDCap Project
             </x-buttonlink>
         </x-slot>

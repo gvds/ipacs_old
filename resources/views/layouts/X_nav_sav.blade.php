@@ -56,7 +56,7 @@
           class="nav-link dropdown-toggle">Administration</a>
         <ul aria-labelledby="dropdownMenu1" class="dropdown-menu border-0 shadow">
           <li><a href="#" class="dropdown-item">Users</a></li>
-          <li><a href="/projects" class="dropdown-item">Projects</a></li>
+          <li><a href="projects" class="dropdown-item">Projects</a></li>
         </ul>
       </li>
       <!-- End Level one -->

@@ -24,7 +24,6 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        // session()->pull('currentProject');
         $currentProject = \App\project::find(session('currentProject',null));
         return view('home', compact('currentProject'));
     }

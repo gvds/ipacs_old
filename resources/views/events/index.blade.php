@@ -2,7 +2,7 @@
     <x-pageheader>
         Events
         <x-slot name='button'>
-            <x-buttonlink href="/events/create">
+            <x-buttonlink href="events/create">
                 Add New Event
             </x-buttonlink>
         </x-slot>
@@ -34,7 +34,7 @@
             <td>{{$event->study_id_labels}}</td>
             <td>{{$event->active}}</td>
             <td>
-                <x-buttonlink href="/events/{{$event->id}}/edit">
+                <x-buttonlink href="events/{{$event->id}}/edit">
                     Edit
                 </x-buttonlink>
             </td>

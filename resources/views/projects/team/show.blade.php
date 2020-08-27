@@ -2,7 +2,7 @@
 
   <x-pageheader>
     Team Member: {{$user->fullname}}
-      <x-buttonlink href="/team/{{$user->id}}/edit">Edit</x-buttonlink>
+      <x-buttonlink href="team/{{$user->id}}/edit">Edit</x-buttonlink>
   </x-pageheader>
   <x-table>
 
@@ -25,7 +25,7 @@
     <tr>
       <th>Permissions</th>
       <td>{{implode(" || ",$user->team_member_permissions->where('pivot.team_id',$team->id)->pluck('name')->toArray())}}</td>
-      <td><x-buttonlink href="/team/{{$user->id}}/permissions">Edit Permissions</x-buttonlink></td>
+      <td><x-buttonlink href="team/{{$user->id}}/permissions">Edit Permissions</x-buttonlink></td>
     </tr>
   </x-table>
   <x-buttonlink href='/team'>Return</x-buttonlink>

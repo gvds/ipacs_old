@@ -3,7 +3,7 @@
     <x-pageheader>
       Team Members
       <x-slot name='button'>
-        <x-buttonlink href="/team/addmember">
+        <x-buttonlink href="team/addmember">
           Add New Member
         </x-buttonlink>
       </x-slot>
@@ -21,7 +21,7 @@
       <td>{{$teammember->name}}</td>
       <td>{{implode(" || ",$teammember->team_member_permissions->where('pivot.team_id',$currentProject->id)->pluck('name')->toArray())}}</td>
       <td>
-        <x-buttonlink href="/team/{{$teammember->id}}">Details</x-buttonlink>
+        <x-buttonlink href="team/{{$teammember->id}}">Details</x-buttonlink>
       </td>
       <td>
         <x-delConfirm url='/team/{{$teammember->id}}' />

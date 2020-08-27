@@ -4,10 +4,10 @@
 
     <!-- Left Side Of Navbar -->
     <div class="flex space-x-5">
-      <x-nav.link href="/">{{ config('app.name') }}</x-nav.link>
-      {{-- <x-nav.link href="/selectproject">My Projects</x-nav.link> --}}
+      <x-nav.link href="">{{ config('app.name') }}</x-nav.link>
+      {{-- <x-nav.link href="selectproject">My Projects</x-nav.link> --}}
       @auth
-      <x-nav.link href="/project/select">My Projects</x-nav.link>
+      <x-nav.link href="project/select">My Projects</x-nav.link>
       @endauth
     </div>
 
@@ -19,19 +19,19 @@
         <x-slot name="nav_item">
           <div>Subject Management</div>
         </x-slot>
-        <x-nav.dropdown-link href="/subjects">Manage Subjects</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/subjects/create">Generate Subject IDs</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="subjects">Manage Subjects</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="subjects/create">Generate Subject IDs</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Enrol Subject</x-nav.dropdown-link> --}}
         <x-nav.dropdown-submenu>
           <x-slot name="nav_item">
             <div>Follow-up Schedule</div>
           </x-slot>
-          <x-nav.dropdown-link href="/schedule/thisweek">This Week's Schedule</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/schedule/nextweek">Next Week's Schedule</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="schedule/thisweek">This Week's Schedule</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="schedule/nextweek">Next Week's Schedule</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/labels">Manage Label Print Queue</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/labels/print">Print Labels</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="labels">Manage Label Print Queue</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="labels/print">Print Labels</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Switch Arm</x-nav.dropdown-link> --}}
         {{-- <x-nav.dropdown-link href="#">Update Switch Arm Date</x-nav.dropdown-link> --}}
         {{-- <x-nav.dropdown-link href="#">Revert Arm Switch</x-nav.dropdown-link> --}}
@@ -41,17 +41,17 @@
         <x-slot name="nav_item">
           <div>Event & Sample Logging</div>
         </x-slot>
-        <x-nav.dropdown-link href="/event_subject">Log Event Status</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/primary">Register Primary Samples</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/primary.log">Log Primary Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="event_subject">Log Event Status</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="primary">Register Primary Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="primary.log">Log Primary Samples</x-nav.dropdown-link>
         <x-nav.dropdown-submenu>
           <x-slot name="nav_item">
             <div>Log Derivative Samples</div>
           </x-slot>
-          <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="derivative/pse">Log By Event</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/samples">Manage Sample</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="samples">Manage Sample</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>
@@ -93,15 +93,15 @@
           <x-slot name="nav_item">
             <div>REDCap</div>
           </x-slot>
-          <x-nav.dropdown-link href="/redcap/arms">Arms</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/redcap/events">Events</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/redcap/users">Users</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="redcap/arms">Arms</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="redcap/events">Events</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="redcap/users">Users</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/team">Team Members</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/sampletypes">Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="team">Team Members</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="sites">Sites</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="arms">Arms</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="events">Events</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="sampletypes">Samples</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>
@@ -124,12 +124,12 @@
           <x-slot name="nav_item">
             <div>Access Control</div>
           </x-slot>
-          <x-nav.dropdown-link href="/users">Users</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/roles">Roles</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/permissions">Permissions</x-nav.dropdown-link>
-          {{-- <x-nav.dropdown-link href="/laratrust">Access Control</x-nav.dropdown-link> --}}
+          <x-nav.dropdown-link href="users">Users</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="roles">Roles</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="permissions">Permissions</x-nav.dropdown-link>
+          {{-- <x-nav.dropdown-link href="laratrust">Access Control</x-nav.dropdown-link> --}}
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/project">Projects</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="project">Projects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Freezer Layout</x-nav.dropdown-link>
         <x-nav.dropdown-submenu alignment="left">
           <x-slot name="nav_item">
@@ -145,7 +145,7 @@
         <x-slot name="nav_item">
           <div>{{Auth::user()->firstname}}</div>
         </x-slot>
-        <x-nav.dropdown-link href="/changePassword">Change Password</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="changePassword">Change Password</x-nav.dropdown-link>
         <x-nav.dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
         document.getElementById('logout-form').submit();">
           Log out
