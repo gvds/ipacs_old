@@ -14,12 +14,14 @@
  * You can see the styles here:
  * https://unpkg.com/tailwindcss/dist/base.css
  */
-@tailwind base;
+// @tailwind base;
+@import "tailwindcss/base";
 
 /**
  * This injects any component classes registered by plugins.
  */
-@tailwind components;
+// @tailwind components;
+@import "tailwindcss/components";
 
 /**
  * Here you would add any of your custom component classes; stuff that you'd
@@ -82,7 +84,8 @@ td, th {
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.
  */
-@tailwind utilities;
+// @tailwind utilities;
+@import "tailwindcss/utilities";
 
 /**
  * Here you would add any custom utilities you need that don't come out of the

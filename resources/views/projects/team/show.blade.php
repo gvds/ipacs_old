@@ -28,5 +28,5 @@
       <td><x-buttonlink href="team/{{$user->id}}/permissions">Edit Permissions</x-buttonlink></td>
     </tr>
   </x-table>
-  <x-buttonlink href='/team'>Return</x-buttonlink>
+  <x-buttonlink :href="url('/team')">Return</x-buttonlink>
 </x-layout>

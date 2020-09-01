@@ -18,7 +18,7 @@
   {{ Form::label('restricted', 'Restricted') }}
   {{ Form::radio('restricted', 0) }} No {{ Form::radio('restricted', 1) }} Yes
   {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
-  <x-buttonlink href='/roles' class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/roles')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>

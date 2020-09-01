@@ -19,8 +19,8 @@
   {!! Form::text('telephone', null, ['required','placeholder'=>'0## ###-####']) !!}
   {!! Form::label('homesite', 'Site') !!}
   {!! Form::text('homesite', null, ['required']) !!}
-  {!! Form::submit('Save Record', ['class' => "w-full font-bold"]) !!}
-  <x-buttonlink href='/users' class='text-orange-500'>Cancel</x-buttonlink>
+  {!! Form::submit('Save Record', ['class' => "w-full mt-2 font-bold"]) !!}
+  <x-buttonlink :href="url('/users')" class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}
 
 </x-layout>

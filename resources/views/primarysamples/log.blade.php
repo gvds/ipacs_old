@@ -22,7 +22,7 @@
         {{ Form::close() }}
     </div>
     <div class='mt-2 ml-6'>
-        <x-buttonlink href='/primary.log'>Log Another Set</x-buttonlink>
+        <x-buttonlink :href="url('/primary.log')">Log Another Set</x-buttonlink>
     </div>
     </div>
 

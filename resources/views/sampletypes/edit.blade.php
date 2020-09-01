@@ -33,7 +33,7 @@
     {{ Form::label('active', 'Active') }}
     {{ Form::radio('active', 0) }} No {{ Form::radio('active', 1, true) }} Yes
     {{ Form::submit('Save Changes', ['class' => "w-full mt-2"]) }}
-    <x-buttonlink href='/events' class='text-orange-500'>Cancel</x-buttonlink>
+    <x-buttonlink :href="url('/events')" class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>

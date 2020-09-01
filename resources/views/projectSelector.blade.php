@@ -12,7 +12,7 @@
         @endempty
         @foreach ($projects as $project)
         <div class="py-1 px-3 text-center hover:font-semibold">
-            <a href="project/{{$project->id}}/select">{{$project->project}}</a>
+            <a href="/project/{{$project->id}}/select">{{$project->project}}</a>
         </div>
         @endforeach
     </div>

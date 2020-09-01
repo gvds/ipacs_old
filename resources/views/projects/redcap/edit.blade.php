@@ -19,7 +19,7 @@
     {{ Form::label('label_id', 'Label Format') }}
     {{ Form::select('label_id', ['L7651_mod' => 'L7651_mod', 'L7651' => 'L7651'], $project->label_id) }}
     {{ Form::submit('Save', ['class' => 'w-full mt-2']) }}
-    <x-buttonlink href='/project' class='text-orange-500'>Cancel</x-buttonlink>
+    <x-buttonlink :href="url('/project')" class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>

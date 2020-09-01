@@ -43,9 +43,9 @@
             <td class="text-center">{{$project->active}}</td>
             <td>
                 @if (isset($project->redcapProject_id))
-                <x-buttonlink href='/redcapproject/{{$project->id}}/edit'>Edit</x-buttonlink>
+                <x-buttonlink href='redcapproject/{{$project->id}}/edit'>Edit</x-buttonlink>
                 @else
-                <x-buttonlink href='/project/{{$project->id}}/edit'>Edit</x-buttonlink>
+                <x-buttonlink :href="url('/project/{{$project->id}}/edit')">Edit</x-buttonlink>
                 @endif
             </td>
             <td>

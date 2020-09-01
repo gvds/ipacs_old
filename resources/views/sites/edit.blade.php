@@ -9,7 +9,7 @@
   {{ Form::label('name', 'Site Name', ['class'=>'text-sm']) }}
   {{ Form::text('name', null, ['required']) }}
   {{ Form::submit('Save Changes', ['class' => 'w-full mt-2']) }}
-  <x-buttonlink href='/sites' class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/sites')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 

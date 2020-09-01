@@ -31,7 +31,7 @@
     {{ Form::label('parentSampleType_id', 'Parent Sample Type') }}
     {{ Form::select('parentSampleType_id', $sampleTypes) }}
     {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
-    <x-buttonlink href='/sampletypes' class='text-orange-500'>Cancel</x-buttonlink>
+    <x-buttonlink :href="url('/sampletypes')" class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>

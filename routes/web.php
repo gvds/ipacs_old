@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Routing\Route as RoutingRoute;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +24,12 @@ Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::middleware('guest')->group(function () {
-    Route::view('login', 'auth.login')->name('login');
+    Route::view('/login', 'auth.login')->name('login');
     // Route::view('register', 'auth.register')->name('register');
 });
 
-// Route::view('password/reset', 'auth.passwords.email')->name('password.request');
-// Route::get('password/reset/{token}', 'Auth\PasswordResetController')->name('password.reset');
+// Route::view('/password/reset', 'auth.passwords.email')->name('password.request');
+// Route::get('/password/reset/{token}', 'Auth\PasswordResetController')->name('password.reset');
 
 Route::middleware('auth')->group(function () {
     Route::get('/changePassword', 'PasswordController@showChangePasswordForm');
@@ -43,12 +44,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/project/select', 'ProjectController@selectList');
     Route::get('/project/{project}/select', 'ProjectController@select');
-    Route::resource('/project', 'ProjectController');
 
-    Route::get('/redcapproject/new', 'RedcapController@create');
-    Route::post('/redcapproject', 'RedcapController@store');
-    Route::get('/redcapproject/{project}/edit', 'RedcapController@edit');
-    Route::patch('/redcapproject/{project}', 'RedcapController@update');
+    Route::group(['middleware' => ['permission:manage-projects']], function () {
+        Route::resource('/project', 'ProjectController');
+
+        Route::get('/redcapproject/new', 'RedcapController@create');
+        Route::post('/redcapproject', 'RedcapController@store');
+        Route::get('/redcapproject/{project}/edit', 'RedcapController@edit');
+        Route::patch('/redcapproject/{project}', 'RedcapController@update');
+    });
 
     Route::group(['middleware' => ['permission:manage-users']], function () {
         Route::resource('/users', 'UserController', ['except' => ['show']]);
@@ -135,7 +139,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('project.auth:administer-project')->group(function () {
-    // Route::group(['middleware' => ['role:admin|sysadmin']], function () {
+        // Route::group(['middleware' => ['role:admin|sysadmin']], function () {
         Route::get('/redcap/arms', 'RedcapController@arms');
         Route::get('/redcap/events', 'RedcapController@events');
         Route::get('/redcap/users', 'RedcapController@users');
@@ -144,3 +148,5 @@ Route::middleware('auth')->group(function () {
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
 });
+
+URL::forceScheme('https');

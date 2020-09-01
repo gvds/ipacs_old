@@ -18,6 +18,9 @@ module.exports = {
       // whitelistPatterns: [/-active$/, /-enter$/, /-leave-to$/, /show$/],
     },
   },
+  future: {
+    removeDeprecatedGapUtilities: true,
+  },
   theme: {
     extend: {
       fontFamily: {

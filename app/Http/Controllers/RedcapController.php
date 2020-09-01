@@ -53,6 +53,7 @@ class RedcapController extends Controller
         if (count($linked_redcap_projects) > 0) {
             $query .= " where project_id not in (" . implode(",", $linked_redcap_projects) . ")";
         }
+        $query .= " order by app_title";
         $redcap_projects = DB::connection('redcap')
             ->select($query);
         $redcap_projects = collect($redcap_projects)->pluck('app_title', 'project_id')->prepend('', '');

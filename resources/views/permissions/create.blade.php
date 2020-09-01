@@ -18,7 +18,7 @@
         <!-- {!! Form::label('guard_name', 'Guard Name') !!}
         {!! Form::select('guard_name', ['web'=>'web','api'=>'api'], 'web') !!} -->
         {!! Form::submit('Save Record', ['class' => "w-full mt-4"]) !!}
-        <x-buttonlink href='/permissions' class='text-orange-500'>Cancel</x-buttonlink>
+        <x-buttonlink :href="url('/permissions')" class='text-orange-500'>Cancel</x-buttonlink>
         {!! Form::close() !!}
 
       </x-layout>

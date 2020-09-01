@@ -19,7 +19,7 @@
     {{ Form::checkbox('switcharms[]', $arm->id) }} {{$arm->name}}<br />
     @endforeach
     {{ Form::submit('Save Changes', ['class' => "w-full mt-2"]) }}
-    <x-buttonlink href='/arms' class='text-orange-500'>Cancel</x-buttonlink>
+    <x-buttonlink :href="url('/arms')" class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>
