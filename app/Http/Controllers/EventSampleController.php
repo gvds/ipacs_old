@@ -17,13 +17,21 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'barcode' => 'nullable|regex:/^[A-Z]{0,6}\d{3,8}$/|exists:event_sample,barcode'
         ]);
-        if (array_key_exists('barcode',$validatedData)) {
+        if (array_key_exists('barcode', $validatedData)) {
             $sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
-            ->select('event_sample.*')
-            ->where('barcode', $validatedData['barcode'])
-            ->where('project_id', session('currentProject'))
-            ->first();
-           return redirect("/samples/$sample->id");
+                ->select('event_sample.*')
+                ->where('barcode', $validatedData['barcode'])
+                ->where('project_id', session('currentProject'))
+                ->first();
+            if (!is_null($sample)) {
+                $subject = $sample->event_subject->subject;
+                if ($subject->site_id !== auth()->user()->project_site) {
+                    return back()->withErrors('This sample does not belong to your site');
+                }
+                return redirect("/samples/$sample->id");
+            } else {
+                return view('samples.index')->withErrors("Sample " . $validatedData['barcode'] . " was not found in this project");
+            }
         }
         return view('samples.index');
     }
@@ -59,6 +67,13 @@ class EventSampleController extends Controller
     {
         if ($event_sample->samplestatus_id == 0) {
             return back()->withErrors("Sample barcode " . $event_sample->barcode . " is currently unassigned");
+        }
+        $subject = $event_sample->event_subject->subject;
+        if ($subject->project_id !== session('currentProject')) {
+            return back()->withErrors('This sample does not belong to the current project');
+        }
+        if ($subject->site_id !== auth()->user()->project_site) {
+            return back()->withErrors('This sample does not belong to your site');
         }
         return view('samples.show', compact('event_sample'));
     }
@@ -107,10 +122,10 @@ class EventSampleController extends Controller
     {
         $event_sample->samplestatus_id = 0;
         $event_sample->save();
-        return redirect('/samples')->with('message',"Sample $event_sample->barcode has been unlogged");
+        return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
 
-     /**
+    /**
      * Update the specified sample's volume.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -124,6 +139,6 @@ class EventSampleController extends Controller
         ]);
         $event_sample->volume = $validatedData['volume'];
         $event_sample->save();
-        return back()->with('message',"Volume has been updated");
+        return back()->with('message', "Volume has been updated");
     }
 }

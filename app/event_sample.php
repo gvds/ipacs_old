@@ -10,7 +10,7 @@ class event_sample extends Pivot
 
     public function event_subject()
     {
-        return $this->belongsTo('event_subject', 'event_subject_id', 'id');
+        return $this->belongsTo(event_subject::class, 'event_subject_id', 'id');
     }
 
     public function sampletype()
