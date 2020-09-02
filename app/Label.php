@@ -18,8 +18,7 @@ class Label
           ->where('minDate', "<=", $thresholdDate)
           ->where('active', true)
           ->update(['labelStatus' => 1]);
-          return;
-    //   return redirect('/')->with('message', "$records events added to the label queue");
+          return $records;
   }
 
 }

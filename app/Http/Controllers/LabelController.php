@@ -104,20 +104,9 @@ class LabelController extends PDF_Label
 
     public function addEventsToLabelQueue()
     {
-        \App\Label::addEventsToLabelQueue();
+        $records = \App\Label::addEventsToLabelQueue();
+        return back()->with('message', "$records events added to the label queue");
     }
-    // public function addEventsToLabelQueue($thresholdDate = null)
-    // {
-    //     $thresholdDate = Carbon::parse('next friday');
-    //     $records = event_subject::where('labelStatus', '0')
-    //         ->join('events', 'event_id', 'events.id')
-    //         ->join('arms', 'arm_id', 'arms.id')
-    //         ->where('project_id', session('currentProject'))
-    //         ->where('minDate', "<=", $thresholdDate)
-    //         ->where('active', true)
-    //         ->update(['labelStatus' => 1]);
-    //     return redirect('/')->with('message', "$records events added to the label queue");
-    // }
 
     public function clear(Request $request)
     {
