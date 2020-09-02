@@ -68,6 +68,7 @@ class ScheduleController extends Controller
             $this->fpdf->Cell(25, 7, "Due Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "Start Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "End Date", '', 0, 'C');
+            $this->fpdf->Cell(25, 7, "Address", '', 0, 'C');
             $fieldtitle = "";
             for ($index = 0; $index < count($field_arr); $index++) {
                 if ($field_arr[$index]['fieldtitle'] != $fieldtitle) {
@@ -93,10 +94,10 @@ class ScheduleController extends Controller
                 ->where('user_id', auth()->user()->id)
                 ->where('subject_status', 1)
                 ->get();
-
             $fill = 1;
             foreach ($subjects as $subject) {
                 foreach ($subject->events as $event) {
+                    $address = implode(', ',array_filter([$subject->address1,$subject->address2,$subject->address3]));
                     $fill = $fill ? 0 : 1;
                     $this->fpdf->SetFont('Arial', '', 10);
                     $this->fpdf->Cell(23, 9, $subject->subjectID, 0, 0, 'C', $fill);
@@ -107,8 +108,8 @@ class ScheduleController extends Controller
                     $this->fpdf->SetFont('Arial', '', 10);
                     $this->fpdf->Cell(25, 9, $event->pivot->minDate, 0, 0, 'C', $fill);
                     $this->fpdf->Cell(25, 9, $event->pivot->maxDate, 0, 0, 'C', $fill);
-
-                    $this->fpdf->Cell(0, 9, "", 0, 1, 'L', $fill);
+                    $this->fpdf->SetFont('Arial', '', 8);
+                    $this->fpdf->Cell(0, 9, $address, 0, 1, 'L', $fill);
                 }
             }
 
