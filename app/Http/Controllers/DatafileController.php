@@ -60,12 +60,16 @@ class DatafileController extends Controller
             'platform' => 'required|max:100',
             'opperator' => 'required|max:100',
             'fileset' => 'required|integer',
-            'description' => 'nullable|max:500'
+            'description' => 'nullable|max:500',
+            'filetype' => 'required|max:40',
+            'software' => 'required|max:40',
+            'owner' => 'required|max:60'
         ]);
         $filename = $validatedData['file']->getClientOriginalName();
         if (datafile::where('filename',$filename)->where('project_id',session('currentProject'))->exists()) {
             return back()->withInput()->withErrors('Duplicate filename');
         }
+        $filesize = filesize($validatedData['file']);
         $hash = hash_file('sha256',$validatedData['file']);
         $path = $validatedData['file']->storeAs("/" . session('currentProject'),$filename,'local');
         $file = new datafile;
@@ -80,9 +84,13 @@ class DatafileController extends Controller
         $file->opperator = $validatedData['opperator'];
         $file->description = $validatedData['description'];
         $file->fileset = $validatedData['fileset'];
+        $file->filetype = $validatedData['filetype'];
+        $file->software = $validatedData['software'];
+        $file->owner = $validatedData['owner'];
         $file->hash = $hash;
+        $file->filesize = $filesize;
         $file->save();
-        return redirect('/datafiles');
+        return redirect('/datafiles')->with('message',"$filename uploaded (" . (round($filesize/1024**2,2)) . " MB)");
     }
 
     /**
@@ -124,7 +132,10 @@ class DatafileController extends Controller
             'lab' => 'required|max:100',
             'platform' => 'required|max:100',
             'opperator' => 'required|max:100',
-            'description' => 'nullable|max:500'
+            'description' => 'nullable|max:500',
+            'filetype' => 'required|max:40',
+            'software' => 'required|max:40',
+            'owner' => 'required|max:60'
         ]);
         $datafile->update($validatedData);
         return redirect('/datafiles');

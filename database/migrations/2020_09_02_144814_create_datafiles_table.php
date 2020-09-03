@@ -27,6 +27,10 @@ class CreateDatafilesTable extends Migration
             $table->string('opperator',100);
             $table->text('description')->nullable();
             $table->string('hash',100);
+            $table->unsignedBigInteger('filesize');
+            $table->string('filetype',40);
+            $table->string('software',40);
+            $table->string('owner',60);
             $table->timestamps();
         });
     }

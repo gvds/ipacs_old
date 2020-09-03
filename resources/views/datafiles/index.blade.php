@@ -8,6 +8,7 @@
             </x-buttonlink>
         </x-slot>
     </x-pageheader>
+    @include('layouts.errormsg')
     <x-table>
         <x-slot name="head">
             <tr>

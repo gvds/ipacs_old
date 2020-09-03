@@ -16,7 +16,12 @@ class datafile extends Model
         'lab',
         'platform',
         'opperator',
-        'description'
+        'description',
+        'hash',
+        'filesize',
+        'filetype',
+        'software',
+        'owner'
     ];
 
     public function user()

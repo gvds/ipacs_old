@@ -16,12 +16,16 @@
         </td>
       </tr>
       <tr>
-        <th class='text-left'>Owner</th>
+        <th class='text-left'>Uploaded By</th>
         <td>{{$datafile->user->fullname}}</td>
       </tr>
       <tr>
         <th class='text-left'>Site</th>
         <td>{{$datafile->site->name}}</td>
+      </tr>
+      <tr>
+        <th class='text-left'>Owner</th>
+        <td>{{$datafile->owner}}</td>
       </tr>
       <tr>
         <th class='text-left'>Generated</th>
@@ -40,13 +44,25 @@
         <td>{{$datafile->opperator}}</td>
       </tr>
       <tr>
+        <th class='text-left'>File Type</th>
+        <td>{{$datafile->filetype}}</td>
+      </tr>
+      <tr>
+        <th class='text-left'>Software</th>
+        <td>{{$datafile->software}}</td>
+      </tr>
+      <tr>
+        <th class='text-left'>File Size</th>
+        <td>{{round($datafile->filesize/1024**2,2)}} MB</td>
+      </tr>
+      <tr>
         <th class='text-left'>SHA256 Hash</th>
         <td>{{$datafile->hash}}</td>
       </tr>
       <tr>
         <th class='text-left'>Description</th>
         <td>{{$datafile->description}}</td>
-        
+
       </tr>
     </x-table>
   </div>
