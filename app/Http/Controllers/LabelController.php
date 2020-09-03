@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\event_subject;
 use Illuminate\Http\Request;
 use App\Library\PDF_Label;
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class LabelController extends PDF_Label
 {
@@ -105,7 +105,7 @@ class LabelController extends PDF_Label
     public function addEventsToLabelQueue()
     {
         $records = \App\Label::addEventsToLabelQueue();
-        return back()->with('message', "$records events added to the label queue");
+        return back()->with('message', $records . ' ' . Str::plural('event',$records) . " added to the label queue");
     }
 
     public function clear(Request $request)
@@ -119,7 +119,7 @@ class LabelController extends PDF_Label
         } else {
             $affected = 0;
         }
-        return redirect('/labels')->with('message', $affected . " labels cleared from the queue");
+        return redirect('/labels')->with('message', $affected . ' ' . Str::plural('label',$affected) . " cleared from the queue");
     }
 
     public function addEventToLabelQueue(event_subject $event_subject)

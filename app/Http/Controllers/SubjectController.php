@@ -303,7 +303,8 @@ class SubjectController extends Controller
      */
     public function search($searchterm)
     {
-        return subject::where('subjectID', 'like', $searchterm . '%')
+        return subject::where('subjectID', 'like', "%{$searchterm}%")
+            ->where('project_id', session('currentProject'))
             ->where('user_id', auth()->user()->id)
             ->pluck('subjectID', 'id')
             ->take(8);
