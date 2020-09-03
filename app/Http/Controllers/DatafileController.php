@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\datafile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class DatafileController extends Controller
@@ -65,6 +66,7 @@ class DatafileController extends Controller
         if (datafile::where('filename',$filename)->where('project_id',session('currentProject'))->exists()) {
             return back()->withInput()->withErrors('Duplicate filename');
         }
+        $hash = hash_file('sha256',$validatedData['file']);
         $path = $validatedData['file']->storeAs("/" . session('currentProject'),$filename,'local');
         $file = new datafile;
         $file->filename = $filename;
@@ -78,6 +80,7 @@ class DatafileController extends Controller
         $file->opperator = $validatedData['opperator'];
         $file->description = $validatedData['description'];
         $file->fileset = $validatedData['fileset'];
+        $file->hash = $hash;
         $file->save();
         return redirect('/datafiles');
     }

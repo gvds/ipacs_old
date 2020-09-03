@@ -26,6 +26,7 @@ class CreateDatafilesTable extends Migration
             $table->string('platform',100);
             $table->string('opperator',100);
             $table->text('description')->nullable();
+            $table->string('hash',100);
             $table->timestamps();
         });
     }
