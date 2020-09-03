@@ -78,11 +78,8 @@
 
       <x-nav.dropdown>
         <x-slot name="nav_item">
-          <div>Data Management</div>
+          <x-nav.link href="/datafiles">Data Files</x-nav.link>
         </x-slot>
-        <x-nav.dropdown-link href="#/datastore/manage">Manage Datastore</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#/datastore/upload">Upload Data File</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#/datastore/retrieve">Retrieve Data File</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>

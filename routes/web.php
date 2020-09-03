@@ -138,6 +138,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('project.auth:manage-samples')->group(function () {
     });
 
+    Route::middleware('project.auth:manage-datafiles')->group(function () {
+        Route::resource('/datafiles', 'DatafileController');
+        Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
+    });
+
     Route::middleware('project.auth:administer-project')->group(function () {
         // Route::group(['middleware' => ['role:admin|sysadmin']], function () {
         Route::get('/redcap/arms', 'RedcapController@arms');

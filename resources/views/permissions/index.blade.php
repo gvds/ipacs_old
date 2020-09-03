@@ -3,7 +3,7 @@
   <x-pageheader>
     Permissions
     <x-slot name='button'>
-      <x-buttonlink href="permissions/create">
+      <x-buttonlink href="/permissions/create">
         Add New Permission
       </x-buttonlink>
     </x-slot>

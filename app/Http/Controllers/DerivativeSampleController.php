@@ -70,19 +70,26 @@ class DerivativeSampleController extends Controller
         $validatedData = $request->validate([
             'parent' => 'required|exists:event_sample,barcode'
         ]);
-        $parentsampletype = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+        $parentsample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
             ->select('event_sample.id')
             ->where('barcode', $validatedData['parent'])
             ->where('project_id', session('currentProject'))
             ->first();
+        if (is_null($parentsample)) {
+            return back()->withErrors('Sample barcode ' . $validatedData['parent'] . ' does not exist in this project');
+        }
         return redirect()->action(
             'DerivativeSampleController@retrieve',
-            ['event_sample' => $parentsampletype->id]
+            ['event_sample' => $parentsample->id]
         );
     }
 
     public function retrieve(event_sample $event_sample)
     {
+        $subject = $event_sample->event_subject->subject;
+        if ($subject->site_id !== auth()->user()->project_site) {
+            return back()->withErrors('This sample does not belong to your site');
+        }
         $parentsampletype = sampletype::find($event_sample->sampletype_id);
 
         $sampletypes = sampletype::with(['event_samples' => function ($query) use ($event_sample) {

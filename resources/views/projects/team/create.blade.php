@@ -10,7 +10,6 @@
   {{ Form::select('user', $users, null, ['required']) }}
   {{ Form::label('site', 'Site', ['class'=>'text-sm']) }}
   {{ Form::select('site', $sites, null) }}
-  <!-- {{ Form::select('site', [''=>'',1=>'SU_MBHG',2=>'MRC_Gambia',3=>'UCRC'], null) }} -->
   {{ Form::submit('Submit', ['class' => 'w-full mt-2']) }}
   <x-buttonlink :href="url('/team')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
