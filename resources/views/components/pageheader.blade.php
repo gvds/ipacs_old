@@ -5,7 +5,7 @@
         </div>
         {{ $secondary ?? ''}}
     </div>
-    <div class='space-x-2'>
+    <div class='space-x-2 ml-5'>
         {{ $button ?? ''}}
         {{ $button2 ?? ''}}
     </div>
