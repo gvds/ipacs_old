@@ -31,7 +31,7 @@
         </x-slot>
         @foreach ($projects as $project)
         <tr class="odd:bg-gray-100">
-            <td class="text-center">{{$project->id}}</td>
+            <td class="text-center"><a href="/project/{{$project->id}}/select">{{$project->id}}</td>
             <td>{{$project->project}}</td>
             <td>{{$project->projectOwner->full_name}}</td>
             <td>{{$project->redcapProject_id}}</td>

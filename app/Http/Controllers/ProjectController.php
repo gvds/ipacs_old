@@ -155,7 +155,7 @@ class ProjectController extends Controller
 
     public function select(project $project)
     {
-        if (in_array($project->id, \App\User::find(Auth::user()->id)->teams()->pluck('id')->toArray()) or $project->owner === Auth::user()->id) {
+        if (in_array($project->id, \App\User::find(Auth::user()->id)->teams()->pluck('id')->toArray()) or $project->owner === Auth::user()->id or Auth::user()->hasRole('sysadmin')) {
             session(['currentProject' => $project->id]);
         } else {
             return redirect('/')->with('error', 'You do not have access to that project');
