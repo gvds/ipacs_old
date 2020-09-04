@@ -16,6 +16,8 @@
   <!-- Styles -->
   <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
 
+  @stack('scripts')
+  
 </head>
 
 <body>

@@ -34,9 +34,6 @@
       </td>
       <td>
         <x-delConfirm url='/users/{{$user->id}}' />
-        {{-- {{ Form::open(['url' => "/users/$user->id", 'method' => 'DELETE']) }}
-        {{ Form::button('Delete', ['class' => 'text-sm font-bold bg-red-700 text-red-50 mb-0 py-1 px-2 rounded shadow-md']) }}
-        {{ Form::close() }} --}}
       </td>
     </tr>
     @endforeach
@@ -44,4 +41,3 @@
 
 </x-layout>
 
-<x-delConfirmScript />

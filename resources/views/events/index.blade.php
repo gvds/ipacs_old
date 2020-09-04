@@ -46,5 +46,3 @@
     </x-table>
 
 </x-layout>
-
-<x-delConfirmScript />

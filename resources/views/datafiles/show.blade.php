@@ -68,5 +68,3 @@
   </div>
   <x-buttonlink href='/datafiles'>Return</x-buttonlink>
 </x-layout>
-
-<x-delConfirmScript />

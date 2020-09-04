@@ -59,4 +59,3 @@
 
 </x-layout>
 
-<x-delConfirmScript />

@@ -30,4 +30,3 @@
 
 </x-layout>
 
-<x-delConfirmScript />
