@@ -41,7 +41,7 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ['odd', 'even'],
+    backgroundColor: ['odd', 'even', 'hover'],
   },
   plugins: [
     // require('@tailwindcss/custom-forms'),

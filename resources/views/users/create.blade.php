@@ -18,7 +18,7 @@
   {!! Form::text('telephone', null, ['required','placeholder'=>'0## ###-####']) !!}
   {!! Form::label('site', 'Site') !!}
   {!! Form::text('homesite', null, ['required']) !!}
-  {!! Form::submit('Save Record', ['class' => "w-full"]) !!}
+  {!! Form::submit('Save Record', ['class' => "w-full mt-2"]) !!}
   <x-buttonlink :href="url('/users')" class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}
 

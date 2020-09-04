@@ -9,7 +9,7 @@ $alignmentStyle = [
 
 <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
 
-    <div class="cursor-pointer px-3 py-1 text-sm hover:text-indigo-800 hover:font-semibold">
+    <div class="cursor-pointer px-3 py-1 text-sm hover:bg-gray-300">
         {{ $nav_item }}
     </div>
 

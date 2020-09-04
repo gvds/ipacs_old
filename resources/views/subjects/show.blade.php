@@ -3,21 +3,9 @@
   <x-pageheader>
     Subject: {{$subject->subjectID}}
     <x-slot name='secondary'>
-      <div x-data='subjectSearch()' class="flex flex-row">
-        <div>
-          <input type="text" placeholder="Search for subject ID..." name="subjectSearch" x-model="subjectSearch" x-on:keyup="fetchSubject()"
-            class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg px-4" autofocus />
-          <template x-if="subjects">
-            <div
-              class="text-sm flex flex-col bg-white border border-gray-300 rounded shadow-md position absolute w-1/5">
-              <template x-for="[id, subject] in Object.entries(subjects)">
-                <a x-text="subject" x-bind:href=`/subjects/${id}`
-                  class="flex px-3 py-1 text-xs font-semibold text-gray-700"></a>
-              </template>
-            </div>
-          </template>
-        </div>
-      </div>
+
+      @include('subjects._search')
+
     </x-slot>
   </x-pageheader>
 
@@ -113,7 +101,7 @@
       <div class='text-lg font-bold'>Switch Arm</div>
       {{ Form::open(['url' => "/subjects/$subject->id/switch", 'class' => 'form mb-2', 'method' => 'POST']) }}
       {{ Form::select('switchArm', $switcharms, null, ['required','placeholder' => 'Select new arm...']) }}
-      {{ Form::date('switchDate', today(), ['required']) }}
+      {{ Form::date('switchDate', today(), ['required', 'class'=>'mt-2']) }}
       {{ Form::submit('Switch', ['class' => 'w-full mt-2']) }}
       {{ Form::close() }}
       @endif
@@ -276,28 +264,5 @@
         return this.restoreBgCol
       },
     }
-  }
-</script>
-
-<script>
-  function subjectSearch() {
-    return {
-      subjectSearch: "",
-      subjects: null,
-      isLoading: false,
-      fetchSubject() {
-        if (this.subjectSearch == "") {
-          this.subjects = null;
-        } else {
-          this.isLoading = true;
-          fetch(`/subjectsearch/${this.subjectSearch}`)
-          .then(response => response.json())
-          .then(data => {
-            this.isLoading = false;
-            this.subjects = data;
-          });
-        }
-      }
-    };
   }
 </script>
