@@ -42,7 +42,7 @@ class EventController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
-            'redcap_event_id' => 'nullable|integer',
+            // 'redcap_event_id' => 'nullable|integer',
             'arm_id' => 'required|exists:arms,id',
             'autolog' => 'required|boolean',
             'offset' => 'required|integer|min:0',
@@ -92,7 +92,7 @@ class EventController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
-            'redcap_event_id' => 'nullable|integer',
+            // 'redcap_event_id' => 'nullable|integer',
             'arm_id' => 'required|exists:arms,id',
             'autolog' => 'required|boolean',
             'offset' => 'required|integer|min:0',

@@ -52,7 +52,7 @@ class ArmController extends Controller
         $currentProject = $request->currentProject;
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
-            'redcap_arm_id' => 'nullable|integer',
+            // 'redcap_arm_id' => 'nullable|integer',
             'arm_num' => 'required|integer',
             'manual_enrol' => 'required|in:0,1',
             'switcharms' => 'nullable'
@@ -99,7 +99,7 @@ class ArmController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|min:3|max:50',
-            'redcap_arm_id' => 'nullable|integer',
+            // 'redcap_arm_id' => 'nullable|integer',
             'arm_num' => 'required|integer',
             'manual_enrol' => 'required|in:0,1',
             'switcharms' => 'nullable'

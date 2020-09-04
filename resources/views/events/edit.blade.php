@@ -10,8 +10,8 @@
     {{ Form::text('name', null, ['required'=>'required']) }}
     {{ Form::label('arm_id', 'Arm') }}
     {{ Form::select('arm_id', $arms) }}
-    {{ Form::label('redcap_event_id', 'REDCap Event ID') }}
-    {{ Form::text('redcap_event_id', null) }}
+    {{-- {{ Form::label('redcap_event_id', 'REDCap Event ID') }}
+    {{ Form::text('redcap_event_id', null) }} --}}
     {{ Form::label('autolog', 'Auto-Log') }}
     {{ Form::radio('autolog', 0, true) }} No {{ Form::radio('autolog', 1) }} Yes
     {{ Form::label('offset', 'Offset') }}

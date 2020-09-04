@@ -8,8 +8,8 @@
     {{ Form::model($arm, ['route' => ['arms.update', $arm], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Arm Name') }}
     {{ Form::text('name', null, ['required'=>'required']) }}
-    {{ Form::label('redcap_arm_id', 'REDCap Arm ID') }}
-    {{ Form::text('redcap_arm_id', null) }}
+    {{-- {{ Form::label('redcap_arm_id', 'REDCap Arm ID') }}
+    {{ Form::text('redcap_arm_id', null) }} --}}
     {{ Form::label('arm_num', 'Arm Number') }}
     {{ Form::text('arm_num', null, ['required'=>'required']) }}
     {{ Form::label('manual_enrol', 'Manual Enrole') }}
