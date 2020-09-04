@@ -31,7 +31,7 @@
         </x-slot>
         @foreach ($projects as $project)
         <tr class="odd:bg-gray-100">
-            <td class="text-center"><a href="/project/{{$project->id}}/select">{{$project->id}}</td>
+            <td class="text-center"><a href="/project/{{$project->id}}/select"><button class='bg-gray-300 font-semibold px-2 py-1 rounded border border-gray-300 shadow-md w-16'>{{$project->id}}</button></td>
             <td>{{$project->project}}</td>
             <td>{{$project->projectOwner->full_name}}</td>
             <td>{{$project->redcapProject_id}}</td>
