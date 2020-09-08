@@ -32,4 +32,5 @@ class event_sample extends Pivot
     {
         return \App\User::find($user_id);
     }
+
 }

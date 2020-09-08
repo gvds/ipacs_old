@@ -14,13 +14,11 @@ class CreateStorageReportsTable extends Migration
     public function up()
     {
         Schema::create('storage_reports', function (Blueprint $table) {
-            $table->bigIncrements('storageReport_id');
+            $table->id();
             $table->bigInteger('project_id')->unsigned();
-            $table->string('loggedBy',15);
-            $table->bigInteger('sampletype_id')->unsigned();
-            $table->bigInteger('location_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('user_id')->references('id')->on('users');
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

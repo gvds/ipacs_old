@@ -17,6 +17,7 @@ class CreateLocationsTable extends Migration
             $table->bigIncrements('location_id');
             $table->string('virtualUnit_id');
             $table->string('storageProjectName',40);
+            $table->string('barcode',20);
             $table->tinyInteger('rack')->unsigned()->nullable();
             $table->string('box')->nullable();
             $table->smallInteger('position')->unsigned()->nullable();

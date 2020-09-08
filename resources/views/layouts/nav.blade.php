@@ -61,8 +61,8 @@
         {{-- <x-nav.dropdown-link href="#">Identify Sample</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Lookup</x-nav.dropdown-link>
         <hr /> --}}
-        <x-nav.dropdown-link href="#">Allocate Storage</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Storage Reports</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samplestore">Allocate Storage</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samplestore/report">Storage Reports</x-nav.dropdown-link>
         <hr />
         <x-nav.dropdown-link href="#">Log Sample out of Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Log Sample Return to Storage</x-nav.dropdown-link>

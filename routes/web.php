@@ -135,6 +135,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/samples/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
 
+    Route::middleware('project.auth:log-samples')->group(function () {
+        Route::get('/samplestore', 'StorageController@listSamples');
+        Route::post('/samplestore', 'StorageController@allocateStorage');
+        Route::get('/samplestore/report', 'StorageController@reportList');
+        Route::get('/samplestore/{storageReport}/report', 'StorageController@report');
+    });
+
     Route::middleware('project.auth:manage-samples')->group(function () {
     });
 
