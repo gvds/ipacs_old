@@ -15,8 +15,8 @@ class RedcapController extends Controller
 
     private function curl(array $params)
     {
-        $user = auth()->user()->teams()->where('teams.id', session('currentProject'))->first();
-        $redcap_api_token = $user->pivot->redcap_api_token;
+        $team = auth()->user()->teams->where('teams.id', session('currentProject'))->first();
+        $redcap_api_token = $team->pivot->redcap_api_token;
 
         $fields = array(
             'token'   => $redcap_api_token,
