@@ -65,6 +65,9 @@ class SubjectController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
+        if (empty(auth()->user()->projectSite)) {
+            return redirect()->back()->with('error', 'Subject IDs cannot be created as your site has not been set')->withInput();
+        }
         $response = subject::createSubjects($validator->valid());
         if ($response !== 0) {
             return redirect()->back()->with('error', $response . ' - No new IDs created')->withInput();

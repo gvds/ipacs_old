@@ -17,8 +17,8 @@ class CreateSubjectsTable extends Migration
             $table->bigIncrements('id');
             $table->string('subjectID',10);
             $table->bigInteger('project_id')->unsigned();
-            $table->string('site_id',15)->nullable();
-            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('site_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->string('firstname',20)->nullable();
             $table->string('surname',30)->nullable();
             $table->string('address1',50)->nullable();

@@ -153,16 +153,18 @@ class subject extends Model
     return true;
   }
 
-  public function createArmEvents($arm, $baselineDate = null)
+  public function createArmEvents($arm)
   {
     foreach ($arm->events as $event) {
       if ($event->active) {
-        $response = $this->events()->attach($event->id);
+        if ($event->event_order === 0 & $event->autolog === 0) {
+          $labelStatus = 1;
+        } else {
+          $labelStatus = 0;
+        }
+        $response = $this->events()->attach($event->id, ['labelStatus' => $labelStatus]);
         if ($response) {
           return ($response);
-        }
-        if ($baselineDate) {
-          $response = $this->setEventDates($event, $baselineDate);
         }
       }
     }
