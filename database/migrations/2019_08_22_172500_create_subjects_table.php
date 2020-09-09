@@ -32,7 +32,7 @@ class CreateSubjectsTable extends Migration
             $table->tinyInteger('subject_status')->unsigned()->default(0);
             $table->timestamps();
             
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

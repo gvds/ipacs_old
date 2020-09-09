@@ -20,23 +20,29 @@ class RedcapController extends Controller
 
         $fields = array(
             'token'   => $redcap_api_token,
-            'format'  => 'json'
+            'format'  => 'json',
+            'returnFormat' => 'json'
         );
 
         $fields = array_merge($fields, $params);
 
+        $data = array(
+                'token' => $redcap_api_token,
+                'content' => 'arm',
+                'format' => 'json',
+                'returnFormat' => 'json'
+            );
         $ch = curl_init();
-
         curl_setopt($ch, CURLOPT_URL, config('services.redcap.url'));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // Set to TRUE for production use
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
 
         return curl_exec($ch);
     }

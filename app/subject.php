@@ -157,17 +157,20 @@ class subject extends Model
   {
     foreach ($arm->events as $event) {
       if ($event->active) {
-        if ($event->event_order === 0 & $event->autolog === 0) {
+        if (($event->event_order === 0) & ($event->autolog === 0)) {
           $labelStatus = 1;
         } else {
           $labelStatus = 0;
         }
+        dump($event);
+        dump($labelStatus);
         $response = $this->events()->attach($event->id, ['labelStatus' => $labelStatus]);
         if ($response) {
           return ($response);
         }
       }
     }
+    dd($arm);
     return true;
   }
 
@@ -201,7 +204,6 @@ class subject extends Model
         'maxDate' => $maxDate,
         'logDate' => $timestamp
       ]);
-
       if ($response === 1) {
         return true;
       } else {
@@ -219,23 +221,23 @@ class subject extends Model
       'token'   => $token,
       'format'  => 'json',
       'type'    => 'flat',
-      'data'    => json_encode([$data]),
+      'returnFormat' => 'json',
+      'data'    => json_encode([$data])
     );
 
     $fields = array_merge($fields, $params);
+    
     $ch = curl_init();
-
     curl_setopt($ch, CURLOPT_URL, config('services.redcap.url'));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // Set to TRUE for production use
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_AUTOREFERER, true);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
     return curl_exec($ch);
   }
 

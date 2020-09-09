@@ -162,7 +162,7 @@ class SubjectController extends Controller
             if ($response !== true) {
                 throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
             }
-
+            
             // Schedule event dates
             $events = $subject->arm()->first()->events()->get();
             foreach ($events as $event) {
