@@ -23,6 +23,7 @@ class LabelController extends PDF_Label
             ->join('events', 'event_id', 'events.id')
             ->join('arms', 'events.arm_id', 'arms.id')
             ->select([
+                'event_subject.id',
                 'subjects.project_id',
                 'arms.name AS armname',
                 'events.name AS eventname',
@@ -59,7 +60,7 @@ class LabelController extends PDF_Label
 
         foreach ($events as $event) {
             // Generate Name labels
-            $PSE = $event->project_id . '_' . $event->subjectID . '_' . $event->event_id;
+            $PSE = $event->project_id . '_' . $event->subjectID . '_' . $event->id;
             for ($i = 0; $i < $event->name_labels; $i++) {
                 $text = sprintf("%s %s\n%s\nEvent: %s\nArm: %s", $event->firstname, $event->surname, $PSE, $event->eventname, $event->armname);
                 $this->fpdf->Add_BarLabel($text, $PSE);
