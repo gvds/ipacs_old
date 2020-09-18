@@ -162,15 +162,15 @@ class subject extends Model
         } else {
           $labelStatus = 0;
         }
-        dump($event);
-        dump($labelStatus);
+        // dump($event);
+        // dump($labelStatus);
         $response = $this->events()->attach($event->id, ['labelStatus' => $labelStatus]);
         if ($response) {
           return ($response);
         }
       }
     }
-    dd($arm);
+    // dd($arm);
     return true;
   }
 
@@ -184,12 +184,12 @@ class subject extends Model
         $timestamp = now();
       } else {
         if ($event->offset === 0) {
-          if ($event->arm->arm_num === 0) {
-            $eventstatus = 3;
-            $timestamp = now();
-          } else {
-            $eventstatus = 1;
-          }
+          // if ($event->arm->arm_num === 1) {
+          $eventstatus = 2;
+          $timestamp = now();
+          // } else {
+          //   $eventstatus = 1;
+          // }
         } else {
           $eventstatus = 0;
         }
@@ -216,6 +216,9 @@ class subject extends Model
   {
     $user = Auth::user()->teams()->where('teams.id', session('currentProject'))->first();
     $token = $user->pivot->redcap_api_token;
+    if (empty($token)) {
+      throw new Exception('You do not have a REDCap API token in your ' . config('app.name') . ' project account');
+    }
 
     $fields = array(
       'token'   => $token,
@@ -226,7 +229,7 @@ class subject extends Model
     );
 
     $fields = array_merge($fields, $params);
-    
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, config('services.redcap.url'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -249,7 +252,11 @@ class subject extends Model
       'arms' => [$arm_num]
     ];
     $events = $this->curl($params);
-    $event_name = json_decode($events)[0]->unique_event_name;
+    $events = json_decode($events, true);
+    if (array_key_exists('error', $events)) {
+      throw new Exception('REDCap Error: ' . $events['error']);
+    }
+    $event_name = $events[0]['unique_event_name'];
 
     // New SubjectID for REDCap database
     $params = [

@@ -162,7 +162,7 @@ class SubjectController extends Controller
             if ($response !== true) {
                 throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
             }
-            
+
             // Schedule event dates
             $events = $subject->arm()->first()->events()->get();
             foreach ($events as $event) {
@@ -171,11 +171,11 @@ class SubjectController extends Controller
                     throw new \ErrorException("Event dates for $subject->subjectID could not be set : $response");
                 }
             }
-
+            
             if (isset($request->currentProject->redcapProject_id)) {
                 $subject->createREDCapRecord();
             }
-
+            
             \App\Label::addEventsToLabelQueue();
 
             DB::commit();
@@ -218,7 +218,6 @@ class SubjectController extends Controller
             if ($response !== true) {
                 throw new \ErrorException("Events for $subject->subjectID could not be created : $response");
             }
-
             // Schedule event dates
             $events = $arm->events()->get();
             foreach ($events as $event) {
