@@ -17,11 +17,11 @@ class PrimarySampleController extends Controller
             'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
         ]);
         try {
-            list($project_id, $subjectID, $id) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
-            $event_subject = \App\event_subject::where('id', $id)->firstOr(function () {
+            $event_subject = \App\event_subject::where('id', $event_subject_id)->firstOr(function () {
                 throw new Exception("The event record could not be found");
             });
             $subject = \App\subject::where('id', $event_subject->subject_id)->first();
@@ -64,7 +64,7 @@ class PrimarySampleController extends Controller
             return back()->with('error', $th->getMessage());
         }
         $samplestatuses = \App\sampleStatus::pluck('samplestatus', 'id');
-        return view('primarysamples.register', compact('sampletypes', 'samplestatuses', 'id'));
+        return view('primarysamples.register', compact('sampletypes', 'samplestatuses', 'event_subject_id'));
     }
 
     public function registerprimary(Request $request)
@@ -128,11 +128,11 @@ class PrimarySampleController extends Controller
             'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
         ]);
         try {
-            list($project_id, $subjectID, $id) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
-            $event_subject = \App\event_subject::where('id', $id)->firstOr(function () {
+            $event_subject = \App\event_subject::where('id', $event_subject_id)->firstOr(function () {
                 throw new Exception("The event record could not be found");
             });
             $subject = \App\subject::where('id', $event_subject->subject_id)->first();

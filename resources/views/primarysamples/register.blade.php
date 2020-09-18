@@ -16,7 +16,7 @@
     @endphp
     <div x-data="">
         {{ Form::open(['url' => '/primary', 'class' => 'form max-w-none mt-2', 'method' => 'POST', 'x-on:keydown.enter.prevent' => '']) }}
-        {{ Form::hidden('event_subject_id',$id)}}
+        {{ Form::hidden('event_subject_id',$event_subject_id)}}
         {{ Form::label('log', 'Log samples when registering')}}
         <div class='mb-1'>
             No {{ Form::radio('log', 0, ['selected'])}} Yes {{ Form::radio('log', 1)}}
