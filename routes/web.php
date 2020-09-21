@@ -130,12 +130,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/derivative', 'DerivativeSampleController@log');
 
         Route::get('/samples', 'EventSampleController@index');
+        Route::get('/samples/search', 'EventSampleController@search');
+        Route::post('/samples/search', 'EventSampleController@retrieve');
         Route::get('/samples/{event_sample}', 'EventSampleController@show');
         Route::get('/samples/{event_sample}/unlog', 'EventSampleController@unlog');
         Route::post('/samples/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
 
-    Route::middleware('project.auth:log-samples')->group(function () {
+    Route::middleware('project.auth:store-samples')->group(function () {
         Route::get('/samplestore', 'StorageController@listSamples');
         Route::post('/samplestore', 'StorageController@allocateStorage');
         Route::get('/samplestore/report', 'StorageController@reportList');

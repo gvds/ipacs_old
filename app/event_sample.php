@@ -23,6 +23,16 @@ class event_sample extends Pivot
         return $this->belongsTo(sampleStatus::class, 'samplestatus_id', 'id');
     }
 
+    public function site()
+    {
+        return $this->belongsTo(site::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(location::class, 'location', 'location_id');
+    }
+
     public function derivativeCount()
     {
         return event_sample::where('parentBarcode',$this->barcode)->count();

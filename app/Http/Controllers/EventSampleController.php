@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\event_sample;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 class EventSampleController extends Controller
 {
@@ -140,5 +143,95 @@ class EventSampleController extends Controller
         $event_sample->volume = $validatedData['volume'];
         $event_sample->save();
         return back()->with('message', "Volume has been updated");
+    }
+
+    public function search()
+    {
+        $events = \App\project::select(DB::raw("CONCAT(arms.name,' : ',events.name) AS event, events.id"))
+            ->join('arms', 'projects.id', 'project_id')
+            ->join('events', 'arms.id', 'arm_id')
+            ->where('projects.id', session('currentProject'))
+            ->orderBy('arm_num')
+            ->orderBy('offset')
+            ->pluck('event', 'events.id');
+        $sampletypes = \App\sampletype::where('project_id', session('currentProject'))
+            ->orderBy('name')
+            ->pluck('name', 'id');
+        $sites = \App\site::where('project_id', session('currentProject'))
+            ->orderBy('name')
+            ->pluck('name', 'id');
+        return view('samples.search', compact('events', 'sampletypes', 'sites'));
+    }
+
+    public function retrieve(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'subjectIDlist' => 'nullable|max:6000',
+            'events' => 'array',
+            'sampletypes' => 'array',
+            'sites' => 'array',
+            'events.*' => 'nullable|integer',
+            'sampletypes.*' => 'nullable|integer',
+            'sites.*' => 'nullable|integer',
+        ]);
+        $subjectIDs = array_unique(array_filter(preg_split("(,|\s+)", $validatedData['subjectIDlist'])));
+        $subjectIDs = empty($subjectIDs) ? null : $subjectIDs;
+        $events = empty($validatedData['events']) ? null : $validatedData['events'];
+        $sampletypes = empty($validatedData['sampletypes']) ? null : $validatedData['sampletypes'];
+        $sites = empty($validatedData['sites']) ? null : $validatedData['sites'];
+
+        $samples = event_sample::with('event_subject.event','event_subject.subject', 'event_subject.event.arm','site','sampletype','status','location')
+        // ->select('barcode','aliquot','volume')
+        ->whereHas('sampletype', function ($query) {
+            return $query->where('project_id', session('currentProject'));
+        })
+            ->when($subjectIDs, function ($query, $subjectIDs) {
+                return $query->whereHas('event_subject', function ($query) use ($subjectIDs) {
+                    return $query->whereIn('subject_id', $subjectIDs);
+                });
+            })
+            ->when($sampletypes, function ($query, $sampletypes) {
+                return $query->whereIn('sampletype_id', $sampletypes);
+            })
+            ->when($events, function ($query, $events) {
+                return $query->whereHas('event_subject', function ($query) use ($events) {
+                    return $query->whereIn('event_id', $events);
+                });
+            })
+            ->when($sites, function ($query, $sites) {
+                return $query->whereHas('event_subject', function ($query) use ($sites) {
+                    return $query->whereHas('subject', function ($query) use ($sites) {
+                        return $query->whereIn('site_id', $sites);
+                    });
+                });
+            })
+            ->get();
+
+        $headers = [
+            'Content-type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="samplelist.csv"',
+        ];
+        
+        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLocation\n";
+        foreach ($samples as $key=>$sample) {
+            $sampledata = [$sample->barcode,
+            $sample->sampletype->name,
+            $sample->event_subject->event->arm->name,
+            $sample->event_subject->event->name,
+            $sample->aliquot,
+            $sample->volume . $sample->sampletype->volumeUnit,
+            $sample->status->samplestatus,
+            $sample->event_subject->subject->subjectID,
+            $sample->site->name,
+            $sample->parentBarcode];
+            if (!empty($sample->location)) {
+                array_push($data, $sample->location->virtualUnit_id . ' - ' . $sample->location->rack . ':' . $sample->location->box . ':' . $sample->location->position);
+            }
+
+            $data .= implode("\t",$sampledata) . "\n";
+        }
+        return Response::make($data, 200, $headers);
+        
     }
 }

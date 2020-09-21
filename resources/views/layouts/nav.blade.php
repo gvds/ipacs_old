@@ -58,9 +58,9 @@
         <x-slot name="nav_item">
           <div>Sample Management</div>
         </x-slot>
-        {{-- <x-nav.dropdown-link href="#">Identify Sample</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Sample Lookup</x-nav.dropdown-link>
-        <hr /> --}}
+        {{-- <x-nav.dropdown-link href="#">Sample Lookup</x-nav.dropdown-link> --}}
+        <x-nav.dropdown-link href="/samples/search">Retrieve Sample Details</x-nav.dropdown-link>
+        <hr />
         <x-nav.dropdown-link href="/samplestore">Allocate Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/report">Storage Reports</x-nav.dropdown-link>
         <hr />
@@ -69,8 +69,8 @@
         <hr />
         <x-nav.dropdown-link href="#">Log Sample as Used</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Log Sample as Lost</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Select Samples for Shipping</x-nav.dropdown-link>
         <hr />
+        <x-nav.dropdown-link href="#">Select Samples for Shipping</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Shipping Manifests</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Received Manifest Shipment</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Receive External Shipment</x-nav.dropdown-link> --}}
