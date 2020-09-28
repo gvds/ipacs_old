@@ -13,8 +13,7 @@ $alignmentStyle = [
         {{ $nav_item }}
     </div>
 
-    {{-- <div class="absolute z-25 bg-white text-black rounded shadow-md py-1 mt-0 w-auto" --}}
-    <div class="absolute z-25 bg-white rounded shadow-md py-1 mt-0 w-auto"
+    <div class="absolute z-25 bg-white rounded shadow-md py-1 mt-0 w-max-content"
         style="{{ $alignmentStyle[$alignment] }}";
         {{-- style="right: 0px; top: 0em; transform:translateX(100%);" --}}
         x-show="open"

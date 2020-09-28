@@ -29,6 +29,7 @@
           <x-nav.dropdown-link href="/schedule/thisweek">This Week's Schedule</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/schedule/nextweek">Next Week's Schedule</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
+        <x-nav.dropdown-link href="/event_subject">Log Event Status</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels">Manage Label Print Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels/print">Print Labels</x-nav.dropdown-link>
@@ -39,9 +40,8 @@
 
       <x-nav.dropdown>
         <x-slot name="nav_item">
-          <div>Event & Sample Logging</div>
+          <div>Sample Logging</div>
         </x-slot>
-        <x-nav.dropdown-link href="/event_subject">Log Event Status</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/primary">Register Primary Samples</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/primary.log">Log Primary Samples</x-nav.dropdown-link>
         <x-nav.dropdown-submenu>
@@ -51,7 +51,7 @@
           <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
-        <x-nav.dropdown-link href="/samples">Manage Sample</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samples">Sample Details</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       <x-nav.dropdown>

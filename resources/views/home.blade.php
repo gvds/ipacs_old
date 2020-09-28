@@ -8,7 +8,7 @@
 
             <h1 class="text-5xl font-extrabold tracking-wider text-center text-gray-600">
                 <div>{{ config('app.name') }}</div>
-                <div class='text-sm font-bold italic'>Version Alpha</div>
+                <div class='text-sm font-bold italic'>Version Beta</div>
             </h1>
             @if ($currentProject)
             <h2 class="text-3xl font-bold text-center text-indigo-600">

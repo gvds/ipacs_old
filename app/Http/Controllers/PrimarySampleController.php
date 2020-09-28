@@ -28,7 +28,7 @@ class PrimarySampleController extends Controller
             if ($subject->user_id !== auth()->user()->id) {
                 throw new Exception("You do not have permission to access this subject's record", 1);
             }
-            if ($subjectID != $subject->subjectID) {
+            if ($subjectID !== $subject->subjectID) {
                 throw new Exception('Invalid PSE: The subject ID does not match the event record');
             }
             switch ($subject->subject_status) {
