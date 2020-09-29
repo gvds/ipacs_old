@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration
             $table->bigIncrements('id');
             $table->string('project',50);
             $table->bigInteger('redcapProject_id')->unsigned()->nullable();
-            $table->integer('owner')->unsigned()->nullable();
+            $table->bigInteger('owner')->unsigned()->nullable();
             $table->boolean('active')->default(true);
             $table->string('subject_id_prefix',10)->nullable();
             $table->smallInteger('subject_id_digits')->unsigned()->nullable();
@@ -25,6 +25,7 @@ class CreateProjectsTable extends Migration
             $table->string('storageProjectName',40)->nullable();
             $table->string('label_id',40)->nullable();
             $table->timestamps();
+            $table->foreign('owner')->references('id')->on('users');
         });
     }
 
