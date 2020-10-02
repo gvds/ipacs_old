@@ -24,7 +24,7 @@
   @php
   $currentProject = \App\project::find(session('currentProject', null));
   @endphp
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col h-screen">
     <header class='bg-gray-600'>
       @if ($currentProject)
       <div class="text-xl font-bold text-white px-6">
@@ -33,7 +33,7 @@
       @endif
       @include('layouts.nav')
     </header>
-    <main class="flex flex-1 bg-gray-50 py-6 px-6">
+    <main class="flex flex-1 overflow-y-auto bg-gray-50 py-6 px-6">
       {{ $centred ?? ''}}
       <div class="w-max-content">
         {{ $slot }}
