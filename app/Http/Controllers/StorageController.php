@@ -103,7 +103,7 @@ class StorageController extends Controller
     public function listSamples()
     {
         $sampletypes = sampletype::with(['event_samples' => function ($query) {
-            $query->where('site', auth()->user()->project_site)
+            $query->where('site_id', auth()->user()->project_site)
                 ->where('samplestatus_id', 2);
         }])
             ->where('project_id', session('currentProject'))
@@ -134,7 +134,7 @@ class StorageController extends Controller
         ]);
         $sampletypes = sampletype::whereIn('id', $request->sampletype)
             ->with(['event_samples' => function ($query) {
-                $query->where('site', auth()->user()->project_site)
+                $query->where('site_id', auth()->user()->project_site)
                     ->where('samplestatus_id', 2);
             }])
             ->where('project_id', session('currentProject'))
