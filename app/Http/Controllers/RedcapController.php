@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\project;
 use App\site;
+use App\Team;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,10 +14,10 @@ use Illuminate\Support\Str;
 class RedcapController extends Controller
 {
 
-    private function curl(array $params)
+    private function curl(array $params, $redcap_api_token)
     {
-        $team = auth()->user()->teams->where('teams.id', session('currentProject'))->first();
-        $redcap_api_token = $team->pivot->redcap_api_token;
+        // $team = auth()->user()->teams->where('teams.id', session('currentProject'))->first();
+        // $redcap_api_token = $team->pivot->redcap_api_token;
 
         $fields = array(
             'token'   => $redcap_api_token,
@@ -127,7 +128,8 @@ class RedcapController extends Controller
             $team->users()->sync([$request->owner => ['site_id' => $user_site ?? null, 'redcap_api_token' => $token]], false);
 
             // Create arms
-            $redcap_arms = $this->arms();
+            $redcap_arms = $this->arms($token);
+
             foreach ($redcap_arms as $redcap_arm) {
                 $arm = \App\arm::create([
                     'project_id' => $project->id,
@@ -136,7 +138,7 @@ class RedcapController extends Controller
                 ]);
 
                 // Create events
-                $redcap_events = $this->events([$arm->arm_num]);
+                $redcap_events = $this->events($token,[$arm->arm_num]);
                 foreach ($redcap_events as $redcap_event) {
                     $event = \App\event::create([
                         'arm_id' => $arm->id,
@@ -147,7 +149,6 @@ class RedcapController extends Controller
                     ]);
                 }
             }
-
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -246,40 +247,40 @@ class RedcapController extends Controller
         );
     }
 
-    public function arms()
+    public function arms($redcap_api_token)
     {
         $params = [
             'content' => 'arm'
         ];
-        $arms = $this->curl($params);
+        $arms = $this->curl($params, $redcap_api_token);
         return collect(json_decode($arms));
     }
 
-    public function events($arms = [])
+    public function events($redcap_api_token,$arms = [])
     {
         $params = [
             'content' => 'event',
             'arms' => $arms
         ];
-        $events = $this->curl($params);
+        $events = $this->curl($params, $redcap_api_token);
         return collect(json_decode($events));
     }
 
-    public function users()
+    public function users($redcap_api_token)
     {
         $params = [
             'content' => 'user'
         ];
-        $users = $this->curl($params);
+        $users = $this->curl($params, $redcap_api_token);
         return collect(json_decode($users));
     }
 
-    public function project()
+    public function project($redcap_api_token)
     {
         $params = [
             'content' => 'project'
         ];
-        $project = $this->curl($params);
+        $project = $this->curl($params, $redcap_api_token);
         return collect(json_decode($project));
     }
 

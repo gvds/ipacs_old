@@ -32,7 +32,7 @@ class CreateEventSampleTable extends Migration
             $table->string('parentBarcode',20)->nullable();
             $table->timestamps();
             $table->foreign('sampletype_id')->references('id')->on('sampletypes')->onDelete('restrict')->onUpdate('cascade');
-            $table->foreign('event_subject_id')->references('id')->on('event_subject')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('event_subject_id')->references('id')->on('event_subject')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

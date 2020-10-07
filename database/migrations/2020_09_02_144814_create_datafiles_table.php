@@ -32,6 +32,7 @@ class CreateDatafilesTable extends Migration
             $table->string('software',40);
             $table->string('owner',60);
             $table->timestamps();
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

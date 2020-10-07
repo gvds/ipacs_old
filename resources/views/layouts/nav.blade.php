@@ -90,7 +90,7 @@
         <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/sampletypes">Samples</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sampletypes">Sample Types</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>

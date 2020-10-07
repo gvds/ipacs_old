@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SampleTypesController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -28,9 +28,11 @@ class SampleTypesController extends Controller
     public function create()
     {
         $currentProject = request('currentProject');
-        $tubeLabelTypes = ['1'=>'Adhesive','2'=>'FluidX 1ml','3'=>'FluidX 300ul'];
-        $sampleTypes = $currentProject->sampletypes->pluck('name','id')->prepend('','');
-        return view('sampletypes.create', compact('tubeLabelTypes','sampleTypes'));
+        $tubeLabelTypes = \App\tubeLabelType::orderBy('tubeLabelType')
+            ->pluck('tubeLabelType', 'id')
+            ->prepend('', '');
+        $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
+        return view('sampletypes.create', compact('tubeLabelTypes', 'sampleTypes'));
     }
 
     /**
@@ -52,7 +54,7 @@ class SampleTypesController extends Controller
             'transferDestination' => 'nullable|max:25',
             'transferSource' => 'nullable|max:25',
             'sampleGroup' => 'nullable|max:25',
-            'tubeLabelType' => 'nullable|max:25',
+            'tubeLabelType_id' => 'nullable|integer',
             'storageSampleType' => 'nullable|max:25',
             'parentSampleType_id' => 'nullable|integer'
         ]);
@@ -81,9 +83,11 @@ class SampleTypesController extends Controller
     public function edit(sampletype $sampletype)
     {
         $currentProject = request('currentProject');
-        $tubeLabelTypes = ['1'=>'Adhesive','2'=>'FluidX 1ml','3'=>'FluidX 300ul'];
-        $sampleTypes = $currentProject->sampletypes->pluck('name','id')->prepend('','');
-        return view('sampletypes.edit', compact('sampletype','tubeLabelTypes','sampleTypes'));
+        $tubeLabelTypes = \App\tubeLabelType::orderBy('tubeLabelType')
+            ->pluck('tubeLabelType', 'id')
+            ->prepend('', '');
+        $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
+        return view('sampletypes.edit', compact('sampletype', 'tubeLabelTypes', 'sampleTypes'));
     }
 
     /**
@@ -105,7 +109,7 @@ class SampleTypesController extends Controller
             'transferDestination' => 'nullable|max:25',
             'transferSource' => 'nullable|max:25',
             'sampleGroup' => 'nullable|max:25',
-            'tubeLabelType' => 'nullable|max:25',
+            'tubeLabelType_id' => 'nullable|integer',
             'storageSampleType' => 'nullable|max:25',
             'parentSampleType_id' => 'nullable|integer',
             'active' => 'required|boolean'

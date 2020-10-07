@@ -38,17 +38,18 @@ class PrimarySampleController extends Controller
                 case 2:
                     throw new Exception("This subject has been dropped");
                     break;
-                default:
+            }
+            switch ($event_subject->eventstatus_id) {
+                case 0:
+                case 1:
+                    throw new Exception("This event has not yet been scheduled");
                     break;
-            }
-            if ($event_subject->eventstatus_id < 2) {
-                throw new Exception("This event has not yet been scheduled");
-            }
-            if ($event_subject->eventstatus_id === 5) {
-                throw new Exception("This event has been missed");
-            }
-            if ($event_subject->eventstatus_id === 6) {
-                throw new Exception("This event has been cancelled");
+                case 5:
+                    throw new Exception("This event has been missed");
+                    break;
+                case 6:
+                    throw new Exception("This event has been cancelled");
+                    break;
             }
 
             $sampletypes = \App\sampletype::with(['event_samples' => function ($query) use ($event_subject) {
@@ -149,17 +150,18 @@ class PrimarySampleController extends Controller
                 case 2:
                     throw new Exception("This subject has been dropped");
                     break;
-                default:
+            }
+            switch ($event_subject->eventstatus_id) {
+                case 0:
+                case 1:
+                    throw new Exception("This event has not yet been scheduled");
                     break;
-            }
-            if ($event_subject->eventstatus_id < 2) {
-                throw new Exception("This event has not yet been scheduled");
-            }
-            if ($event_subject->eventstatus_id === 5) {
-                throw new Exception("This event has been missed");
-            }
-            if ($event_subject->eventstatus_id === 6) {
-                throw new Exception("This event has been cancelled");
+                case 5:
+                    throw new Exception("This event has been missed");
+                    break;
+                case 6:
+                    throw new Exception("This event has been cancelled");
+                    break;
             }
 
             $sampletypes = \App\sampletype::join('event_sample', 'sampletypes.id', '=', 'sampletype_id')

@@ -18,7 +18,7 @@ class sampletype extends Model
     'tranferDestination',
     'transferSource',
     'sampleGroup',
-    'tubeLabelType',
+    'tubeLabelType_id',
     'storageSampleType',
     'parentSampleType_id'
   ];
@@ -27,4 +27,15 @@ class sampletype extends Model
   {
     return $this->hasMany(event_sample::class);
   }
+
+  public function tubeLabelType()
+  {
+    return $this->belongsTo(tubeLabelType::class,'tubeLabelType_id','id');
+  }
+
+  public function parentSampleType()
+  {
+    return $this->belongsTo(sampletype::class, 'parentSampleType_id', 'id');
+  }
+  
 }

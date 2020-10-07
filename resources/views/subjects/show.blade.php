@@ -153,7 +153,7 @@
       @foreach ($events as $event)
       <tr class='odd:bg-gray-100 text-xs'>
         <td>{{$event->arm->name}}</td>
-        <td>{{$event->id}}</td>
+        <td>{{$event->pivot->id}}</td>
         <td>{{$event->name}}</td>
         <td class='text-left'>
           {{$event->pivot->itteration}}

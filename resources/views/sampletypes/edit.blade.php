@@ -1,6 +1,9 @@
 <x-layout>
     <x-pageheader>
         Edit Sample Type
+        <x-slot name='button'>
+            <x-delConfirm url='/sampletypes/{{$sampletype->id}}' />
+        </x-slot>
     </x-pageheader>
 
     @include('layouts.errormsg')
@@ -24,8 +27,8 @@
     {{ Form::text('transferSource', null) }}
     {{ Form::label('sampleGroup', 'Sample Group') }}
     {{ Form::text('sampleGroup', null) }}
-    {{ Form::label('tubeLabelType', 'Tube Label Type') }}
-    {{ Form::select('tubeLabelType', $tubeLabelTypes) }}
+    {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
+    {{ Form::select('tubeLabelType_id', $tubeLabelTypes) }}
     {{ Form::label('storageSampleType', 'Storage Sample Type') }}
     {{ Form::text('storageSampleType', null) }}
     {{ Form::label('parentSampleType_id', 'Parent Sample Type') }}
@@ -33,7 +36,7 @@
     {{ Form::label('active', 'Active') }}
     {{ Form::radio('active', 0) }} No {{ Form::radio('active', 1, true) }} Yes
     {{ Form::submit('Save Changes', ['class' => "w-full mt-2"]) }}
-    <x-buttonlink :href="url('/events')" class='text-orange-500'>Cancel</x-buttonlink>
+    <x-buttonlink :href="url('/sampletypes')" class='text-orange-500'>Cancel</x-buttonlink>
     {{ Form::close() }}
 
 </x-layout>

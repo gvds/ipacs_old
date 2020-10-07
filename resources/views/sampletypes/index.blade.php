@@ -17,7 +17,7 @@
             <th>Pooled</th>
             <th>Default Volume</th>
             <th>Volume Unit</th>
-            <th>Store</th>
+            {{-- <th>Store</th> --}}
             <th>Transfer Destination</th>
             <th>Transfer Source</th>
             <th>Sample Group</th>
@@ -35,22 +35,22 @@
             <td>{{$sampletype->pooled}}</td>
             <td>{{$sampletype->defaultVolume}}</td>
             <td>{{$sampletype->volumeUnit}}</td>
-            <td>{{$sampletype->store}}</td>
+            {{-- <td>{{$sampletype->store}}</td> --}}
             <td>{{$sampletype->transferDestination}}</td>
             <td>{{$sampletype->transferSource}}</td>
             <td>{{$sampletype->sampleGroup}}</td>
-            <td>{{$sampletype->tubeLabelType}}</td>
+            <td>{{$sampletype->tubeLabelType->tubeLabelType ?? ''}}</td>
             <td>{{$sampletype->storageSampleType}}</td>
-            <td>{{$sampletype->parentSampleType_id}}</td>
+            <td>{{$sampletype->parentSampleType->name ?? ''}}</td>
             <td>{{$sampletype->active}}</td>
             <td>
                 <x-buttonlink href="sampletypes/{{$sampletype->id}}/edit">
                     Edit
                 </x-buttonlink>
             </td>
-            <td>
+            {{-- <td>
                 <x-delConfirm url='/sampletypes/{{$sampletype->id}}' />
-            </td>
+            </td> --}}
         </tr>
         @endforeach
     </x-table>

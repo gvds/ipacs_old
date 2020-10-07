@@ -40,6 +40,11 @@ class subject extends Model
     return $this->belongsTo(arm::class, 'previous_arm_id');
   }
 
+  public function arms()
+  {
+    return $this->belongsToMany(arm::class)->withTimestamps();
+  }
+
   public function site()
   {
     return $this->belongsTo(site::class);
@@ -102,7 +107,10 @@ class subject extends Model
     $this->address1 = $validatedData['address1'];
     $this->address2 = $validatedData['address2'];
     $this->address3 = $validatedData['address3'];
-    return $this->save();
+    $response = $this->save();
+    if ($response !== true) {
+      throw new \ErrorException("Subject $this->subjectID failed to enrol : $response");
+    }
   }
 
   public function switchArm(Int $switchArm, $switchDate)
@@ -111,10 +119,14 @@ class subject extends Model
     $this->previousArmBaselineDate = $this->armBaselineDate;
     $this->armBaselineDate = $switchDate;
     $this->arm_id = $switchArm;
-    return $this->save();
+    $response = $this->save();
+    if ($response !== true) {
+      throw new \ErrorException("Subject $this->subjectID failed to switch : $response");
+    }
+    $this->arms()->attach($this->arm_id, ['armBaselineDate' => $switchDate, 'previous_arm_id' => $this->arm_id]);
   }
 
-  public function cancelEvents()
+  public function cancelOutstandingEvents()
   {
     $this->events()
       ->whereNotIn('eventstatus_id', [3, 4, 5])
@@ -126,31 +138,38 @@ class subject extends Model
 
   public function reverseArmSwitch()
   {
+    $this->arms()->detach($this->arm_id);
     $this->arm_id = $this->previous_arm_id;
     $this->armBaselineDate = $this->previousArmBaselineDate;
     $this->previous_arm_id = null;
     $this->previousArmBaselineDate = null;
-    return $this->save();
+    $response = $this->save();
+    if ($response !== true) {
+      throw new \ErrorException("Subject $this->subjectID failed to reverse switch : $response");
+    }
   }
 
   public function revertArmSwitchEvents($currentArm, $previousArm)
   {
     $response = $this->events()->detach($this->events()->where('arm_id', $currentArm)->pluck('events.id'));
     if ($response === 0) {
-      return (false);
+      throw new \ErrorException("Events for $this->subjectID could not be reverted");
     }
-    $previousEvents = $this->events()->where('arm_id', $previousArm)->get();
-    foreach ($previousEvents as $previousEvent) {
-      if (Carbon::parse($previousEvent->pivot->maxDate) < Carbon::today()) {
-        $evenstatus_id = 5;
-      } else {
-        $evenstatus_id = 0;
+    try {
+      $previousEvents = $this->events()->where('arm_id', $previousArm)->get();
+      foreach ($previousEvents as $previousEvent) {
+        if (Carbon::parse($previousEvent->pivot->maxDate) < Carbon::today()) {
+          $evenstatus_id = 5;
+        } else {
+          $evenstatus_id = 0;
+        }
+        $this->events()
+          ->wherePivot('eventstatus_id', 6)
+          ->updateExistingPivot($previousEvent->id, ['eventstatus_id' => $evenstatus_id]);
       }
-      $response = $this->events()
-        ->wherePivot('eventstatus_id', 6)
-        ->updateExistingPivot($previousEvent->id, ['eventstatus_id' => $evenstatus_id]);
+    } catch (\Throwable $th) {
+      throw new \ErrorException("Previous arm events for $this->subjectID could not be restored");
     }
-    return true;
   }
 
   public function createArmEvents($arm)
@@ -162,15 +181,12 @@ class subject extends Model
         } else {
           $labelStatus = 0;
         }
-        // dump($event);
-        // dump($labelStatus);
         $response = $this->events()->attach($event->id, ['labelStatus' => $labelStatus]);
         if ($response) {
           return ($response);
         }
       }
     }
-    // dd($arm);
     return true;
   }
 
@@ -184,12 +200,7 @@ class subject extends Model
         $timestamp = now();
       } else {
         if ($event->offset === 0) {
-          // if ($event->arm->arm_num === 1) {
           $eventstatus = 2;
-          $timestamp = now();
-          // } else {
-          //   $eventstatus = 1;
-          // }
         } else {
           $eventstatus = 0;
         }
@@ -272,6 +283,13 @@ class subject extends Model
       throw new Exception($returnmsg['error']);
     } elseif ($returnmsg['count'] === 0) {
       throw new Exception('REDCap record was not created');
+    }
+  }
+
+  public function checkAccessPermission()
+  {
+    if ($this->user_id !== auth()->user()->id) {
+      return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
     }
   }
 }

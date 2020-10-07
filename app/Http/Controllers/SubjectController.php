@@ -84,9 +84,8 @@ class SubjectController extends Controller
      */
     public function show(subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         $switcharms = is_null($subject->arm->switcharms) ? [] : json_decode($subject->arm->switcharms);
         $switcharms = \App\arm::whereIn('id', $switcharms)->pluck('name', 'id');
         $eventstatus = \App\eventStatus::all();
@@ -133,18 +132,16 @@ class SubjectController extends Controller
      */
     public function destroy(subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         $subject->delete();
         return redirect('/subjects');
     }
 
     public function enrol(Request $request, Subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $validatedData = $request->validate([
             'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior",
@@ -157,11 +154,7 @@ class SubjectController extends Controller
         try {
             DB::beginTransaction();
 
-            // Update subject record
-            $response = $subject->enrol($validatedData);
-            if ($response !== true) {
-                throw new \ErrorException("Subject $subject->subjectID failed to enrol : $response");
-            }
+            $subject->enrol($validatedData);
 
             // Schedule event dates
             $events = $subject->arm()->first()->events()->get();
@@ -188,9 +181,8 @@ class SubjectController extends Controller
 
     public function switch(Request $request, Subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $switcharms = json_decode($subject->arm->switcharms);
         $validatedData = $request->validate([
@@ -203,14 +195,9 @@ class SubjectController extends Controller
         try {
             DB::beginTransaction();
 
-            // Update subject record
-            $response = $subject->switchArm($validatedData['switchArm'], $validatedData['switchDate']);
-            if ($response !== true) {
-                throw new \ErrorException("Subject $subject->subjectID failed to switch : $response");
-            }
-
-            // Cancel all outstanding events
-            $subject->cancelEvents();
+            $subject->switchArm($validatedData['switchArm'], $validatedData['switchDate']);
+            
+            $subject->cancelOutstandingEvents();
 
             // Add event entries for the subject's arm to the event_subject table
             $arm = $subject->arm()->with('events')->first();
@@ -240,26 +227,18 @@ class SubjectController extends Controller
 
     public function reverseSwitch(Request $request, Subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         try {
             DB::beginTransaction();
 
             $currentArm = $subject->arm_id;
             $previousArm = $subject->previous_arm_id;
-            // Update subject record
-            $response = $subject->reverseArmSwitch();
-            if ($response !== true) {
-                throw new \ErrorException("Subject $subject->subjectID failed to reverse switch : $response");
-            }
-
-            // Delete current event entries and restore previous arm event entries in the event_subject table
-            $response = $subject->revertArmSwitchEvents($currentArm, $previousArm);
-            if ($response !== true) {
-                throw new \ErrorException("Events for $subject->subjectID could not be reverted : $response");
-            }
-
+            
+            $subject->reverseArmSwitch();
+            
+            $subject->revertArmSwitchEvents($currentArm, $previousArm);
+            
             \App\Label::addEventsToLabelQueue();
 
             DB::commit();
@@ -272,9 +251,8 @@ class SubjectController extends Controller
 
     public function drop(Request $request, Subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+        
         if ($subject->subject_status !== 1) {
             return redirect()->back()->with('error', "This subject cannot be dropped");
         }
@@ -285,9 +263,8 @@ class SubjectController extends Controller
 
     public function restore(Request $request, Subject $subject)
     {
-        if ($subject->user_id !== auth()->user()->id) {
-            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
-        }
+        $subject->checkAccessPermission();
+
         if ($subject->subject_status !== 2) {
             return redirect()->back()->with('error', "This subject cannot be restored");
         }

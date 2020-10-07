@@ -13,7 +13,7 @@ class CreateSamplesTable extends Migration
      */
     public function up()
     {
-        Schema::create('samples', function (Blueprint $table) {
+        Schema::create('sampletypes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('project_id');
             $table->string('name',50)->nullable();
@@ -21,17 +21,17 @@ class CreateSamplesTable extends Migration
             $table->tinyInteger('aliquots')->unsigned();
             $table->boolean('pooled')->default(0);
             $table->decimal('defaultVolume',8,2)->nullable();
-            $table->text('volumeUnit',10)->nullable();
+            $table->string('volumeUnit',10)->nullable();
             $table->boolean('store')->default(0);
-            $table->text('transferDestination',50)->nullable();
-            $table->text('transferSource',50)->nullable();
-            $table->text('sampleGroup',50)->nullable();
-            $table->tinyInteger('tubeLabelType_id');
-            $table->text('storageSampleType',50)->nullable();
+            $table->string('transferDestination',50)->nullable();
+            $table->string('transferSource',50)->nullable();
+            $table->string('sampleGroup',50)->nullable();
+            $table->unsignedBigInteger('tubeLabelType_id');
+            $table->string('storageSampleType',50)->nullable();
             $table->unsignedBigInteger('parentSampleType_id')->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();
-            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -42,6 +42,6 @@ class CreateSamplesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('arms');
+        Schema::dropIfExists('sampletypes');
     }
 }

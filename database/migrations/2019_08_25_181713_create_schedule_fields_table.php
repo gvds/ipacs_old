@@ -21,7 +21,7 @@ class CreateScheduleFieldsTable extends Migration
             $table->string('fieldtitle',25)->nullable();
             $table->tinyInteger('fieldlength')->unsigned()->default(0);
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            $table->foreign('project_id')->references('project_id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

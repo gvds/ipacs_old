@@ -24,8 +24,8 @@
     {{ Form::text('transferSource', null) }}
     {{ Form::label('sampleGroup', 'Sample Group') }}
     {{ Form::text('sampleGroup', null) }}
-    {{ Form::label('tubeLabelType', 'Tube Label Type') }}
-    {{ Form::select('tubeLabelType', $tubeLabelTypes) }}
+    {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
+    {{ Form::select('tubeLabelType_id', $tubeLabelTypes) }}
     {{ Form::label('storageSampleType', 'Storage Sample Type') }}
     {{ Form::text('storageSampleType', null) }}
     {{ Form::label('parentSampleType_id', 'Parent Sample Type') }}
