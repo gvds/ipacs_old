@@ -205,6 +205,12 @@
           {{Carbon\Carbon::parse($event->pivot->logDate)->format('Y-m-d')}}
           @endif
         </td>
+        <td>
+          {{ Form::open(['url' => '/event_subject/retrieve','method' => 'GET']) }}
+          {{ Form::hidden('pse', $subject->project_id . '_' . $subject->subjectID . '_' . $event->pivot->id) }}
+          <button class='bg-gray-300 rounded shadow px-2 py-1 m-0'>Log</button>
+          {{ Form::close() }}
+        </td>
       </tr>
       @endforeach
     </x-table>
