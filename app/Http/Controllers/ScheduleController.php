@@ -84,13 +84,34 @@ class ScheduleController extends Controller
             // Get users for whom this user is substituting
 
 
+            // Schedule events
+            \App\event_subject::whereHas('subject', function($query){
+                $query->where('project_id',session('currentProject'))
+                ->where('user_id', auth()->user()->id)
+                ->where('subject_status', 1);
+            })
+            ->whereHas('event', function($query){
+                $query->where('active', true);
+            })
+            ->where('minDate', '<=', $enddate)
+            ->where('eventstatus_id', '<', 3)
+            ->update(['eventstatus_id' => 2]);
+
             // Get scheduled subjects
-            $subjects = \App\subject::with(['events' => function ($query) use ($enddate) {
-                $query->where('minDate', '<=', $enddate);
-                $query->where('eventstatus_id', '<', 3);
+            // $subjects = \App\subject::with(['events' => function ($query) use ($enddate) {
+            //     $query->where('minDate', '<=', $enddate);
+            //     $query->where('eventstatus_id', '<', 3);
+            //     $query->where('active', true);
+            // }])
+            //     ->where('project_id', $currentProject->id)
+            //     ->where('user_id', auth()->user()->id)
+            //     ->where('subject_status', 1)
+            //     ->get();
+            $subjects = \App\subject::with(['events' => function ($query) {
+                $query->where('eventstatus_id', 2);
                 $query->where('active', true);
             }])
-                ->where('project_id', $currentProject->id)
+            ->where('project_id', $currentProject->id)
                 ->where('user_id', auth()->user()->id)
                 ->where('subject_status', 1)
                 ->get();
