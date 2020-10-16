@@ -47,10 +47,10 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'username' => 'required|between:3,50|unique:users,username',
-            'firstname' => 'required|between:3,50',
-            'surname' => 'required|between:3,50',
+            'firstname' => 'required|between:2,50',
+            'surname' => 'required|between:2,50',
             'email' => 'required|email|unique:users',
-            'telephone' => 'required|regex:/^0\d{2} \d{3}-\d{4}$/',
+            'telephone' => 'nullable|regex:/^0\d{2} \d{3}-\d{4}$/',
             'homesite' => 'required|between:3,20'
         ]);
         $user = User::create(array_merge($validatedData, ['password' => bcrypt(Str::random(30))]));
@@ -118,10 +118,10 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'username' => 'required|between:3,50|unique:users,username,' . $user->id,
-            'firstname' => 'required|between:3,50',
-            'surname' => 'required|between:3,50',
+            'firstname' => 'required|between:2,50',
+            'surname' => 'required|between:2,50',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'telephone' => 'required|regex:/^0\d{2} \d{3}-\d{4}$/',
+            'telephone' => 'nullable|regex:/^0\d{2} \d{3}-\d{4}$/',
             'homesite' => 'required|between:3,20'
         ]);
         $user->update($validatedData);

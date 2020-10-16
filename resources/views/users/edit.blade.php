@@ -16,7 +16,7 @@
   {!! Form::label('email', 'E-Mail Address') !!}
   {!! Form::email('email', null, ['required']) !!}
   {!! Form::label('telephone', 'Telephone Number') !!}
-  {!! Form::text('telephone', null, ['required','placeholder'=>'0## ###-####']) !!}
+  {!! Form::text('telephone', null, ['placeholder'=>'0## ###-####']) !!}
   {!! Form::label('homesite', 'Site') !!}
   {!! Form::text('homesite', null, ['required']) !!}
   {!! Form::submit('Update Record', ['class' => "w-full mt-2"]) !!}
