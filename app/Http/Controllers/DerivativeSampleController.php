@@ -87,6 +87,7 @@ class DerivativeSampleController extends Controller
     public function retrieve(event_sample $event_sample)
     {
         $subject = $event_sample->event_subject->subject;
+
         if ($subject->site_id !== auth()->user()->project_site) {
             return back()->withErrors('This sample does not belong to your site');
         }
@@ -101,13 +102,15 @@ class DerivativeSampleController extends Controller
             ->orderBy('sampleGroup')
             ->orderBy('name')
             ->get();
-        return view('derivativesamples.log', compact('sampletypes', 'event_sample'));
+        $parent_sample = $event_sample;
+        return view('derivativesamples.log', compact('sampletypes', 'parent_sample'));
     }
 
     public function log(Request $request)
     {
         $rules = [
             'event_subject_id' => 'required|integer|exists:event_subject,id',
+            'parent_sample_id' => 'required|integer|exists:event_sample,id',
             'type' => 'required|array',
             'vol' => 'array',
             'aliquot' => 'array',
@@ -128,7 +131,7 @@ class DerivativeSampleController extends Controller
             'vol.*.*' => "Volume :value"
         ];
         $validatedData = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
-
+        $parent_sample = event_sample::find($validatedData['parent_sample_id']);
         $user = auth()->user();
         $records = 0;
         if (isset($validatedData['type'])) {
@@ -146,6 +149,7 @@ class DerivativeSampleController extends Controller
                             $sample->logTime = now();
                             $sample->samplestatus_id = 2;
                             $sample->aliquot = $validatedData['aliquot'][$sampletype_id][$number];
+                            $sample->parentBarcode = $parent_sample->barcode;
                             $sample->save();
                             $records++;
                         }
