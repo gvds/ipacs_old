@@ -17,10 +17,10 @@ class EventSubjectController extends Controller
     public function show(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+_\d{1,2}$/'
         ]);
         try {
-            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id, $itteration) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
@@ -96,7 +96,7 @@ class EventSubjectController extends Controller
         $event_subject->eventstatus_id = $validatedData['eventstatus'];
         $event_subject->logDate = in_array($validatedData['eventstatus'], [3, 4, 5]) ? $validatedData['logdate'] : null;
         $event_subject->save();
-        $pse = session('currentProject') . "_" . $event_subject->subject->subjectID . '_' . $event_subject->id;
+        $pse = session('currentProject') . "_" . $event_subject->subject->subjectID . '_' . $event_subject->id . '_' . $event_subject->itteration;
         return redirect()->action(
             'EventSubjectController@show',
             ['pse' => $pse]

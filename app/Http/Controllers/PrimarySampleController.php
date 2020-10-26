@@ -14,10 +14,10 @@ class PrimarySampleController extends Controller
     public function primary(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+_\d{1,2}$/'
         ]);
         try {
-            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id, $itteration) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
@@ -106,7 +106,7 @@ class PrimarySampleController extends Controller
                             $sample->event_subject_id = $validatedData['event_subject_id'];
                             $sample->barcode = $barcode;
                             $sample->volume = $validatedData['vol'][$sampletype_id][$number];
-                            $sample->site = $user->projectSite;
+                            $sample->site_id = $user->projectSite;
                             if ($validatedData['log'] == 1) {
                                 $sample->loggedBy = $user->id;
                                 $sample->logTime = now();
@@ -126,10 +126,10 @@ class PrimarySampleController extends Controller
     public function primarylogging(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+_\d{1,2}$/'
         ]);
         try {
-            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id, $itteration) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
