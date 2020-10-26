@@ -61,7 +61,7 @@ class LabelController extends PDF_Label
 
         foreach ($events as $event) {
             // Generate Name labels
-            $PSE = $event->project_id . '_' . $event->subjectID . '_' . $event->id . '_' . $event->itteration;
+            $PSE = $event->project_id . '_' . $event->subjectID . '_' . $event->id;
             for ($i = 0; $i < $event->name_labels; $i++) {
                 $text = sprintf("%s %s\n%s\n%s [%s]\nArm: %s", $event->firstname, $event->surname, $PSE, $event->eventname, $event->itteration, $event->armname);
                 $this->fpdf->Add_BarLabel($text, $PSE);

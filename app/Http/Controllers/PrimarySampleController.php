@@ -14,10 +14,10 @@ class PrimarySampleController extends Controller
     public function primary(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+_\d{1,2}$/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
         ]);
         try {
-            list($project_id, $subjectID, $event_subject_id, $itteration) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
@@ -126,10 +126,10 @@ class PrimarySampleController extends Controller
     public function primarylogging(Request $request)
     {
         $validatedData = $request->validate([
-            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+_\d{1,2}$/'
+            'pse' => 'required|regex:/^\d+_([A-Za-z0-9]+)_\d+$/'
         ]);
         try {
-            list($project_id, $subjectID, $event_subject_id, $itteration) = explode('_', $validatedData['pse']);
+            list($project_id, $subjectID, $event_subject_id) = explode('_', $validatedData['pse']);
             if ($project_id != session('currentProject')) {
                 throw new Exception("This barcode does not belong to the current project", 1);
             }
