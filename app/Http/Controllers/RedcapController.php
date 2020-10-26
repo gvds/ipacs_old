@@ -296,4 +296,5 @@ class RedcapController extends Controller
         $redcap_projects = DB::connection('redcap')->select("select * from redcap_projects");
         dd($redcap_projects);
     }
+
 }

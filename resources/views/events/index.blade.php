@@ -19,6 +19,7 @@
             <th>Name Labels</th>
             <th>Subject Event Labels</th>
             <th>Study ID Labels</th>
+            <th>Repeatable</th>
             <th>Active</th>
         </x-slot>
         @foreach ($events as $event)
@@ -32,6 +33,7 @@
             <td>{{$event->name_labels}}</td>
             <td>{{$event->subject_event_labels}}</td>
             <td>{{$event->study_id_labels}}</td>
+            <td>{{$event->repeatable}}</td>
             <td>{{$event->active}}</td>
             <td>
                 <x-buttonlink href="events/{{$event->id}}/edit">

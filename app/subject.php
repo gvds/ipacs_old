@@ -269,6 +269,8 @@ class subject extends Model
     }
     $event_name = $events[0]['unique_event_name'];
 
+    $dag = strtolower(auth()->user()->currentSite[0]->name);
+
     // New SubjectID for REDCap database
     $params = [
       'content' => 'record',
@@ -276,6 +278,7 @@ class subject extends Model
     $data = [
       'record_id' => $this->subjectID,
       'redcap_event_name' => $event_name,
+      'redcap_data_access_group' => $dag,
     ];
     $response = $this->curl($params, $data);
     $returnmsg = json_decode($response, true);
@@ -286,10 +289,38 @@ class subject extends Model
     }
   }
 
+  // public function addRepeatingEvent(event_subject $event_subject, int $instance)
+  // {
+  //   $event = event::where('id',$event_subject->event_id)->with('arm')->first();
+
+  //   $redcap_event = DB::connection('redcap')->select("select * from redcap_events_metadata where event_id = $event->redcap_event_id");
+    
+  //   $unique_event_name = str_replace(' ','_',strtolower($redcap_event[0]->descrip)) . '_arm' . '_' . $event->arm->arm_num;
+
+  //   $params = [
+  //     'content' => 'record',
+  //   ];
+  //   $data = [
+  //     'record_id' => $this->subjectID,
+  //     'unscheduled_visit_complete' => 0,
+  //     'redcap_event_name' => $unique_event_name,
+  //     'redcap_repeat_instance' => $instance,
+  //   ];
+  //   // dd($data);
+  //   $response = $this->curl($params, $data);
+  //   $returnmsg = json_decode($response, true);
+  //   if (array_key_exists("error", $returnmsg)) {
+  //     throw new Exception($returnmsg['error']);
+  //   } elseif ($returnmsg['count'] === 0) {
+  //     throw new Exception('REDCap record was not created');
+  //   }
+  // }
+
   public function checkAccessPermission()
   {
     if ($this->user_id !== auth()->user()->id) {
       return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
     }
   }
+
 }

@@ -21,6 +21,12 @@ class Team extends LaratrustTeam
         ->withPivot('site_id','redcap_api_token');
     }
 
+    public function subject_managers()
+    {
+        return $this->belongsToMany(User::class)
+        ->wherePermissionIs('manage-subjects');
+    }
+
     public function sites()
     {
         return $this->hasMany(site::class,'project_id');

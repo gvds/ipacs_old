@@ -150,21 +150,26 @@
         {{-- <th>Registered</th> --}}
         <th>Logged</th>
       </x-slot>
-      @foreach ($events as $event)
+      @foreach ($events as $key => $event)
       <tr class='odd:bg-gray-100 text-xs'>
         <td>{{$event->arm->name}}</td>
         <td>{{$event->pivot->id}}</td>
         <td>{{$event->name}}</td>
-        <td class='text-left'>
+        <td>
           {{$event->pivot->itteration}}
-          @if (in_array($event->pivot->eventstatus_id, [3,4]))
+          @if ($event->repeatable & in_array($event->pivot->eventstatus_id, [3,4]))
+          @if (!isset($events[$key+1]) or $events[$key+1]->id !== $event->id)
           <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
-            <x-buttonlink>
-              +
-            </x-buttonlink>
-            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>Add
-              Itteration</span>
+            {{ Form::open(['url' => "/subjects/$subject->id/addEvent",'method' => 'POST','style'=>'display:inline-block']) }}
+            {{ Form::hidden('event_subject_id', $event->pivot->id) }}
+            {{ Form::hidden('itteration', $event->pivot->itteration) }}
+            <button class='bg-gray-300 rounded shadow px-2 py-1 ml-4'>+</button>
+            {{ Form::close() }}
+            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>
+              Add Itteration
+            </span>
           </span>
+          @endif
           @endif
         </td>
         <td>{{$eventstatus[$event->pivot->eventstatus_id]->eventstatus}}</td>
@@ -181,13 +186,12 @@
           @endswitch
           @if ($event->pivot->labelStatus === 2)
           <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
-            @csrf
-            <x-buttonlink href="/labels/{{$event->pivot->id}}/queue">
+            <x-buttonlink href="/labels/{{$event->pivot->id}}/queue" class='ml-2 inline-block'>
               Q
             </x-buttonlink>
-            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>Add
-              to label
-              queue</span>
+            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>
+              Add to label queue
+            </span>
           </span>
           @endif
         </td>

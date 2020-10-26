@@ -26,6 +26,8 @@
     {{ Form::text('subject_event_labels', null) }}
     {{ Form::label('study_id_labels', 'Study ID Labels') }}
     {{ Form::text('study_id_labels', null) }}
+    {{ Form::label('repeatable', 'Repeatable') }}
+    {{ Form::radio('repeatable', 0, true) }} No {{ Form::radio('repeatable', 1) }} Yes
     {{ Form::label('active', 'Active') }}
     {{ Form::radio('active', 0) }} No {{ Form::radio('active', 1, true) }} Yes
     {{ Form::submit('Save Changes', ['class' => "w-full mt-2"]) }}

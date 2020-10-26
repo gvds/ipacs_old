@@ -48,7 +48,7 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany(Team::class)
-            ->withPivot('site_id','redcap_api_token');
+            ->withPivot('site_id', 'redcap_api_token');
     }
 
     public function team_member_permissions()
@@ -60,6 +60,19 @@ class User extends Authenticatable
     public function sites()
     {
         return $this->belongsToMany(site::class, 'team_user');
+    }
+
+    public function currentSite()
+    {
+        return $this->belongsToMany(site::class, 'team_user', 'user_id', 'site_id', 'id', 'id')
+            ->wherePivot('team_id', session('currentProject'));
+    }
+
+    public function substitute()
+    {
+        return $this->belongsToMany(User::class, 'user_substitute', 'user_id', 'substitute_user_id')
+            ->withPivot('team_id')
+            ->wherePivot('team_id', session('currentProject')); //->using(UserSubstitute::class);
     }
 
     public function getProjectSiteAttribute()

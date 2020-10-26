@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\event_subject;
 use App\subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -93,6 +94,8 @@ class SubjectController extends Controller
             ->events()
             ->with('arm')
             ->orderBy('offset')
+            ->orderBy('eventDate')
+            ->orderBy('itteration')
             ->get()
             ->sortBy(function ($event) {
                 return $event->arm->arm_num;
@@ -164,14 +167,14 @@ class SubjectController extends Controller
                     throw new \ErrorException("Event dates for $subject->subjectID could not be set : $response");
                 }
             }
-            
+
             if (isset($request->currentProject->redcapProject_id)) {
                 $subject->createREDCapRecord();
             }
-            
-            \App\Label::addEventsToLabelQueue();
 
             DB::commit();
+
+            \App\Label::addEventsToLabelQueue();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', $th->getMessage())->withInput();
@@ -196,7 +199,7 @@ class SubjectController extends Controller
             DB::beginTransaction();
 
             $subject->switchArm($validatedData['switchArm'], $validatedData['switchDate']);
-            
+
             $subject->cancelOutstandingEvents();
 
             // Add event entries for the subject's arm to the event_subject table
@@ -215,9 +218,9 @@ class SubjectController extends Controller
                 $subject->createREDCapRecord();
             }
 
-            \App\Label::addEventsToLabelQueue();
-
             DB::commit();
+
+            \App\Label::addEventsToLabelQueue();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', $th->getMessage())->withInput();
@@ -234,14 +237,14 @@ class SubjectController extends Controller
 
             $currentArm = $subject->arm_id;
             $previousArm = $subject->previous_arm_id;
-            
+
             $subject->reverseArmSwitch();
-            
+
             $subject->revertArmSwitchEvents($currentArm, $previousArm);
-            
-            \App\Label::addEventsToLabelQueue();
 
             DB::commit();
+
+            \App\Label::addEventsToLabelQueue();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', $th->getMessage())->withInput();
@@ -252,7 +255,7 @@ class SubjectController extends Controller
     public function drop(Request $request, Subject $subject)
     {
         $subject->checkAccessPermission();
-        
+
         if ($subject->subject_status !== 1) {
             return redirect()->back()->with('error', "This subject cannot be dropped");
         }
@@ -287,5 +290,45 @@ class SubjectController extends Controller
             ->where('user_id', auth()->user()->id)
             ->pluck('subjectID', 'id')
             ->take(8);
+    }
+
+    /**
+     * Add an instance of a repeatable event
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addEvent(Request $request, Subject $subject)
+    {
+        $subject->checkAccessPermission();
+        $validatedData = $request->validate([
+            'event_subject_id' => "required|integer|exists:event_subject,id",
+        ]);
+        try {
+            DB::beginTransaction();
+            $event_subject = event_subject::find($validatedData['event_subject_id']);
+            $lastInstance = event_subject::where('subject_id', $subject->id)
+                ->where('event_id', $event_subject->event_id)
+                ->orderBy('itteration', 'desc')
+                ->first();
+            if (is_null($lastInstance)) {
+                throw new \ErrorException("No previous itterations of this event could be found");
+            }
+            $event = \App\event::where('id', $event_subject->event_id)->with('arm')->first();
+            $subject->events()->attach($event->id, [
+                'labelStatus' => 0,
+                'itteration' => $lastInstance->itteration + 1,
+                'eventDate' => $lastInstance->eventDate,
+                'minDate' => $lastInstance->minDate,
+                'maxDate' => $lastInstance->maxDate,
+            ]);
+
+            DB::commit();
+
+            \App\Label::addEventsToLabelQueue();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+        return redirect()->back()->with('message', "New event itteration created");
     }
 }
