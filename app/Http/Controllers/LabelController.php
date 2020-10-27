@@ -34,7 +34,7 @@ class LabelController extends PDF_Label
                 'subject_event_labels',
                 'name_labels',
                 'study_id_labels',
-                'itteration'
+                'iteration'
             ])
             ->where('subjects.project_id', session('currentProject'))
             ->where('user_id', auth()->user()->id)
@@ -63,7 +63,7 @@ class LabelController extends PDF_Label
             // Generate Name labels
             $PSE = $event->project_id . '_' . $event->subjectID . '_' . $event->id;
             for ($i = 0; $i < $event->name_labels; $i++) {
-                $text = sprintf("%s %s\n%s\n%s [%s]\nArm: %s", $event->firstname, $event->surname, $PSE, $event->eventname, $event->itteration, $event->armname);
+                $text = sprintf("%s %s\n%s\n%s [%s]\nArm: %s", $event->firstname, $event->surname, $PSE, $event->eventname, $event->iteration, $event->armname);
                 $this->fpdf->Add_BarLabel($text, $PSE);
             }
             // Generate Study ID labels
@@ -73,7 +73,7 @@ class LabelController extends PDF_Label
             }
             // Generate PSE labels
             for ($i = 0; $i < $event->subject_event_labels; $i++) {
-                $text = sprintf("%s\n%s [%s]\nArm: %s", $PSE, $event->eventname, $event->itteration, $event->armname);
+                $text = sprintf("%s\n%s [%s]\nArm: %s", $PSE, $event->eventname, $event->iteration, $event->armname);
                 $this->fpdf->Add_BarLabel($text, $PSE);
             }
         }

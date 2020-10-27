@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <th class='text-left'>Event</th>
-                <td>{{$event_subject->event->name}} [{{$event_subject->itteration}}]</td>
+                <td>{{$event_subject->event->name}} [{{$event_subject->iteration}}]</td>
             </tr>
             <tr>
                 <th class='text-left'>Scheduled</th>

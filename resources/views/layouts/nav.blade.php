@@ -91,7 +91,7 @@
         <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sampletypes">Sample Types</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link>
+        {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
@@ -139,6 +139,7 @@
         document.getElementById('logout-form').submit();">
           Log out
         </x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/substitute">My Substitutes</x-nav.dropdown-link>
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
           @csrf

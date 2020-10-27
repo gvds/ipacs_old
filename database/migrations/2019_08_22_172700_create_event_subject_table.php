@@ -17,7 +17,7 @@ class CreateEventSubjectTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('event_id')->unsigned();
             $table->bigInteger('subject_id')->unsigned();
-            $table->tinyInteger('itteration')->unsigned()->default(1);
+            $table->tinyInteger('iteration')->unsigned()->default(1);
             $table->tinyInteger('eventstatus_id')->unsigned()->default(0);
             $table->tinyInteger('labelStatus')->default(0);
             $table->date('eventDate');
@@ -28,7 +28,7 @@ class CreateEventSubjectTable extends Migration
             $table->date('logDate')->nullable();
             $table->timestamps();
 
-            $table->index(['event_id', 'subject_id', 'itteration']);
+            $table->index(['event_id', 'subject_id', 'iteration']);
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });

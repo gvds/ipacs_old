@@ -141,7 +141,7 @@
         <th>Arm</th>
         <th>Event ID</th>
         <th>Event</th>
-        <th>Itteration</th>
+        <th>Iteration</th>
         <th>Status</th>
         <th>Label Status</th>
         <th>Min Date</th>
@@ -156,17 +156,17 @@
         <td>{{$event->pivot->id}}</td>
         <td>{{$event->name}}</td>
         <td>
-          {{$event->pivot->itteration}}
+          {{$event->pivot->iteration}}
           @if ($event->repeatable & in_array($event->pivot->eventstatus_id, [3,4]))
           @if (!isset($events[$key+1]) or $events[$key+1]->id !== $event->id)
           <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
             {{ Form::open(['url' => "/subjects/$subject->id/addEvent",'method' => 'POST','style'=>'display:inline-block']) }}
             {{ Form::hidden('event_subject_id', $event->pivot->id) }}
-            {{ Form::hidden('itteration', $event->pivot->itteration) }}
+            {{ Form::hidden('iteration', $event->pivot->iteration) }}
             <button class='bg-gray-300 rounded shadow px-2 py-1 ml-4'>+</button>
             {{ Form::close() }}
             <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>
-              Add Itteration
+              Add Iteration
             </span>
           </span>
           @endif

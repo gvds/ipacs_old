@@ -95,7 +95,7 @@ class SubjectController extends Controller
             ->with('arm')
             ->orderBy('offset')
             ->orderBy('eventDate')
-            ->orderBy('itteration')
+            ->orderBy('iteration')
             ->get()
             ->sortBy(function ($event) {
                 return $event->arm->arm_num;
@@ -308,16 +308,16 @@ class SubjectController extends Controller
             $event_subject = event_subject::find($validatedData['event_subject_id']);
             $lastInstance = event_subject::where('subject_id', $subject->id)
                 ->where('event_id', $event_subject->event_id)
-                ->orderBy('itteration', 'desc')
+                ->orderBy('iteration', 'desc')
                 ->first();
             if (is_null($lastInstance)) {
-                throw new \ErrorException("No previous itterations of this event could be found");
+                throw new \ErrorException("No previous iterations of this event could be found");
             }
             $event = \App\event::where('id', $event_subject->event_id)->with('arm')->first();
             $subject->events()->attach($event->id, [
                 'labelStatus' => 0,
-                'itteration' => $lastInstance->itteration + 1,
-                'eventDate' => $lastInstance->eventDate,
+                'iteration' => $lastInstance->iteration + 1,
+                'eventDate' => today(),
                 'minDate' => $lastInstance->minDate,
                 'maxDate' => $lastInstance->maxDate,
             ]);
@@ -329,6 +329,6 @@ class SubjectController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
-        return redirect()->back()->with('message', "New event itteration created");
+        return redirect()->back()->with('message', "New event iteration created");
     }
 }

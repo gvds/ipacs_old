@@ -12,7 +12,8 @@
     @endphp
     <div x-data="">
         {{ Form::open(['url' => '/derivative', 'class' => 'form max-w-none mt-2', 'method' => 'POST', 'x-on:keydown.enter.prevent' => '']) }}
-        {{ Form::hidden('event_subject_id',$event_sample->event_subject_id)}}
+        {{ Form::hidden('event_subject_id',$parent_sample->event_subject_id)}}
+        {{ Form::hidden('parent_sample_id',$parent_sample->id)}}
         <div>
             <x-table>
                 @foreach ($sampletypes as $sampletype)
