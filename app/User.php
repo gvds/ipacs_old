@@ -71,8 +71,17 @@ class User extends Authenticatable
     public function substitute()
     {
         return $this->belongsToMany(User::class, 'user_substitute', 'user_id', 'substitute_user_id')
+            ->withTimestamps()
             ->withPivot('team_id')
             ->wherePivot('team_id', session('currentProject')); //->using(UserSubstitute::class);
+    }
+
+    public function substitutees()
+    {
+        return $this->belongsToMany(User::class, 'user_substitute', 'substitute_user_id', 'user_id')
+            ->withTimestamps()
+            ->withPivot('team_id')
+            ->wherePivot('team_id', session('currentProject'));
     }
 
     public function getProjectSiteAttribute()

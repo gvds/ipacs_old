@@ -320,6 +320,7 @@ class SubjectController extends Controller
                 'eventDate' => today(),
                 'minDate' => $lastInstance->minDate,
                 'maxDate' => $lastInstance->maxDate,
+                'eventstatus_id' => 2
             ]);
 
             DB::commit();

@@ -65,6 +65,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('/permissions', 'PermissionController');
     });
 
+    Route::middleware('project.auth:manage-subjects')->group(function () {
+        Route::get('/substitute', 'UserSubstituteController@index');
+        Route::post('/substitute', 'UserSubstituteController@store');
+        Route::delete('/substitute', 'UserSubstituteController@destroy');
+    });
+
     // Route::group(['middleware' => ['permission:manage-teams,another_study']], function () {
     Route::middleware('project.auth:manage-teams')->group(function () {
         Route::get('/team', 'TeamController@index');
@@ -93,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/subjects/{subject}/reverseSwitch', 'SubjectController@reverseSwitch');
         Route::post('/subjects/{subject}/drop', 'SubjectController@drop');
         Route::post('/subjects/{subject}/restore', 'SubjectController@restore');
+        Route::post('/subjects/{subject}/addEvent', 'SubjectController@addEvent');
 
         Route::get('/schedule/{week}', 'ScheduleController@generate');
 

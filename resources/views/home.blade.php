@@ -16,6 +16,23 @@
             </h2>
             @endif
 
+            @isset($currentSubstitute)
+            <div class='mb-3 font-medium italic text-white tracking-wider bg-blue-900 rounded px-2 py-1'>
+                <a href='/substitute'>You are currently being substituted by {{$currentSubstitute->fullname}}</a>
+            </div>
+            @endisset
+
+            @isset($currentSubstitutees)
+            <div class='mb-3 font-medium italic text-white tracking-wider bg-blue-900 rounded px-2 py-1'>
+                <div>
+                    You are currently substituting for:
+                </div>
+                @foreach ($currentSubstitutees as $currentsubstitutee)
+                    <div class='ml-10'>{{$currentsubstitutee->fullname}}</div>
+                @endforeach
+            </div>
+            @endisset
+
             @include('layouts.errormsg')
 
             {{-- <ul class="list-reset">
