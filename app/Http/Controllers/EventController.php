@@ -51,6 +51,7 @@ class EventController extends Controller
             'name_labels' => 'required|integer|min:0',
             'subject_event_labels' => 'required|integer|min:0',
             'study_id_labels' => 'required|integer|min:0',
+            'repeatable' => 'required|boolean',
             'active' => 'required|boolean'
         ]);
         event::create($validatedData);
@@ -101,6 +102,7 @@ class EventController extends Controller
             'name_labels' => 'required|integer|min:0',
             'subject_event_labels' => 'required|integer|min:0',
             'study_id_labels' => 'required|integer|min:0',
+            'repeatable' => 'required|boolean',
             'active' => 'required|boolean'
         ]);
         $event->update($validatedData);

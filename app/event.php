@@ -17,6 +17,7 @@ class event extends Model
     'name_labels',
     'subject_event_labels',
     'study_id_labels',
+    'repeatable',
     'active'
   ];
 
