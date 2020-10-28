@@ -26,6 +26,7 @@ class CreateEventsTable extends Migration
             $table->tinyInteger('subject_event_labels')->unsigned()->default(0);
             $table->tinyInteger('study_id_labels')->unsigned()->default(0);
             // $table->tinyInteger('event_order')->unsigned()->default(0);
+            $table->boolean('repeatable')->default(0);
             $table->boolean('active')->default(1);
             $table->timestamps();
             

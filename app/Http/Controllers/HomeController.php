@@ -23,7 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $user = auth()->user();
         $currentProject = \App\project::find(session('currentProject', null));
         $currentSubstitute = auth()->user()->substitute->first();
         $currentSubstitutees = auth()->user()->substitutees;

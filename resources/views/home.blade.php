@@ -22,16 +22,16 @@
             </div>
             @endisset
 
-            @isset($currentSubstitutees)
+            @if(isset($currentSubstitutees) and count($currentSubstitutees)>0)
             <div class='mb-3 font-medium italic text-white tracking-wider bg-blue-900 rounded px-2 py-1'>
                 <div>
                     You are currently substituting for:
                 </div>
                 @foreach ($currentSubstitutees as $currentsubstitutee)
-                    <div class='ml-10'>{{$currentsubstitutee->fullname}}</div>
+                <div class='ml-10'>{{$currentsubstitutee->fullname}}</div>
                 @endforeach
             </div>
-            @endisset
+            @endif
 
             @include('layouts.errormsg')
 
