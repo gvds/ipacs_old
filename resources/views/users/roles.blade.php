@@ -3,7 +3,7 @@
     Edit Roles for {{$user->full_name}}
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {{ Form::open(['url' => ["/users/$user->id/roles"], 'method' => 'post', 'class'=>'form']) }}
   <x-table>

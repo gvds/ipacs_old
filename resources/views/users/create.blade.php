@@ -3,7 +3,7 @@
     Create New User
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {!! Form::open(['url' => 'users', 'class' => 'form']) !!}
   {!! Form::label('username', 'Username') !!}

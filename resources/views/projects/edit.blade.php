@@ -4,7 +4,7 @@
         Edit Project
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::model($project, ['url' => "/project/$project->id", 'method' => 'patch', 'class'=>'form']) }}
     {{ Form::label('project', 'Project Name') }}

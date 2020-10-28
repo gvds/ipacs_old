@@ -3,7 +3,7 @@
     Project Permissions for {{$user->full_name}}
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {{ Form::open(['url' => ["/team/$user->id/permissions"], 'method' => 'PATCH', 'class'=>'form']) }}
   <x-table>

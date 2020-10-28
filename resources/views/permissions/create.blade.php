@@ -4,7 +4,7 @@
     Create New Permission
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
         {!! Form::open(['url' => 'permissions', 'class'=>'form']) !!}
         {!! Form::label('name', 'Permission Name') !!}

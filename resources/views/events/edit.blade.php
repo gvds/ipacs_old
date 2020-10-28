@@ -3,7 +3,7 @@
         Edit Event
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::model($event, ['route' => ['events.update', $event], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Event Name') }}

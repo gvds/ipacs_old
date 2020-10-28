@@ -3,7 +3,7 @@
         Sample Storage Reports
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     <x-table class='w-full'>
         <x-slot name='head'>

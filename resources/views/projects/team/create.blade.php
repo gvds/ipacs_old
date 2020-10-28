@@ -4,7 +4,7 @@
       Add Team Member
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
   {{ Form::open(['url' => '/team', 'class' => 'form']) }}
   {{ Form::label('user', 'New Member', ['class'=>'text-sm']) }}
   {{ Form::select('user', $users, null, ['required']) }}

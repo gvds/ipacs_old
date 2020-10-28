@@ -3,7 +3,7 @@
         Allocate Sample Storage
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     <div class='flex space-x-32'>
         <div>

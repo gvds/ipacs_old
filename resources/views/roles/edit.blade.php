@@ -4,7 +4,7 @@
     Edit Role
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {{ Form::model($role, ['route' => ['roles.update', $role], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}

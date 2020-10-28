@@ -4,7 +4,7 @@
         Generate Subject IDs
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/subjects', 'class' => 'form', 'method' => 'POST']) }}
     <table>

@@ -3,7 +3,7 @@
         New Sample Type
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/sampletypes', 'class'=>'form']) }}
     {{ Form::label('name', 'Sample Name') }}

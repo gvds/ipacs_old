@@ -8,6 +8,6 @@
     {{ Form::text('parent', null, ['placeholder'=>'Scan Parent barcode...','autocomplete'=>'off', 'autofocus']) }}
     {{ Form::close() }}
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
 </x-layout>

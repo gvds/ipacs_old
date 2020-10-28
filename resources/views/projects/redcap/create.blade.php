@@ -4,7 +4,7 @@
         Import REDCap Project
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/redcapproject', 'class' => 'form']) }}
     {{ Form::label('redcapProject_id', 'REDCap Project') }}

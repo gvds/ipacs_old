@@ -4,7 +4,7 @@
       Add Site
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
   {{ Form::open(['url' => '/sites', 'class' => 'form']) }}
   {{ Form::label('name', 'New Site Name', ['class'=>'text-sm']) }}
   {{ Form::text('name', null, ['required']) }}

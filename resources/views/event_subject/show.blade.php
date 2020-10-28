@@ -4,7 +4,7 @@
         Log Event Status
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/event_subject/retrieve', 'class' => 'form', 'method' => 'GET']) }}
     {{ Form::text('pse', null, ['placeholder'=>'Scan PSE barcode...','autocomplete'=>'off', 'autofocus']) }}

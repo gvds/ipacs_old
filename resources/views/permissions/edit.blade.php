@@ -4,7 +4,7 @@
     Edit Permission
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {{ Form::model($permission, ['route' => ['permissions.update', $permission], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Permission Name') }}

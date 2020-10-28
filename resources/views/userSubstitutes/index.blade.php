@@ -4,7 +4,7 @@
         Substitutes
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     @isset($currentSubstitute)
     <div class='mb-3 font-medium italic text-white tracking-wider bg-blue-900 rounded px-2 py-1'>

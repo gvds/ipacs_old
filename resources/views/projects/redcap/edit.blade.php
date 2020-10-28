@@ -4,7 +4,7 @@
         Edit REDCap Project
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
     {{ Form::model($project, ['url' => "/redcapproject/$project->id", 'method' => 'patch', 'class'=>'form']) }}
     {{ Form::label('project', 'Project Name') }}
     <div class='font-bold text-lg'>{{$project->project}}</div>

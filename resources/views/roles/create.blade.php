@@ -3,7 +3,7 @@
     Create New Role
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {{ Form::open(['url' => 'roles', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}

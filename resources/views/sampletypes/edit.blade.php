@@ -6,7 +6,7 @@
         </x-slot>
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::model($sampletype, ['route' => ['sampletypes.update', $sampletype], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Sample Name') }}

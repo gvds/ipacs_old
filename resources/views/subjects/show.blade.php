@@ -9,7 +9,7 @@
     </x-slot>
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   <div class='flex'>
     <div class='flex-col'>

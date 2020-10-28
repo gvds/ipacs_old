@@ -4,7 +4,7 @@
     Upload Data File
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
   <div class='flex space-x-40'>
     {{ Form::open(['url' => '/datafiles', 'class' => 'form','files'=>true,'method'=>'POST']) }}
     {{ Form::hidden('fileset', $fileset) }}

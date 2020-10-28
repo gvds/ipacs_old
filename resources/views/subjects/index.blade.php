@@ -4,7 +4,7 @@
     Subject Search
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   <div class='w-full mt-3'>
 

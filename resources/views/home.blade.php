@@ -33,7 +33,7 @@
             </div>
             @endif
 
-            @include('layouts.errormsg')
+            @include('layouts.message')
 
             {{-- <ul class="list-reset">
                     <li class="inline px-4">

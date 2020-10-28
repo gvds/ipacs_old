@@ -4,7 +4,7 @@
       Edit Site
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
   {{ Form::model($site, ['route' => ['sites.update', $site], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Site Name', ['class'=>'text-sm']) }}
   {{ Form::text('name', null, ['required']) }}

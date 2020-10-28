@@ -1,6 +1,6 @@
 <x-layout>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     <x-slot name='centred'>
         <div class="flex w-full flex-col justify-center items-center space-y-6">

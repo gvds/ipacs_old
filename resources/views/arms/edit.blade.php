@@ -3,7 +3,7 @@
         Edit Arm
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::model($arm, ['route' => ['arms.update', $arm], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Arm Name') }}

@@ -3,7 +3,7 @@
         New Arm
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => 'arms', 'class'=>'form']) }}
     {{ Form::label('name', 'Arm Name') }}

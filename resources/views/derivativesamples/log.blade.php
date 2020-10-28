@@ -4,7 +4,7 @@
         Log Derivative Samples
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     @if (isset($sampletypes))
     @php

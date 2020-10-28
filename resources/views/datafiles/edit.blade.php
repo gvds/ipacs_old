@@ -4,7 +4,7 @@
       Edit Data File Details
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
   {{ Form::model($datafile, ['url' => "/datafiles/$datafile->id", 'class' => 'form','method'=>'PATCH']) }}
   {{ Form::label('filename', 'Filename', ['class'=>'text-sm']) }}
   {{ Form::text('filename', null,['disabled']) }}

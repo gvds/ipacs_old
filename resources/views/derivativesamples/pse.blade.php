@@ -8,7 +8,7 @@
     {{ Form::text('pse', null, ['placeholder'=>'Scan PSE barcode...','autocomplete'=>'off', 'autofocus']) }}
     {{ Form::close() }}
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     @if (isset($sampletypes))
     <div x-data="">

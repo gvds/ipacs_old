@@ -3,7 +3,7 @@
         Manage Samples
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     <x-table class='pb-2'>
         <tr>

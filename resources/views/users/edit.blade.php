@@ -4,7 +4,7 @@
     Edit User
   </x-pageheader>
 
-  @include('layouts.errormsg')
+  @include('layouts.message')
 
   {!! Form::model($user, ['route' => ['users.update', $user], 'method' => 'patch', 'class' => 'form']) !!}
   {!! Form::label('username', 'Username') !!}

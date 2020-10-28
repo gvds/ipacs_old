@@ -6,7 +6,7 @@
         {{ Form::submit('Clear Selected Labels',['class' => 'text-sm text-red-600']) }}
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
     <div x-data="{selectall: false}">
         <x-table>
             <tr>

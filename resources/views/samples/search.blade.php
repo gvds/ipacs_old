@@ -3,7 +3,7 @@
         Search for Samples
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/samples/search', 'class' => ' w-auto', 'method' => 'POST']) }}
     <x-table>

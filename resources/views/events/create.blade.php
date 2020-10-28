@@ -3,7 +3,7 @@
         New Event
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => 'events', 'class'=>'form']) }}
     {{ Form::label('name', 'Event Name') }}

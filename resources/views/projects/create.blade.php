@@ -4,7 +4,7 @@
         New Project
     </x-pageheader>
 
-    @include('layouts.errormsg')
+    @include('layouts.message')
 
     {{ Form::open(['url' => '/project', 'class' => 'form']) }}
     {{ Form::label('project', 'Project Name') }}
