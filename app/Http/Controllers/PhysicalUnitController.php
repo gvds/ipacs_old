@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\physicalUnit;
+use App\unitDefinition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,9 @@ class PhysicalUnitController extends Controller
      */
     public function index()
     {
-        $physicalUnits = physicalUnit::orderBy('unitDefinition_id')
+        $physicalUnits = physicalUnit::join('unitDefinitions','physicalUnits.unitDefinition_id','unitDefinitions.id')
+        ->orderBy('unitDefinitions.storageType')
+        ->orderBy('unitDefinition_id')
         ->orderBy('unitID')
         ->get();
         return view('storage.physical.index', compact('physicalUnits'));
