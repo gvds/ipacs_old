@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PhysicalUnit extends Migration
+class CreatePhysicalUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,14 @@ class PhysicalUnit extends Migration
     public function up()
     {
         Schema::create('physicalUnits', function (Blueprint $table) {
-            $table->string('unitID',40)->primary();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('unitDefinition_id');
+            $table->string('unitID',40);
             $table->string('unitType',100);
             $table->boolean('available')->default(1);
-            $table->string('administrator',20);
+            $table->unsignedBigInteger('administrator');
             $table->timestamps();
-            $table->foreign('unitType')->references('unitType')->on('unitDefinitions');
+            $table->foreign('unitDefinition_id')->references('id')->on('unitDefinitions');
         });
     }
 

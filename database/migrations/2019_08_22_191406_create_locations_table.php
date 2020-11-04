@@ -14,8 +14,8 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('location_id');
-            $table->string('virtualUnit_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('virtualUnit_id');
             $table->string('storageProjectName',40);
             $table->string('barcode',20);
             $table->tinyInteger('rack')->unsigned()->nullable();
@@ -24,7 +24,7 @@ class CreateLocationsTable extends Migration
             $table->boolean('used')->default(0);
             $table->boolean('virgin')->default(1);
             $table->timestamps();
-            $table->foreign('location_id')->references('virtualUnit_id')->on('virtualUnits');
+            $table->foreign('virtualUnit_id')->references('id')->on('virtualUnits');
         });
     }
 

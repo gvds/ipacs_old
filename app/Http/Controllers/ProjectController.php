@@ -6,7 +6,6 @@ use App\project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Team;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -161,5 +160,13 @@ class ProjectController extends Controller
             return redirect('/')->with('error', 'You do not have access to that project');
         }
         return redirect('/');
+    }
+
+    public function storageSampleTypes(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:projects,id'
+        ]);
+        return project::find($request->id)->sampletypes()->whereNotNull('storageSampleType')->distinct()->pluck('storageSampleType');
     }
 }

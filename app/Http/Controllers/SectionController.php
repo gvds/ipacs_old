@@ -22,9 +22,14 @@ class SectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'unitDefinition_id' => 'required|exists:unitDefinitions,id'
+        ]);
+        $unitDefinition = \App\unitDefinition::find($request->unitDefinition_id);
+        $section = count($unitDefinition->sections) + 1;
+        return view('/storage.section.create', compact('unitDefinition','section'));
     }
 
     /**
@@ -35,7 +40,20 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'unitDefinition_id' => 'required|exists:unitDefinitions,id',
+            'section' => 'required|integer|min:1',
+            'rows' => 'required|integer|min:1',
+            'columns' => 'required|integer|min:1',
+            'boxes' => 'required|integer|min:1',
+            'positions' => 'required|integer|min:1',
+        ]);
+        try {
+            $unitDefinition = section::create($validatedData);
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Creation of Section failed: ' . $th->getMessage());
+        }
+        return redirect("/unitDefinitions/" . $validatedData['unitDefinition_id']);
     }
 
     /**
@@ -80,6 +98,9 @@ class SectionController extends Controller
      */
     public function destroy(section $section)
     {
-        //
+        $unitDefinition_id = $section->unitDefinition_id;
+        $section->delete();
+        return redirect("/unitDefinitions/$unitDefinition_id");
     }
+
 }

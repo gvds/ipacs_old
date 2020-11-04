@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\event_sample;
 use App\location;
 use App\sampletype;
 use App\storageLog;
 use App\storageReport;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Codedge\Fpdf\Fpdf\Fpdf;
 
-class StorageController extends Controller
+class samplestoreController extends Controller
 {
 
     private $fpdf;
@@ -42,14 +40,17 @@ class StorageController extends Controller
             $virgin = [0, 1];
         }
 
+        $project = \App\project::find($project);
+        $sampletype = \App\sampletype::find($sampletype);
+
         $nextLocation = location::with(['virtualUnit' => function ($query) use ($sampletype) {
             $query->where('active', 1)
-                ->where('sampleType', $sampletype);
+                ->where('storageSampleType', $sampletype->storageSampleType);
         }])
-            ->where('storageProjectName', $project)
+            ->where('storageProjectName', $project->storageProjectName)
             ->where('used', 0)
             ->whereIn('virgin', $virgin)
-            ->orderBy('VirtualUnit_id')
+            ->orderBy('virtualUnit_id')
             ->orderBy('rack')
             ->orderBy('box')
             ->orderBy('position')
@@ -61,7 +62,7 @@ class StorageController extends Controller
             $nextLocation->save();
         }
 
-        return $nextLocation;
+        return $nextLocation->id;
     }
 
     /**
@@ -190,17 +191,18 @@ class StorageController extends Controller
     public function reportList()
     {
         $reports = storageReport::where('project_id', session('currentProject'))
-        ->orderBy('created_at','desc')
-        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('samples.storageReports', compact('reports'));
     }
 
     public function report(Request $request, storageReport $storageReport)
     {
+
         $storageLogs = $storageReport->storageLogs->whereNotNull('location_id');
 
-        $layout='P';
+        $layout = 'P';
         if ($layout == "P") {
             $this->fpdf = new Fpdf('P');
         } else {
@@ -245,7 +247,7 @@ class StorageController extends Controller
                 $this->fpdf->Cell(40, 7, $storageLog->sample->barcode, 0, 0, 'L');
             }
             if (!empty($storageLog->location_id)) {
-                $locstring = "[" . $storageLog->storageLocation->virtualUnit->unitID . "] : " . $storageLog->storageLocation->virtualUnit->name . "    " . $storageLog->storageLocation->rack . " : " . $storageLog->storageLocation->box . " : " . $storageLog->storageLocation->position;
+                $locstring = "[" . $storageLog->storageLocation->virtualUnit->physicalUnit->unitID . "] : " . $storageLog->storageLocation->virtualUnit->virtualUnit . "   " . $storageLog->storageLocation->rack . " : " . $storageLog->storageLocation->box . " : " . $storageLog->storageLocation->position;
             } else {
                 $locstring = "No Storage location allocated";
             }
@@ -264,7 +266,7 @@ class StorageController extends Controller
             $this->fpdf->Cell(55, 7, "Sample Type", '', 1, 'L');
             $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
             $this->fpdf->SetFont('Calibri', '', 9);
-            
+
             foreach ($storageLogs as $storageLog) {
                 $this->fpdf->Cell(30, 7, $storageLog->sample->barcode, 0, 0, 'L');
                 $this->fpdf->Cell(55, 7, $storageLog->sampletype->name, 0, 1, 'L');
@@ -274,5 +276,4 @@ class StorageController extends Controller
 
         $this->fpdf->Output("storageReport.pdf", "I");
     }
-
 }

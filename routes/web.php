@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/{project}/select', 'ProjectController@select');
 
     Route::group(['middleware' => ['permission:manage-projects']], function () {
+        Route::get('/project/stypes', 'ProjectController@storageSampleTypes');
         Route::resource('/project', 'ProjectController');
 
         Route::get('/redcapproject/new', 'RedcapController@create');
@@ -63,6 +64,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/roles/{role}/permissions', 'RoleController@updatepermissions');
 
         Route::resource('/permissions', 'PermissionController');
+    });
+
+    Route::group(['middleware' => ['permission:manage-storage']], function () {
+        Route::resource('/unitDefinitions', 'UnitDefinitionController');
+        Route::resource('/sections', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
+        Route::resource('/physicalUnits', 'PhysicalUnitController');
+        Route::get('/physicalUnits/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
+        Route::resource('/virtualUnits', 'VirtualUnitController');
+        Route::get('/virtualUnits/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
     });
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
@@ -145,10 +155,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('project.auth:store-samples')->group(function () {
-        Route::get('/samplestore', 'StorageController@listSamples');
-        Route::post('/samplestore', 'StorageController@allocateStorage');
-        Route::get('/samplestore/report', 'StorageController@reportList');
-        Route::get('/samplestore/{storageReport}/report', 'StorageController@report');
+        Route::get('/samplestore', 'samplestoreController@listSamples');
+        Route::post('/samplestore', 'samplestoreController@allocateStorage');
+        Route::get('/samplestore/report', 'samplestoreController@reportList');
+        Route::get('/samplestore/{storageReport}/report', 'samplestoreController@report');
     });
 
     Route::middleware('project.auth:manage-samples')->group(function () {

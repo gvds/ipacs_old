@@ -124,8 +124,8 @@
           <x-slot name="nav_item">
             <div>Freezer Management</div>
           </x-slot>
-          <x-nav.dropdown-link href="#">Physical Freezers</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="#">Virtual Freezers</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/unitDefinitions">Physical Storage</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/physicalUnits">Virtual Storage</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
       </x-nav.dropdown>
 

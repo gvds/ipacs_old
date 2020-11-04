@@ -14,7 +14,8 @@ class UnitDefinitionController extends Controller
      */
     public function index()
     {
-        //
+        $unitDefinitions = unitDefinition::with('sections')->get();
+        return view('storage.unitdef.index', compact('unitDefinitions'));
     }
 
     /**
@@ -24,7 +25,7 @@ class UnitDefinitionController extends Controller
      */
     public function create()
     {
-        //
+        return view('storage.unitdef.create');
     }
 
     /**
@@ -35,7 +36,20 @@ class UnitDefinitionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'unitType' => 'required|Min:5|Max:100',
+            'sectionLayout' => 'required|in:vertical,horizontal',
+            'boxDesignation' => 'required|in:alpha,numeric',
+            'storageType' => 'required|in:minus80,ln,minus20,bios',
+            'rackOrder' => 'required|in:columnwise,rowwise',
+            'orientation' => 'required|in:vertical,horizontal'
+        ]);
+        try {
+            $unitDefinition = unitDefinition::create($validatedData);
+        } catch (\Throwable $th) {
+            return back()->with('error','Creation of Unit Definition failed: ' . $th->getMessage());
+        }
+        return redirect("/unitDefinitions/$unitDefinition->id");
     }
 
     /**
@@ -46,7 +60,9 @@ class UnitDefinitionController extends Controller
      */
     public function show(unitDefinition $unitDefinition)
     {
-        //
+        $sections = $unitDefinition->sections;
+        $physicalUnits = $unitDefinition->physicalUnits;
+        return view('storage.unitdef.show', compact('unitDefinition','sections', 'physicalUnits'));
     }
 
     /**
@@ -80,6 +96,7 @@ class UnitDefinitionController extends Controller
      */
     public function destroy(unitDefinition $unitDefinition)
     {
-        //
+        $unitDefinition->delete();
+        return redirect('/unitDefinitions');
     }
 }

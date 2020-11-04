@@ -18,6 +18,6 @@ class storageLog extends Model
 
     public function storageLocation()
     {
-        return $this->belongsTo(location::class);
+        return $this->belongsTo(location::class, 'location_id', 'id');
     }
 }
