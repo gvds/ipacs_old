@@ -18,9 +18,12 @@ class PhysicalUnitController extends Controller
      */
     public function index()
     {
-        $physicalUnits = physicalUnit::join('unitDefinitions','physicalUnits.unitDefinition_id','unitDefinitions.id')
-        ->orderBy('unitDefinitions.storageType')
-        ->orderBy('unitDefinition_id')
+        // $physicalUnits = physicalUnit::join('unitDefinitions','physicalUnits.unitDefinition_id','unitDefinitions.id')
+        // ->orderBy('unitDefinitions.storageType')
+        // ->orderBy('unitDefinition_id')
+        // ->orderBy('unitID')
+        // ->get();
+        $physicalUnits = physicalUnit::orderBy('unitDefinition_id')
         ->orderBy('unitID')
         ->get();
         return view('storage.physical.index', compact('physicalUnits'));

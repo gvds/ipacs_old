@@ -16,8 +16,8 @@
         @foreach ($physicalUnits as $physicalUnit)
         <tr class="odd:bg-gray-100">
             <td>{{$physicalUnit->unitID}}</td>
-            <td>{{$physicalUnit->storageType}}</td>
-            <td>{{$physicalUnit->unitType}}</td>
+            <td>{{$physicalUnit->unitType->storageType}}</td>
+            <td>{{$physicalUnit->unitType->unitType}}</td>
             <td>
                 @if ($physicalUnit->available)
                 <svg class="h-5 w-5 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20"

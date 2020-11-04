@@ -104,9 +104,9 @@ class VirtualUnitController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with('error', 'Failed to create Virtual Unit: ' . $th->getMessage());
+            return back()->with('input')->with('error', 'Failed to create Virtual Unit: ' . $th->getMessage());
         }
-        return back()->with('message', 'Virtual Unit created');
+        return back()->with('input')->with('message', 'Virtual Unit created');
     }
 
     /**
