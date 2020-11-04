@@ -176,8 +176,8 @@ class subject extends Model
   {
     foreach ($arm->events as $event) {
       if ($event->active) {
-        if (($event->event_order === 0) and ($event->autolog === 0)) {
-          $labelStatus = 1;
+        if ($event->autolog == 1) {
+          $labelStatus = 2;
         } else {
           $labelStatus = 0;
         }
