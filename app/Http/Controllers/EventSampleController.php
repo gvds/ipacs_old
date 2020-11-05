@@ -165,7 +165,6 @@ class EventSampleController extends Controller
 
     public function retrieve(Request $request)
     {
-
         $validatedData = $request->validate([
             'subjectIDlist' => 'nullable|max:6000',
             'events' => 'array',
@@ -181,11 +180,11 @@ class EventSampleController extends Controller
         $sampletypes = empty($validatedData['sampletypes']) ? null : $validatedData['sampletypes'];
         $sites = empty($validatedData['sites']) ? null : $validatedData['sites'];
 
-        $samples = event_sample::with('event_subject.event','event_subject.subject', 'event_subject.event.arm','site','sampletype','status','location')
-        // ->select('barcode','aliquot','volume')
-        ->whereHas('sampletype', function ($query) {
-            return $query->where('project_id', session('currentProject'));
-        })
+        $samples = event_sample::with('event_subject.event', 'event_subject.subject', 'event_subject.event.arm', 'site', 'sampletype', 'status', 'storagelocation')
+            // ->select('barcode','aliquot','volume')
+            ->whereHas('sampletype', function ($query) {
+                return $query->where('project_id', session('currentProject'));
+            })
             ->when($subjectIDs, function ($query, $subjectIDs) {
                 return $query->whereHas('event_subject', function ($query) use ($subjectIDs) {
                     return $query->whereIn('subject_id', $subjectIDs);
@@ -212,26 +211,26 @@ class EventSampleController extends Controller
             'Content-type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
-        
-        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLocation\n";
-        foreach ($samples as $key=>$sample) {
-            $sampledata = [$sample->barcode,
-            $sample->sampletype->name,
-            $sample->event_subject->event->arm->name,
-            $sample->event_subject->event->name,
-            $sample->aliquot,
-            $sample->volume . $sample->sampletype->volumeUnit,
-            $sample->status->samplestatus,
-            $sample->event_subject->subject->subjectID,
-            $sample->site->name,
-            $sample->parentBarcode];
-            if (!empty($sample->location)) {
-                array_push($data, $sample->location->virtualUnit_id . ' - ' . $sample->location->rack . ':' . $sample->location->box . ':' . $sample->location->position);
-            }
 
-            $data .= implode("\t",$sampledata) . "\n";
+        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLocation\n";
+        foreach ($samples as $key => $sample) {
+            $sampledata = [
+                $sample->barcode,
+                $sample->sampletype->name,
+                $sample->event_subject->event->arm->name,
+                $sample->event_subject->event->name,
+                $sample->aliquot,
+                $sample->volume . $sample->sampletype->volumeUnit,
+                $sample->status->samplestatus,
+                $sample->event_subject->subject->subjectID,
+                $sample->site->name,
+                $sample->parentBarcode
+            ];
+            if (!empty($sample->storagelocation)) {
+                array_push($sampledata, $sample->storagelocation->virtualUnit->id . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
+            }
+            $data .= implode("\t", $sampledata) . "\n";
         }
         return Response::make($data, 200, $headers);
-        
     }
 }

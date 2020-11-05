@@ -28,9 +28,9 @@ class event_sample extends Pivot
         return $this->belongsTo(site::class);
     }
 
-    public function location()
+    public function storagelocation()
     {
-        return $this->belongsTo(location::class, 'location', 'location_id');
+        return $this->belongsTo(location::class, 'location', 'id');
     }
 
     public function derivativeCount()

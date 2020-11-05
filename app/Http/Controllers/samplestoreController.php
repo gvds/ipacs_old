@@ -43,10 +43,10 @@ class samplestoreController extends Controller
         $project = \App\project::find($project);
         $sampletype = \App\sampletype::find($sampletype);
 
-        $nextLocation = location::with(['virtualUnit' => function ($query) use ($sampletype) {
+        $nextLocation = location::whereHas('virtualUnit', function ($query) use ($sampletype) {
             $query->where('active', 1)
                 ->where('storageSampleType', $sampletype->storageSampleType);
-        }])
+        })
             ->where('storageProjectName', $project->storageProjectName)
             ->where('used', 0)
             ->whereIn('virgin', $virgin)
@@ -154,30 +154,38 @@ class samplestoreController extends Controller
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
-                foreach ($sampletype->event_samples as $sample) {
-                    // Allocate storage position
-                    $location_id = $this->storesample($project_id, $sampletype->id, $request->reuse[0], $sample->barcode);
-                    if (!empty($location_id)) {
-                        // Update sample record
-                        $sample->location = $location_id;
+                if ($sampletype->storageSampleType === 'BiOS') {
+                    foreach ($sampletype->event_samples as $sample) {
+                        $sample->location = 0;
                         $sample->samplestatus_id = 3;
                         $sample->save();
-                        
                         $stored_count++;
-                    } else {
-                        if (array_key_exists($sampletype->name, $arr_nospace)) {
-                            $arr_nospace[$sampletype->name] += 1;
-                        } else {
-                            $arr_nospace[$sampletype->name] = 1;
-                        }
                     }
-                    // log to storage logs table
-                    $storageLog = new storageLog();
-                    $storageLog->storageReport_id = $storageEvent->id;
-                    $storageLog->sampletype_id = $sampletype->id;
-                    $storageLog->sample_id = $sample->id;
-                    $storageLog->location_id = $location_id;
-                    $storageLog->save();
+                } else {
+                    foreach ($sampletype->event_samples as $sample) {
+                        // Allocate storage position
+                        $location_id = $this->storesample($project_id, $sampletype->id, $request->reuse[0], $sample->barcode);
+                        if (!empty($location_id)) {
+                            // Update sample record
+                            $sample->location = $location_id;
+                            $sample->samplestatus_id = 3;
+                            $sample->save();
+                            $stored_count++;
+                        } else {
+                            if (array_key_exists($sampletype->name, $arr_nospace)) {
+                                $arr_nospace[$sampletype->name] += 1;
+                            } else {
+                                $arr_nospace[$sampletype->name] = 1;
+                            }
+                        }
+                        // log to storage logs table
+                        $storageLog = new storageLog();
+                        $storageLog->storageReport_id = $storageEvent->id;
+                        $storageLog->sampletype_id = $sampletype->id;
+                        $storageLog->sample_id = $sample->id;
+                        $storageLog->location_id = $location_id;
+                        $storageLog->save();
+                    }
                 }
             }
             DB::commit();
