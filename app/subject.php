@@ -278,7 +278,7 @@ class subject extends Model
     $data = [
       'record_id' => $this->subjectID,
       'redcap_event_name' => $event_name,
-      'redcap_data_access_group' => $dag,
+      // 'redcap_data_access_group' => $dag,
     ];
     $response = $this->curl($params, $data);
     $returnmsg = json_decode($response, true);
