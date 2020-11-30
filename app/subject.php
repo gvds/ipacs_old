@@ -178,6 +178,8 @@ class subject extends Model
       if ($event->active) {
         if ($event->autolog == 1) {
           $labelStatus = 2;
+        } elseif ($event->offset == 0){
+          $labelStatus = 1;
         } else {
           $labelStatus = 0;
         }
