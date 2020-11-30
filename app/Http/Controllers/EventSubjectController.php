@@ -51,7 +51,7 @@ class EventSubjectController extends Controller
                 $statuscriteria = [3];
             }
             if ($event_subject->samplecount == '') {
-                $statuscriteria = [2, 3, 5, 6];
+                $statuscriteria = [2, 3, 5];
             } else {
                 $statuscriteria = [3];
             }
