@@ -320,8 +320,8 @@ class subject extends Model
 
   public function checkAccessPermission()
   {
-    if ($this->user_id !== auth()->user()->id) {
-      return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+    if ($this->user_id === auth()->user()->id or auth()->user()->hasRole('sysadmin')) {
+      return true;
     }
   }
 

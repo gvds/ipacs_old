@@ -85,7 +85,9 @@ class SubjectController extends Controller
      */
     public function show(subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()){
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         $switcharms = is_null($subject->arm->switcharms) ? [] : json_decode($subject->arm->switcharms);
         $switcharms = \App\arm::whereIn('id', $switcharms)->pluck('name', 'id');
@@ -112,7 +114,7 @@ class SubjectController extends Controller
      */
     public function edit(subject $subject)
     {
-        //
+        return view('subjects.edit', compact('subject'));
     }
 
     /**
@@ -124,7 +126,15 @@ class SubjectController extends Controller
      */
     public function update(Request $request, subject $subject)
     {
-        //
+        $validatedData = $request->validate([
+            'firstname' => "present|max:30",
+            'surname' => "present|max:30",
+            'address1' => "present|max:50",
+            'address2' => "present|max:50",
+            'address3' => "present|max:50",
+        ]);
+        $subject->update($validatedData);
+        return redirect("/subjects/$subject->id")->with('message','Subject details updated');
     }
 
     /**
@@ -285,11 +295,18 @@ class SubjectController extends Controller
      */
     public function search($searchterm)
     {
-        return subject::where('subjectID', 'like', "%{$searchterm}%")
+        if (auth()->user()->hasRole('sysadmin')) {
+            return subject::where('subjectID', 'like', "%{$searchterm}%")
+            ->where('project_id', session('currentProject'))
+            ->pluck('subjectID', 'id')
+            ->take(15);
+        } else {
+            return subject::where('subjectID', 'like', "%{$searchterm}%")
             ->where('project_id', session('currentProject'))
             ->where('user_id', auth()->user()->id)
             ->pluck('subjectID', 'id')
-            ->take(8);
+            ->take(15);
+        }
     }
 
     /**
