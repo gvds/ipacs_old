@@ -36,22 +36,10 @@ class ScheduleController extends Controller
             $enddate = $startdate->add(6, 'days');
             $henddate = $enddate->format('d/m/Y'); // formatted for header
             $header = "($hstartdate - $henddate)";
-
             // Get the fields to use in the schedule
             // $query = "Select plims.lu_schedule_fields.fieldname, plims.lu_schedule_fields.fieldtitle, plims.lu_schedule_fields.fieldlength, plims.lu_schedule_fields.fieldorder From plims.lu_schedule_fields Where plims.lu_schedule_fields.project_id = $PM_project_id Order By plims.lu_schedule_fields.fieldorder";
             // $result = $conn->query($query);
             $field_arr = array();
-            // while ($row = $result->fetch_assoc()) {
-            //     $fieldorder = $row['fieldorder'];
-            //     $fieldname = $row['fieldname'];
-            //     $fieldtitle = $row['fieldtitle'];
-            //     $fieldlength = $row['fieldlength'];
-            //     $field_arr[$fieldorder - 1] = array(
-            //         'fieldname' => $fieldname,
-            //         'fieldtitle' => $fieldtitle,
-            //         'fieldlength' => $fieldlength
-            //     );
-            // }
 
             $this->fpdf = new Fpdf;
             $this->fpdf->AddFont('Calibri', 'B', 'calibrib.php');
@@ -69,56 +57,51 @@ class ScheduleController extends Controller
             $this->fpdf->Cell(25, 7, "Start Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "End Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "Address", '', 0, 'C');
-            $fieldtitle = "";
-            for ($index = 0; $index < count($field_arr); $index++) {
-                if ($field_arr[$index]['fieldtitle'] != $fieldtitle) {
-                    $fieldtitle = $field_arr[$index]['fieldtitle'];
-                    $this->fpdf->Cell($field_arr[$index]['fieldlength'], 7, $field_arr[$index]['fieldtitle'], '', 0, 'L');
-                }
-            }
+            // $fieldtitle = "";
+            // for ($index = 0; $index < count($field_arr); $index++) {
+            //     if ($field_arr[$index]['fieldtitle'] != $fieldtitle) {
+            //         $fieldtitle = $field_arr[$index]['fieldtitle'];
+            //         $this->fpdf->Cell($field_arr[$index]['fieldlength'], 7, $field_arr[$index]['fieldtitle'], '', 0, 'L');
+            //     }
+            // }
 
             $this->fpdf->Cell(0, 7, "", '', 1, 'L');
             $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
 
             $this->fpdf->SetFillColor(220, 220, 220);
-            // Get users for whom this user is substituting
 
+            // Get ids of current user and users for whom this user is substituting
+            $currentSubstitutees = auth()->user()->substitutees;
+            $userIDList = [auth()->user()->id];
+            foreach ($currentSubstitutees as $substitutee) {
+                array_push($userIDList, $substitutee->id);
+            }
 
             // Schedule events
-            \App\event_subject::whereHas('subject', function($query){
-                $query->where('project_id',session('currentProject'))
-                ->where('user_id', auth()->user()->id)
-                ->where('subject_status', 1);
+            \App\event_subject::whereHas('subject', function ($query) use ($userIDList) {
+                $query->where('project_id', session('currentProject'))
+                    ->whereIn('user_id', $userIDList)
+                    ->where('subject_status', 1);
             })
-            ->whereHas('event', function($query){
-                $query->where('active', true);
-            })
-            ->where('minDate', '<=', $enddate)
-            ->where('eventstatus_id', '<', 3)
-            ->update(['eventstatus_id' => 2]);
+                ->whereHas('event', function ($query) {
+                    $query->where('active', true);
+                })
+                ->where('minDate', '<=', $enddate)
+                ->where('eventstatus_id', '<', 2)
+                ->update(['eventstatus_id' => 2]);
 
-            // Get scheduled subjects
-            // $subjects = \App\subject::with(['events' => function ($query) use ($enddate) {
-            //     $query->where('minDate', '<=', $enddate);
-            //     $query->where('eventstatus_id', '<', 3);
-            //     $query->where('active', true);
-            // }])
-            //     ->where('project_id', $currentProject->id)
-            //     ->where('user_id', auth()->user()->id)
-            //     ->where('subject_status', 1)
-            //     ->get();
             $subjects = \App\subject::with(['events' => function ($query) {
                 $query->where('eventstatus_id', 2);
                 $query->where('active', true);
             }])
-            ->where('project_id', $currentProject->id)
+                ->where('project_id', $currentProject->id)
                 ->where('user_id', auth()->user()->id)
                 ->where('subject_status', 1)
                 ->get();
             $fill = 1;
             foreach ($subjects as $subject) {
                 foreach ($subject->events as $event) {
-                    $address = implode(', ',array_filter([$subject->address1,$subject->address2,$subject->address3]));
+                    $address = implode(', ', array_filter([$subject->address1, $subject->address2, $subject->address3]));
                     $fill = $fill ? 0 : 1;
                     $this->fpdf->SetFont('Arial', '', 10);
                     $this->fpdf->Cell(23, 9, $subject->subjectID, 0, 0, 'C', $fill);
