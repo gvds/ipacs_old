@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewAccount;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -138,6 +140,35 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect('/users');
+    }
+
+    public function impersonation()
+    {
+        if(session('currentProject') === null){
+            return redirect('/')->with('error','No Project Selected');
+        }
+        $users = User::whereHas('teams', function($query){
+            $query->where('id', session('currentProject'));
+        })
+        ->where('id', '!=', auth()->user()->id)
+        ->orderBy('firstname')
+        ->get();
+        return view('users.impersonate', compact('users'));
+    }
+
+    public function user_impersonate_start(User $user)
+    {
+        Session::put('original_user', Auth::id());
+        Auth::login($user);
+        return redirect('/')->with('message','You are now impersonating ' . $user->fullname);
+    }
+
+    public function user_impersonate_stop()
+    {
+        $id = Session::pull('original_user');
+        $original_user = User::find($id);
+        Auth::login($original_user);
+        return redirect('/')->with('message', 'You are now yourself again');
     }
 
 }
