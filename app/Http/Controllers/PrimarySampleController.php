@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\event_subject;
 use App\event_sample;
+use App\Rules\BarcodeFormat;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -75,21 +77,34 @@ class PrimarySampleController extends Controller
             'aliquot' => 'array',
             'type.*.*' => [
                 'nullable',
-                'regex:/^[A-Z]{0,6}\d{3,8}$/',
+                new BarcodeFormat,
+                // 'regex:/^[A-Z]{0,6}\d{3,8}$/',
                 'distinct',
                 'unique:event_sample,barcode'
             ],
-            'vol.*.*' => 'required|numeric',
-            'aliquot.*.*' => 'required|integer|min:1'
+            // 'vol.*.*' => 'required_with:type.*.*|numeric',
+            'vol.*.*' => 'required_with:type.*.*',
+            'aliquot.*.*' => 'required_with:type.*.*|integer|min:1'
         ];
         $messages = [
             'type.required' => 'All samples have already been recorded',
         ];
         $attributes = [
             'type.*.*' => "Barcode ':input'",
-            'vol.*.*' => "Volume :value"
+            'vol.*.*' => "Volume :input"
         ];
         $validatedData = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
+
+        // Log event if it is not currently logged
+        $event_subject = \App\event_subject::findOrFail($validatedData['event_subject_id']);
+        if ($event_subject->eventstatus_id === 2) {
+            if (Carbon::today() > Carbon::parse($event_subject->maxDate)) {
+                $event_subject->eventstatus_id = 4; // late
+            } else {
+                $event_subject->eventstatus_id = 3;
+            }
+            $event_subject->save();
+        }
 
         $user = auth()->user();
         $records = 0;
@@ -107,8 +122,10 @@ class PrimarySampleController extends Controller
                             if ($validatedData['log'] == 1) {
                                 $sample->loggedBy = $user->id;
                                 $sample->logTime = now();
+                                $sample->samplestatus_id = 2;
+                            } else {
+                                $sample->samplestatus_id = 1;
                             }
-                            $sample->samplestatus_id = $validatedData['log'] + 1;
                             $sample->aliquot = $validatedData['aliquot'][$sampletype_id][$number];
                             $sample->save();
                             $records++;
