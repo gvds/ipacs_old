@@ -15,6 +15,7 @@ class Label
           ->join('events', 'event_id', 'events.id')
           ->join('arms', 'arm_id', 'arms.id')
           ->where('project_id', session('currentProject'))
+          ->whereNotNull('eventDate')
           ->where('minDate', "<=", $thresholdDate)
           ->where('active', true)
           ->update(['labelStatus' => 1]);
