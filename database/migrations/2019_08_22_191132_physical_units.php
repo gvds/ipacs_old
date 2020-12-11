@@ -17,7 +17,7 @@ class CreatePhysicalUnitsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('unitDefinition_id');
             $table->string('unitID',40);
-            $table->string('unitType',100);
+            $table->string('unitType',100)->default(null);
             $table->boolean('available')->default(1);
             $table->unsignedBigInteger('administrator');
             $table->timestamps();
