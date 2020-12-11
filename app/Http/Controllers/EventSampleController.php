@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\event_sample;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
 class EventSampleController extends Controller
@@ -18,7 +17,10 @@ class EventSampleController extends Controller
     public function index(Request $request)
     {
         $validatedData = $request->validate([
-            'barcode' => 'nullable|regex:/^[A-Z]{0,6}\d{3,8}$/|exists:event_sample,barcode'
+            'barcode' => [
+                'nullable',
+                'exists:event_sample,barcode'
+            ]
         ]);
         if (array_key_exists('barcode', $validatedData)) {
             $sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
@@ -68,9 +70,9 @@ class EventSampleController extends Controller
      */
     public function show(event_sample $event_sample)
     {
-        if ($event_sample->samplestatus_id == 0) {
-            return back()->withErrors("Sample barcode " . $event_sample->barcode . " is currently unassigned");
-        }
+        // if ($event_sample->samplestatus_id == 0) {
+        //     return back()->withErrors("Sample barcode " . $event_sample->barcode . " is currently unassigned");
+        // }
         $subject = $event_sample->event_subject->subject;
         if ($subject->project_id !== session('currentProject')) {
             return back()->withErrors('This sample does not belong to the current project');
@@ -123,8 +125,11 @@ class EventSampleController extends Controller
      */
     public function unlog(event_sample $event_sample)
     {
-        $event_sample->samplestatus_id = 0;
-        $event_sample->save();
+        // *** Still need to check for derivatives
+
+        // $event_sample->samplestatus_id = 0;
+        // $event_sample->save();
+        $event_sample->delete();
         return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
 
