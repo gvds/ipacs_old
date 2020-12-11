@@ -18,7 +18,7 @@ class samplestoreController extends Controller
 
     public function __construct()
     {
-        define('FPDF_FONTPATH', public_path() . '/font');
+        // define('FPDF_FONTPATH', public_path() . '/font');
     }
 
     /**
@@ -120,7 +120,17 @@ class samplestoreController extends Controller
         }
         $sampleSets = collect($sampleSets);
 
-        return view('samples.allocateStorage', compact('sampleSets'));
+        $project = \App\project::find(session('currentProject'));
+        $lowstorage = location::join('virtualUnits', 'virtualUnit_id', 'virtualUnits.id')
+            ->select(DB::raw('storageSampleType, count(*) as total, sum(used) as used'))
+            ->where('active', 1)
+            ->where('storageProjectName', $project->storageProjectName)
+            ->groupBy('storageSampleType')
+            ->orderBy('storageSampleType')
+            ->havingRaw('(total - used) / total < ?', [0.1])
+            ->get();
+
+        return view('samples.allocateStorage', compact('sampleSets', 'lowstorage'));
     }
 
     public function allocateStorage(Request $request)
