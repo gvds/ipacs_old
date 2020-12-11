@@ -126,10 +126,17 @@ class TeamController extends Controller
     private function getREDCapUser($redcapProject_id, $username)
     {
         return DB::connection('redcap')->select(
-            "SELECT * from redcap_user_rights left join redcap_data_access_groups on 
-                    redcap_user_rights.group_id = redcap_data_access_groups.group_id and 
+            "SELECT * from
+                    redcap_user_rights
+                left join
+                    redcap_data_access_groups
+                on 
+                    redcap_user_rights.group_id = redcap_data_access_groups.group_id
+                and 
                     redcap_user_rights.project_id = redcap_data_access_groups.project_id 
-                    where redcap_user_rights.project_id = $redcapProject_id and 
+                where
+                    redcap_user_rights.project_id = $redcapProject_id
+                and 
                     redcap_user_rights.username = '$username'"
         );
     }
