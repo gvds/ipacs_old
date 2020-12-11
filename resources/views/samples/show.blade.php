@@ -84,7 +84,7 @@
                 </div>
             </td>
             <td>
-                <x-buttonlink href="samples/{{$event_sample->id}}/unlog" x-show='confirm'
+                <x-buttonlink href="/samples/{{$event_sample->id}}/unlog" x-show='confirm'
                     class='bg-red-600 text-red-50'>
                     Confirm Unlog
                 </x-buttonlink>
