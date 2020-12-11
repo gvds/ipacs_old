@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\event_sample;
+use App\Rules\BarcodeFormat;
 use App\sampletype;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -55,7 +56,7 @@ class DerivativeSampleController extends Controller
                 ->where('primary', true)
                 ->orderBy('sampleGroup')
                 ->orderBy('name')
-                ->get();
+            ->get();
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -108,24 +109,26 @@ class DerivativeSampleController extends Controller
         $rules = [
             'event_subject_id' => 'required|integer|exists:event_subject,id',
             'parent_sample_id' => 'required|integer|exists:event_sample,id',
-            'type' => 'required|array',
+            'type' => ['required', 'array'],
             'vol' => 'array',
             'aliquot' => 'array',
             'type.*.*' => [
                 'nullable',
-                'regex:/^[A-Z]{0,6}\d{3,8}$/',
+                new BarcodeFormat,
+                // 'regex:/^[A-Z]{0,6}\d{3,12}$/',
                 'distinct',
-                'unique:event_sample,barcode'
+                'unique:event_sample,barcode',
             ],
-            'vol.*.*' => 'required|numeric',
-            'aliquot.*.*' => 'required|integer|min:1'
+            // 'vol.*.*' => 'required_with:type.*.*|numeric',
+            'vol.*.*' => 'required_with:type.*.*',
+            'aliquot.*.*' => 'required_with:type.*.*|integer|min:1'
         ];
         $messages = [
             'type.required' => 'All samples have already been recorded',
         ];
         $attributes = [
             'type.*.*' => "Barcode ':input'",
-            'vol.*.*' => "Volume :value"
+            'vol.*.*' => "Volume :input"
         ];
         $validatedData = Validator::make($request->all(), $rules, $messages, $attributes)->validate();
         $parent_sample = event_sample::find($validatedData['parent_sample_id']);
