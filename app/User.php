@@ -88,7 +88,7 @@ class User extends Authenticatable
     {
         $project_id = session('currentProject');
         $site = DB::table('team_user')
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', $this->id)
             ->where('team_id', $project_id)
             ->pluck('site_id')
             ->first();

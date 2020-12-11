@@ -24,6 +24,7 @@ class Team extends LaratrustTeam
     public function subject_managers()
     {
         return $this->belongsToMany(User::class)
+        ->withPivot('site_id')
         ->wherePermissionIs('manage-subjects');
     }
 

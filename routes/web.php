@@ -79,8 +79,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('/virtualUnits', 'VirtualUnitController');
     });
 
-    Route::middleware('project.auth:manage-subjects')->group(function () {
+    Route::group(['middleware' => ['project.auth:manage-subjects,manage-teams']], function () {
         Route::get('/substitute', 'UserSubstituteController@index');
+        Route::get('/substitute/{user}', 'UserSubstituteController@show');
         Route::post('/substitute', 'UserSubstituteController@store');
         Route::delete('/substitute', 'UserSubstituteController@destroy');
     });

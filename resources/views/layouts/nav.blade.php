@@ -92,7 +92,7 @@
         <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sampletypes">Sample Types</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
-        <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/substitute">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/progress">Progress Report</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
       </x-nav.dropdown>
@@ -143,7 +143,7 @@
         document.getElementById('logout-form').submit();">
           Log out
         </x-nav.dropdown-link>
-        <x-nav.dropdown-link href="/substitute">My Substitutes</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/substitute/{{Auth::user()->id}}">My Substitutes</x-nav.dropdown-link>
         @if (Auth::user()->hasRole('sysadmin'))
         <x-nav.dropdown-link href="/users/impersonate">Impersonation</x-nav.dropdown-link>
         @endif
