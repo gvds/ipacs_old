@@ -13,7 +13,10 @@
 
   <div class='flex'>
     <div class='flex-col'>
-      <div class='text-lg font-bold'>Details</div>
+      <div class='text-lg font-bold flex justify-between mb-1'>
+        <span>Details</span>
+        <span><x-buttonlink href="/subjects/{{$subject->id}}/edit">Edit</x-buttonlink></span>
+      </div>
       <div>
         <x-table class="table table-sm">
           <tr>
@@ -84,6 +87,7 @@
         {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-red-600 text-red-50 text-sm font-bold px-2 py-1 rounded shadow-md leading-tight hover:text-indigo-500"]) }}
         {{ Form::close() }}
       </span>
+
       @endif
       @if ($subject->subject_status === 2)
       <span x-data="confirmDrop()"">
