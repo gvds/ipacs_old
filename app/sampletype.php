@@ -20,7 +20,8 @@ class sampletype extends Model
     'sampleGroup',
     'tubeLabelType_id',
     'storageSampleType',
-    'parentSampleType_id'
+    'parentSampleType_id',
+    'active'
   ];
 
   public function event_samples()
@@ -37,5 +38,10 @@ class sampletype extends Model
   {
     return $this->belongsTo(sampletype::class, 'parentSampleType_id', 'id');
   }
+
+  // public function derivativeSampleTypes()
+  // {
+  //   return $this->hasMany(sampletype::class, 'parentSampleType_id', 'id');
+  // }
   
 }
