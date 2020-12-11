@@ -93,7 +93,7 @@
         <x-nav.dropdown-link href="/sampletypes">Sample Types</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="#">Colleague Substitution</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Progress Report</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/progress">Progress Report</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
       </x-nav.dropdown>
 
@@ -132,7 +132,11 @@
       <x-nav.link href="#">Manual</x-nav.link>
       <x-nav.dropdown alignment="right">
         <x-slot name="nav_item">
-          <div>{{Auth::user()->firstname}}</div>
+          @if( Session::has('original_user') )
+            <div class="bg-red-600 px-2 rounded-md">{{Auth::user()->firstname}}</div>
+          @else
+            <div>{{Auth::user()->firstname}}</div>
+          @endif
         </x-slot>
         <x-nav.dropdown-link href="/changePassword">Change Password</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/{{ route('logout') }}" onclick="event.preventDefault();
@@ -140,6 +144,12 @@
           Log out
         </x-nav.dropdown-link>
         <x-nav.dropdown-link href="/substitute">My Substitutes</x-nav.dropdown-link>
+        @if (Auth::user()->hasRole('sysadmin'))
+        <x-nav.dropdown-link href="/users/impersonate">Impersonation</x-nav.dropdown-link>
+        @endif
+        @if( Session::has('original_user') )
+        <x-nav.dropdown-link href="/users/impersonate/stop">Revert to Me</x-nav.dropdown-link>
+        @endif
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
           @csrf

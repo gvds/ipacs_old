@@ -40,7 +40,11 @@ Route::middleware('auth')->group(function () {
 
     //     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
 
-    Route::post('/projectlist', 'ProjectController@list');
+    Route::group(['middleware' => ['role:sysadmin']], function () {
+        Route::get('/users/impersonate', 'UserController@impersonation');
+        Route::get('/users/impersonate/start/{user}', 'UserController@user_impersonate_start');
+    });
+    Route::get('/users/impersonate/stop', 'UserController@user_impersonate_stop');
 
     Route::get('/project/select', 'ProjectController@selectList');
     Route::get('/project/{project}/select', 'ProjectController@select');
@@ -71,8 +75,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('/sections', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
         Route::resource('/physicalUnits', 'PhysicalUnitController');
         Route::get('/physicalUnits/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
-        Route::resource('/virtualUnits', 'VirtualUnitController');
         Route::get('/virtualUnits/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
+        Route::resource('/virtualUnits', 'VirtualUnitController');
     });
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
@@ -161,7 +165,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/samplestore/{storageReport}/report', 'samplestoreController@report');
     });
 
-    Route::middleware('project.auth:manage-samples')->group(function () {
+    Route::middleware('project.auth:monitor-progress')->group(function () {
+        Route::get('/progress', 'ProgressController@index');
     });
 
     Route::middleware('project.auth:manage-datafiles')->group(function () {
