@@ -194,7 +194,9 @@ class SubjectController extends Controller
 
     public function switch(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()){
+            return back()->with('error',"You don't have permission to switch this subject");
+        };
 
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $switcharms = json_decode($subject->arm->switcharms);

@@ -323,6 +323,7 @@ class subject extends Model
     if ($this->user_id === auth()->user()->id or auth()->user()->hasRole('sysadmin')) {
       return true;
     }
+    return false;
   }
 
 }
