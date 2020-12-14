@@ -18,7 +18,7 @@ class samplestoreController extends Controller
 
     public function __construct()
     {
-        // define('FPDF_FONTPATH', public_path() . '/font');
+        define('FPDF_FONTPATH', public_path() . '/font');
     }
 
     /**
