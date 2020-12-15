@@ -24,6 +24,7 @@ class CreateEventSampleTable extends Migration
             $table->string('labelType',15);
             $table->float('volume',8,2)->unsigned()->nullable();
             $table->string('volumeUnit',10)->nullable();
+            $table->unsignedTinyInteger('thawcount')->default(0);
             $table->unsignedBigInteger('loggedBy')->nullable();
             $table->dateTime('logTime')->nullable();
             $table->unsignedBigInteger('usedBy')->nullable();

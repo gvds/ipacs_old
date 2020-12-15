@@ -158,6 +158,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/samples/{event_sample}/unlog', 'EventSampleController@unlog');
         Route::post('/samples/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
+    
+    Route::middleware('project.auth:manage-samples')->group(function () {
+        Route::view('/sample/logout', 'samples.logout');
+        Route::patch('/sample/logout', 'EventSampleController@logout');
+        Route::view('/sample/logreturn', 'samples.logreturn');
+        Route::patch('/sample/logreturn', 'EventSampleController@logreturn');
+    });
 
     Route::middleware('project.auth:store-samples')->group(function () {
         Route::get('/samplestore', 'samplestoreController@listSamples');

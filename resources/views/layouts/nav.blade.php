@@ -64,8 +64,8 @@
         <x-nav.dropdown-link href="/samplestore">Allocate Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/report">Storage Reports</x-nav.dropdown-link>
         <hr />
-        <x-nav.dropdown-link href="#">Log Sample out of Storage</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Log Sample Return to Storage</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sample/logout">Log Sample out of Storage</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sample/logreturn">Log Sample Return to Storage</x-nav.dropdown-link>
         <hr />
         <x-nav.dropdown-link href="#">Log Sample as Used</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Log Sample as Lost</x-nav.dropdown-link>

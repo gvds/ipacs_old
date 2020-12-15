@@ -125,10 +125,15 @@ class EventSampleController extends Controller
      */
     public function unlog(event_sample $event_sample)
     {
-        // *** Still need to check for derivatives
-
         // $event_sample->samplestatus_id = 0;
         // $event_sample->save();
+        if ($event_sample->derivativeCount() > 0) {
+            return back()->with('error', 'This sample cannot be unlogged as it has existing derivatives');
+        }
+        if (in_array($event_sample->samplestatus_id, [5, 8])) {
+            return back()->with('error', 'This sample cannot be unlogged as it no longer exists');
+        }
+        
         $event_sample->delete();
         return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
@@ -237,5 +242,50 @@ class EventSampleController extends Controller
             $data .= implode("\t", $sampledata) . "\n";
         }
         return Response::make($data, 200, $headers);
+    }
+
+    public function logout(Request $request)
+    {
+        $validatedData = $request->validate([
+            'barcode' => 'required|string'
+        ]);
+        $event_sample = event_sample::join('sampletypes','sampletype_id','=','sampletypes.id')
+        ->where('barcode',$validatedData['barcode'])
+        ->where('project_id',session('currentProject'))
+        ->first('event_sample.id');
+        if (is_null($event_sample)) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
+        }
+        $event_sample = event_sample::find($event_sample->id);
+        if ($event_sample->samplestatus_id !== 3) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not currently in storage');
+        }
+        $event_sample->samplestatus_id = 9;
+        $event_sample->update();
+        return back()->with('message',"Sample " . $validatedData['barcode'] . " logged out of storage");
+
+    }
+
+    public function logreturn(Request $request)
+    {
+        $validatedData = $request->validate([
+            'barcode' => 'required|string'
+        ]);
+        $event_sample = event_sample::join('sampletypes', 'sampletype_id','=', 'sampletypes.id')
+        ->where('barcode', $validatedData['barcode'])
+        ->where('project_id', session('currentProject'))
+        ->first('event_sample.id');
+        if (is_null($event_sample)) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
+        }
+        $event_sample = event_sample::find($event_sample->id);
+        if ($event_sample->samplestatus_id !== 9) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not currently logged out of storage');
+        }
+        $event_sample->thawcount += 1;
+        $event_sample->samplestatus_id = 3;
+        $event_sample->update();
+        $storagelocation = $event_sample->storagelocation->virtualUnit->virtualUnit . ' ' . $event_sample->storagelocation->rack . ' ' . $event_sample->storagelocation->box . ':' . $event_sample->storagelocation->position;
+        return back()->with('message', "Sample " . $validatedData['barcode'] . " returned to storage: [" . $storagelocation .']');
     }
 }
