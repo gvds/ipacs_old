@@ -133,7 +133,7 @@ class EventSampleController extends Controller
         if (in_array($event_sample->samplestatus_id, [5, 8])) {
             return back()->with('error', 'This sample cannot be unlogged as it no longer exists');
         }
-        
+
         $event_sample->delete();
         return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
@@ -247,12 +247,12 @@ class EventSampleController extends Controller
     public function logout(Request $request)
     {
         $validatedData = $request->validate([
-            'barcode' => 'required|string'
+            'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        $event_sample = event_sample::join('sampletypes','sampletype_id','=','sampletypes.id')
-        ->where('barcode',$validatedData['barcode'])
-        ->where('project_id',session('currentProject'))
-        ->first('event_sample.id');
+        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            ->where('barcode', $validatedData['barcode'])
+            ->where('project_id', session('currentProject'))
+            ->first('event_sample.id');
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
         }
@@ -262,19 +262,18 @@ class EventSampleController extends Controller
         }
         $event_sample->samplestatus_id = 9;
         $event_sample->update();
-        return back()->with('message',"Sample " . $validatedData['barcode'] . " logged out of storage");
-
+        return back()->with('message', "Sample " . $validatedData['barcode'] . " logged out of storage");
     }
 
     public function logreturn(Request $request)
     {
         $validatedData = $request->validate([
-            'barcode' => 'required|string'
+            'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        $event_sample = event_sample::join('sampletypes', 'sampletype_id','=', 'sampletypes.id')
-        ->where('barcode', $validatedData['barcode'])
-        ->where('project_id', session('currentProject'))
-        ->first('event_sample.id');
+        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            ->where('barcode', $validatedData['barcode'])
+            ->where('project_id', session('currentProject'))
+            ->first('event_sample.id');
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
         }
@@ -286,6 +285,69 @@ class EventSampleController extends Controller
         $event_sample->samplestatus_id = 3;
         $event_sample->update();
         $storagelocation = $event_sample->storagelocation->virtualUnit->virtualUnit . ' ' . $event_sample->storagelocation->rack . ' ' . $event_sample->storagelocation->box . ':' . $event_sample->storagelocation->position;
-        return back()->with('message', "Sample " . $validatedData['barcode'] . " returned to storage: [" . $storagelocation .']');
+        return back()->with('message', "Sample " . $validatedData['barcode'] . " returned to storage: [" . $storagelocation . ']');
+    }
+
+    public function logused(Request $request)
+    {
+        $validatedData = $request->validate([
+            'barcode' => 'required|string|exists:event_sample,barcode'
+        ]);
+        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            ->where('barcode', $validatedData['barcode'])
+            ->where('project_id', session('currentProject'))
+            ->first('event_sample.id');
+        if (is_null($event_sample)) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
+        }
+        $event_sample = event_sample::find($event_sample->id);
+        if (in_array($event_sample->samplestatus_id, [0, 6, 8])) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' does not exist');
+        }
+        if ($event_sample->samplestatus_id === 4) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' has been logged for transfer');
+        }
+        if ($event_sample->samplestatus_id === 5) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' has been already been logged as used');
+        }
+        try {
+            DB::beginTransaction();
+            $event_sample->logAsUsed();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('message', "Sample " . $validatedData['barcode'] . " has been logged as used");
+    }
+
+    public function loglost(Request $request)
+    {
+        $validatedData = $request->validate([
+            'barcode' => 'required|string|exists:event_sample,barcode'
+        ]);
+        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            ->where('barcode', $validatedData['barcode'])
+            ->where('project_id', session('currentProject'))
+            ->first('event_sample.id');
+        if (is_null($event_sample)) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
+        }
+        $event_sample = event_sample::find($event_sample->id);
+        if (in_array($event_sample->samplestatus_id, [0, 6, 8])) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' does not exist');
+        }
+        if ($event_sample->samplestatus_id === 4) {
+            return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' has been logged for transfer');
+        }
+        try {
+            DB::beginTransaction();
+            $event_sample->logAsLost();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('message', "Sample " . $validatedData['barcode'] . " has been logged as lost");
     }
 }

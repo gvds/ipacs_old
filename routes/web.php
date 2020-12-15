@@ -164,6 +164,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sample/logout', 'EventSampleController@logout');
         Route::view('/sample/logreturn', 'samples.logreturn');
         Route::patch('/sample/logreturn', 'EventSampleController@logreturn');
+        Route::view('/sample/logused', 'samples.logused');
+        Route::patch('/sample/logused', 'EventSampleController@logused');
+        Route::view('/sample/loglost', 'samples.loglost');
+        Route::patch('/sample/loglost', 'EventSampleController@loglost');
     });
 
     Route::middleware('project.auth:store-samples')->group(function () {

@@ -65,35 +65,35 @@ class samplestoreController extends Controller
         return $nextLocation->id;
     }
 
-    /**
-     * Frees storage location and optionally unsets virgin flag
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return  \Illuminate\Http\Response
-     * 
-     */
-    private function freelocation(Request $request)
-    {
-        $validatedData = $request->validate([
-            'project' => 'required',
-            'location' => 'required|integer',
-            'virgin' => 'boolean'
-            // 'barcode' => 'required'
-        ]);
+    // /**
+    //  * Frees storage location and optionally unsets virgin flag
+    //  * 
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return  \Illuminate\Http\Response
+    //  * 
+    //  */
+    // public static function freelocation(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'project' => 'required',
+    //         'location' => 'required|integer',
+    //         'virgin' => 'boolean'
+    //         // 'barcode' => 'required'
+    //     ]);
 
-        if ($validatedData['virgin']) {
-            $virgin = 1;
-        } else {
-            $virgin = 0;
-        }
+    //     if ($validatedData['virgin']) {
+    //         $virgin = 1;
+    //     } else {
+    //         $virgin = 0;
+    //     }
 
-        try {
-            location::findOrFail($validatedData['location'])->update(['used' => 0, 'virgin' => $virgin]);
-            return true;
-        } catch (\Throwable $th) {
-            return back()->withErrors($th->getMessage());
-        }
-    }
+    //     try {
+    //         location::findOrFail($validatedData['location'])->update(['used' => 0, 'virgin' => $virgin]);
+    //         return true;
+    //     } catch (\Throwable $th) {
+    //         return back()->withErrors($th->getMessage());
+    //     }
+    // }
 
     /**
      * Presents sets of logged, unstored samples for storage

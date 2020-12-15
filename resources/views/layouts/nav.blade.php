@@ -67,8 +67,8 @@
         <x-nav.dropdown-link href="/sample/logout">Log Sample out of Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sample/logreturn">Log Sample Return to Storage</x-nav.dropdown-link>
         <hr />
-        <x-nav.dropdown-link href="#">Log Sample as Used</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Log Sample as Lost</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sample/logused">Log Sample as Used</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/sample/loglost">Log Sample as Lost</x-nav.dropdown-link>
         <hr />
         <x-nav.dropdown-link href="#">Select Samples for Shipping</x-nav.dropdown-link>
         <x-nav.dropdown-link href="#">Shipping Manifests</x-nav.dropdown-link>

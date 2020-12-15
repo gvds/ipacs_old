@@ -35,12 +35,34 @@ class event_sample extends Pivot
 
     public function derivativeCount()
     {
-        return event_sample::where('parentBarcode',$this->barcode)->count();
+        return event_sample::where('parentBarcode', $this->barcode)->count();
     }
 
     public function sampleActor($user_id)
     {
         return \App\User::find($user_id);
+    }
+
+    public function logAsUsed()
+    {
+        if (in_array($this->samplestatus_id, [3, 9])) {
+            $location = \App\location::find($this->location);
+            $location->freelocation();
+            $this->location = null;
+        }
+        $this->samplestatus_id = 5;
+        $this->update();
+    }
+
+    public function logAsLost()
+    {
+        if (in_array($this->samplestatus_id, [3, 9])) {
+            $location = \App\location::find($this->location);
+            $location->freelocation();
+            $this->location = null;
+        }
+        $this->samplestatus_id = 8;
+        $this->update();
     }
 
 }
