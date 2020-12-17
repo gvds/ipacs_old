@@ -170,6 +170,21 @@ Route::middleware('auth')->group(function () {
         Route::patch('/sample/loglost', 'EventSampleController@loglost');
     });
 
+    Route::middleware('project.auth:manage-samples')->group(function () {
+        // Route::resource('/manifest', 'ManifestController');
+        Route::get('/manifest', 'ManifestController@index');
+        Route::get('/manifest/receive', 'ManifestController@index_received');
+        Route::get('/manifest/receive/{manifest}', 'ManifestController@show_received');
+        Route::get('/manifest/{manifest}', 'ManifestController@show');
+        Route::post('/manifest', 'ManifestController@store');
+        Route::delete('/manifest/{manifest}', 'ManifestController@destroy');
+        Route::post('/manifest/{manifest}/ship', 'ManifestController@ship');
+        Route::post('/manifest/{manifest}/receive', 'ManifestController@receive');
+        Route::post('/manifestitem', 'ManifestItemController@store');
+        Route::patch('/manifestitem', 'ManifestItemController@update');
+        Route::delete('/manifestitem/{manifestItem}', 'ManifestItemController@destroy');
+    });
+
     Route::middleware('project.auth:store-samples')->group(function () {
         Route::get('/samplestore', 'samplestoreController@listSamples');
         Route::post('/samplestore', 'samplestoreController@allocateStorage');

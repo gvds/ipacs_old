@@ -43,8 +43,8 @@ input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
 }
 
 input[type='submit'] {
-    hover:text-indigo-500;
-    @apply font-bold bg-gray-300 mb-3;
+    hover:text-indigo-500 cursor-pointer;
+    @apply font-bold bg-gray-300;
 }
 
 select {

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Exception;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class event_sample extends Pivot
@@ -65,4 +66,43 @@ class event_sample extends Pivot
         $this->update();
     }
 
+    public function logAsTransferred()
+    {
+        $this->samplestatus_id = 7;
+        $this->update();
+    }
+
+    public function logAsReceived()
+    {
+        $response = $this->update(['samplestatus_id' => 10]);
+        if (!$response) {
+            throw new Exception("Error updating sample $this->barcode status as received", 1);
+        }
+    }
+
+    public function logIntoSite(int $site)
+    {
+        if ($this->location) {
+            $location = \App\location::find($this->location);
+            $location->freelocation();
+        }
+        $response = $this->update([
+            'samplestatus_id' => 3,
+            'site_id' => $site,
+            'location' => null
+        ]);
+        if (!$response) {
+            throw new Exception("Error logging sample $this->barcode into local site", 1);
+        }
+    }
+
+    public function returnToSource()
+    {
+        $response = $this->update([
+            'samplestatus_id' => 3
+        ]);
+        if (!$response) {
+            throw new Exception("Error returning sample $this->barcode to source site", 1);
+        }
+    }
 }

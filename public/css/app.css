@@ -671,12 +671,11 @@ input:not([type=checkbox]):not([type=radio]):not([type=submit]) {
 }
 
 input[type=submit] {
-  hover: text-indigo-500;
+  hover: text-indigo-500 cursor-pointer;
   font-weight: 700;
   --bg-opacity: 1;
   background-color: #d2d6dc;
   background-color: rgba(210, 214, 220, var(--bg-opacity));
-  margin-bottom: 0.75rem;
 }
 
 select {
