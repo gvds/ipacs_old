@@ -237,7 +237,7 @@ class EventSampleController extends Controller
                 $sample->parentBarcode
             ];
             if (!empty($sample->storagelocation)) {
-                array_push($sampledata, $sample->storagelocation->virtualUnit->id . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
+                array_push($sampledata, $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
             }
             $data .= implode("\t", $sampledata) . "\n";
         }
