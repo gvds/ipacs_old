@@ -2,18 +2,22 @@
 
   <x-pageheader>
     Data File Details
+    @if (auth()->user()->isAbleTo(['administer-project','manage-datafiles'], $currentProject->team->name))
     <x-buttonlink href="/datafiles/{{$datafile->id}}/edit">
       Edit
     </x-buttonlink>
+    @endif
   </x-pageheader>
   <div>
     <x-table>
       <tr>
         <th class='text-left'>Name</th>
         <td>{{$datafile->filename}}</td>
+        @if (auth()->user()->isAbleTo(['administer-project','manage-datafiles'], $currentProject->team->name))
         <td>
           <x-delConfirm url="/datafiles/{{$datafile->id}}" />
         </td>
+        @endif
       </tr>
       <tr>
         <th class='text-left'>Uploaded By</th>

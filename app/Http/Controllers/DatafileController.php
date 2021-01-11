@@ -16,11 +16,12 @@ class DatafileController extends Controller
      */
     public function index()
     {
+        $currentProject = \App\project::find(session('currentProject'));
         $datafiles = datafile::where('project_id',session('currentProject'))
         ->orderBy('fileset')
         ->orderBy('created_at')
         ->get();
-        return view('datafiles.index', compact('datafiles'));
+        return view('datafiles.index', compact('datafiles', 'currentProject'));
     }
 
     /**
@@ -101,7 +102,8 @@ class DatafileController extends Controller
      */
     public function show(datafile $datafile)
     {
-        return view('datafiles.show', compact('datafile'));
+        $currentProject = \App\project::find(session('currentProject'));
+        return view('datafiles.show', compact('datafile', 'currentProject'));
     }
 
     /**

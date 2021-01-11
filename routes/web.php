@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('project.auth:manage-samples')->group(function () {
         // Route::resource('/manifest', 'ManifestController');
         Route::get('/manifest', 'ManifestController@index');
+        Route::get('/manifest/samplelist', 'ManifestController@samplelist');
         Route::get('/manifest/receive', 'ManifestController@index_received');
         Route::get('/manifest/receive/{manifest}', 'ManifestController@show_received');
         Route::get('/manifest/{manifest}', 'ManifestController@show');
@@ -196,9 +197,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/progress', 'ProgressController@index');
     });
 
+    Route::get('/datafiles', 'DatafileController@index');
+    Route::get('/datafiles/{datafile}', 'DatafileController@show');
+    Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
     Route::middleware('project.auth:manage-datafiles')->group(function () {
-        Route::resource('/datafiles', 'DatafileController');
-        Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
+        Route::resource('/datafiles', 'DatafileController')->except('index','show');
     });
 
     Route::middleware('project.auth:administer-project')->group(function () {

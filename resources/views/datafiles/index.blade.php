@@ -2,11 +2,13 @@
 
     <x-pageheader>
         Data Files
+        @if (auth()->user()->isAbleTo(['administer-project','manage-datafiles'], $currentProject->team->name))
         <x-slot name='button'>
             <x-buttonlink href="/datafiles/create">
                 Add New Data File
             </x-buttonlink>
         </x-slot>
+        @endif
     </x-pageheader>
     @include('layouts.message')
     <x-table>
@@ -38,11 +40,13 @@
                     Details
                 </x-buttonlink>
             </td>
+            @if (auth()->user()->isAbleTo(['administer-project','manage-datafiles'], $currentProject->team->name))
             <td>
                 <x-buttonlink href="/datafiles/create?fileset={{$datafile->fileset}}">
                     Add new file to Set
                 </x-buttonlink>
             </td>
+            @endif
         </tr>
         @endforeach
     </x-table>
