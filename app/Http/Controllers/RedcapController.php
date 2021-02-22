@@ -28,11 +28,11 @@ class RedcapController extends Controller
         $fields = array_merge($fields, $params);
 
         $data = array(
-                'token' => $redcap_api_token,
-                'content' => 'arm',
-                'format' => 'json',
-                'returnFormat' => 'json'
-            );
+            'token' => $redcap_api_token,
+            'content' => 'arm',
+            'format' => 'json',
+            'returnFormat' => 'json'
+        );
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, config('services.redcap.url'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -129,7 +129,13 @@ class RedcapController extends Controller
 
             // Create arms
             $redcap_arms = $this->arms($token);
-
+            if (isset($redcap_arms['error'])) {
+                if ($redcap_arms["error"] === "You cannot export arms for classic projects") {
+                    $redcap_arms = collect(json_decode('[{"arm_num":1,"name":"Arm 1"}]'));
+                } else {
+                    throw new Exception($redcap_arms['error']);
+                }
+            }
             foreach ($redcap_arms as $redcap_arm) {
                 $arm = \App\arm::create([
                     'project_id' => $project->id,
@@ -138,7 +144,7 @@ class RedcapController extends Controller
                 ]);
 
                 // Create events
-                $redcap_events = $this->events($token,[$arm->arm_num]);
+                $redcap_events = $this->events($token, [$arm->arm_num]);
                 foreach ($redcap_events as $redcap_event) {
                     $event = \App\event::create([
                         'arm_id' => $arm->id,
@@ -226,8 +232,8 @@ class RedcapController extends Controller
                 throw new Exception('Could not create unique API token for this user in the REDCap database');
             }
             DB::connection('redcap')->update(
-                "UPDATE redcap_user_rights SET api_token = '$token' WHERE 
-                redcap_user_rights.project_id = $project->redcapProject_id and 
+                "UPDATE redcap_user_rights SET api_token = '$token' WHERE
+                redcap_user_rights.project_id = $project->redcapProject_id and
                 redcap_user_rights.username = '$user->username'"
             );
             return $token;
@@ -239,10 +245,10 @@ class RedcapController extends Controller
     private function getREDCapUser($redcapProject_id, $username)
     {
         return DB::connection('redcap')->select(
-            "SELECT * from redcap_user_rights left join redcap_data_access_groups on 
-                    redcap_user_rights.group_id = redcap_data_access_groups.group_id and 
-                    redcap_user_rights.project_id = redcap_data_access_groups.project_id 
-                    where redcap_user_rights.project_id = $redcapProject_id and 
+            "SELECT * from redcap_user_rights left join redcap_data_access_groups on
+                    redcap_user_rights.group_id = redcap_data_access_groups.group_id and
+                    redcap_user_rights.project_id = redcap_data_access_groups.project_id
+                    where redcap_user_rights.project_id = $redcapProject_id and
                     redcap_user_rights.username = '$username'"
         );
     }
@@ -256,7 +262,7 @@ class RedcapController extends Controller
         return collect(json_decode($arms));
     }
 
-    public function events($redcap_api_token,$arms = [])
+    public function events($redcap_api_token, $arms = [])
     {
         $params = [
             'content' => 'event',
@@ -296,5 +302,4 @@ class RedcapController extends Controller
         $redcap_projects = DB::connection('redcap')->select("select * from redcap_projects");
         dd($redcap_projects);
     }
-
 }
