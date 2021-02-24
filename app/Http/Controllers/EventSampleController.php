@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\event_sample;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -222,7 +223,7 @@ class EventSampleController extends Controller
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
 
-        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLocation\n";
+        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLogged\tLocation\n";
         foreach ($samples as $key => $sample) {
             $sampledata = [
                 $sample->barcode,
@@ -234,7 +235,8 @@ class EventSampleController extends Controller
                 $sample->status->samplestatus,
                 $sample->event_subject->subject->subjectID,
                 $sample->site->name,
-                $sample->parentBarcode
+                $sample->parentBarcode,
+                Carbon::parse($sample->logTime)->toDateString()
             ];
             if (!empty($sample->storagelocation)) {
                 array_push($sampledata, $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
