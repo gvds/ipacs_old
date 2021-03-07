@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePhysicalUnitsTable extends Migration
 {
@@ -14,10 +14,10 @@ class CreatePhysicalUnitsTable extends Migration
     public function up()
     {
         Schema::create('physicalUnits', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('unitDefinition_id');
-            $table->string('unitID',40);
-            $table->string('unitType',100)->default(null);
+            $table->string('unitID', 40);
+            $table->string('unitType', 100)->default(null);
             $table->boolean('available')->default(1);
             $table->unsignedBigInteger('administrator');
             $table->timestamps();
@@ -32,6 +32,6 @@ class CreatePhysicalUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('physicalUnits');
+        Schema::dropIfExists('physical_units');
     }
 }

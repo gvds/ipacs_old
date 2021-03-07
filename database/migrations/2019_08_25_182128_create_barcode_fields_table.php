@@ -14,12 +14,12 @@ class CreateBarcodeFieldsTable extends Migration
     public function up()
     {
         Schema::create('barcode_fields', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('project_id')->unsigned();
-            $table->tinyInteger('fieldorder')->unsigned();
+            $table->id();
+            $table->unsignedBigInteger('project_id');
+            $table->unsignedTinyInteger('fieldorder');
             $table->string('fieldname',25);
             $table->timestamps();
-            $table->foreign('project_id')->references('project_id')->on('projects');
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 

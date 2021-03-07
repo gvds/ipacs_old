@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVirtualUnitsTable extends Migration
 {
@@ -14,17 +14,17 @@ class CreateVirtualUnitsTable extends Migration
     public function up()
     {
         Schema::create('virtualUnits', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('virtualUnit',50);
-            $table->string('physicalUnit_id',40);
+            $table->id();
+            $table->string('virtualUnit', 50);
+            $table->unsignedBigInteger('physicalUnit_id');
             $table->unsignedBigInteger('project_id');
-            $table->string('project',50);
+            $table->string('project', 50);
             $table->unsignedTinyInteger('section');
-            $table->unsignedTinyInteger('startRack',3)->nullable();
-            $table->unsignedTinyInteger('endRack',3)->nullable();
-            $table->string('startBox',3)->nullable();
-            $table->string('endBox',3)->nullable();
-            $table->string('storageSampleType',50)->nullable();
+            $table->unsignedTinyInteger('startRack')->nullable();
+            $table->unsignedTinyInteger('endRack')->nullable();
+            $table->string('startBox', 3)->nullable();
+            $table->string('endBox', 3)->nullable();
+            $table->string('storageSampleType', 50)->nullable();
             $table->unsignedSmallInteger('boxCapacity')->nullable();
             $table->unsignedSmallInteger('rackCapacity')->nullable();
             $table->boolean('active')->default(true);
@@ -40,6 +40,6 @@ class CreateVirtualUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('virtualUnits');
+        Schema::dropIfExists('virtual_units');
     }
 }

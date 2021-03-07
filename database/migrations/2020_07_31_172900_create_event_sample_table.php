@@ -14,7 +14,7 @@ class CreateEventSampleTable extends Migration
     public function up()
     {
         Schema::create('event_sample', function (Blueprint $table) {
-            $table->bigInteger('id')->unsigned();
+            $table->id();
             $table->bigInteger('event_subject_id')->unsigned();
             $table->string('barcode',20);
             $table->unsignedBigInteger('site_id')->nullable();
