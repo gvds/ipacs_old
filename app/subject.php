@@ -296,7 +296,7 @@ class subject extends Model
   //   $event = event::where('id',$event_subject->event_id)->with('arm')->first();
 
   //   $redcap_event = DB::connection('redcap')->select("select * from redcap_events_metadata where event_id = $event->redcap_event_id");
-    
+
   //   $unique_event_name = str_replace(' ','_',strtolower($redcap_event[0]->descrip)) . '_arm' . '_' . $event->arm->arm_num;
 
   //   $params = [

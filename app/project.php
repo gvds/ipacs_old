@@ -31,7 +31,7 @@ class project extends Model
   {
     return $this->hasMany(arm::class);
   }
-  
+
   public function events()
   {
     return $this->hasManyThrough(event::class, arm::class);
@@ -40,6 +40,12 @@ class project extends Model
   public function sampletypes()
   {
     return $this->hasMany(sampletype::class);
+  }
+
+  public function resetLastSubject()
+  {
+    $this->last_subject_id = null;
+    $this->save();
   }
 
 }

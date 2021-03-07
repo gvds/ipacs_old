@@ -151,14 +151,13 @@ class DatafileController extends Controller
      */
     public function destroy(datafile $datafile)
     {
-        Storage::disk('local')->delete($datafile->resource);
         $datafile->delete();
         return redirect('/datafiles');
     }
 
     /**
      * Retrieve the file from the repository
-     * 
+     *
      * @param  \App\datafile  $datafile
      * @return  \Illuminate\Http\Response
      */

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class datafile extends Model
 {
@@ -32,5 +33,11 @@ class datafile extends Model
     public function site()
     {
         return $this->belongsTo(site::class);
+    }
+
+    public function delete()
+    {
+        Storage::disk('local')->delete($this->resource);
+        $this->delete();
     }
 }

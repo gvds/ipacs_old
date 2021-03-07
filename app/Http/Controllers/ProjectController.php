@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\datafile;
+use App\manifest;
 use App\project;
+use App\storageReport;
+use App\subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Team;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -168,5 +173,25 @@ class ProjectController extends Controller
             'id' => 'required|exists:projects,id'
         ]);
         return project::find($request->id)->sampletypes()->whereNotNull('storageSampleType')->distinct()->pluck('storageSampleType');
+    }
+
+    public function reset(project $project)
+    {
+        try {
+            DB::beginTransaction();
+            subject::where('project_id', $project->id)->delete();
+            $datafiles = datafile::where('project_id', $project->id)->get();
+            foreach ($datafiles as $datafile) {
+                $datafile->delete();
+            }
+            manifest::where('project_id', $project->id)->delete();
+            storageReport::where('project_id', $project->id)->delete();
+            $project->resetLastSubject();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Project could not be reset. ' . $th->getMessage());
+        }
+        return back();
     }
 }

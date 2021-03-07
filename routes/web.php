@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['middleware' => ['permission:manage-projects']], function () {
         Route::get('/project/stypes', 'ProjectController@storageSampleTypes');
+        Route::get('/project/{project}/reset', 'ProjectController@reset');
         Route::resource('/project', 'ProjectController');
 
         Route::get('/redcapproject/new', 'RedcapController@create');
@@ -158,7 +159,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/samples/{event_sample}/unlog', 'EventSampleController@unlog');
         Route::post('/samples/{event_sample}/volume', 'EventSampleController@volumeUpdate');
     });
-    
+
     Route::middleware('project.auth:manage-samples')->group(function () {
         Route::view('/sample/logout', 'samples.logout');
         Route::patch('/sample/logout', 'EventSampleController@logout');

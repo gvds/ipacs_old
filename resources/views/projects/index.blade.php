@@ -14,6 +14,8 @@
         </x-slot>
     </x-pageheader>
 
+    @include('layouts.message')
+
     @if (count($projects))
 
     <x-table>
@@ -49,6 +51,9 @@
                 @endif
             </td>
             <td>
+                <x-buttonlink class='bg-orange-500' href='/project/{{$project->id}}/reset'>Reset</x-buttonlink>
+            </td>
+            <td>
                 <x-delConfirm url='/project/{{$project->id}}' />
             </td>
         </tr>
@@ -58,4 +63,3 @@
     @endif
 
 </x-layout>
-
