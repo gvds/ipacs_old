@@ -182,7 +182,7 @@ class ProjectController extends Controller
             subject::where('project_id', $project->id)->delete();
             $datafiles = datafile::where('project_id', $project->id)->get();
             foreach ($datafiles as $datafile) {
-                $datafile->delete();
+                $datafile->deleteFile();
             }
             manifest::where('project_id', $project->id)->delete();
             storageReport::where('project_id', $project->id)->delete();

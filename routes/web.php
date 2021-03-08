@@ -199,11 +199,11 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/datafiles', 'DatafileController@index');
-    Route::get('/datafiles/{datafile}', 'DatafileController@show');
-    Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
     Route::middleware('project.auth:manage-datafiles')->group(function () {
         Route::resource('/datafiles', 'DatafileController')->except('index','show');
     });
+    Route::get('/datafiles/{datafile}', 'DatafileController@show');
+    Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
 
     Route::middleware('project.auth:administer-project')->group(function () {
         // Route::group(['middleware' => ['role:admin|sysadmin']], function () {

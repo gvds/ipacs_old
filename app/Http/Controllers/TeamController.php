@@ -40,9 +40,9 @@ class TeamController extends Controller
     {
         $currentProject = $request->currentProject;
         $teammembers = Team::find($currentProject->id)->users()
-            ->select('users.*', 'name')
-            ->leftJoin('sites', 'site_id', 'sites.id')
-            ->get();
+        ->select('users.*', 'name')
+        ->leftJoin('sites', 'site_id', 'sites.id')
+        ->get();
 
         // dd($teammembers);
 
@@ -130,13 +130,13 @@ class TeamController extends Controller
                     redcap_user_rights
                 left join
                     redcap_data_access_groups
-                on 
+                on
                     redcap_user_rights.group_id = redcap_data_access_groups.group_id
-                and 
-                    redcap_user_rights.project_id = redcap_data_access_groups.project_id 
+                and
+                    redcap_user_rights.project_id = redcap_data_access_groups.project_id
                 where
                     redcap_user_rights.project_id = $redcapProject_id
-                and 
+                and
                     redcap_user_rights.username = '$username'"
         );
     }
@@ -155,8 +155,8 @@ class TeamController extends Controller
                 throw new Exception('Could not create unique API token for this user in the REDCap database');
             }
             DB::connection('redcap')->update(
-                "UPDATE redcap_user_rights SET api_token = '$token' WHERE 
-                redcap_user_rights.project_id = $project->redcapProject_id and 
+                "UPDATE redcap_user_rights SET api_token = '$token' WHERE
+                redcap_user_rights.project_id = $project->redcapProject_id and
                 redcap_user_rights.username = '$user->username'"
             );
             return $token;

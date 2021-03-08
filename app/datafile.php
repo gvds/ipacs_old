@@ -35,7 +35,7 @@ class datafile extends Model
         return $this->belongsTo(site::class);
     }
 
-    public function delete()
+    public function deleteFile()
     {
         Storage::disk('local')->delete($this->resource);
         $this->delete();
