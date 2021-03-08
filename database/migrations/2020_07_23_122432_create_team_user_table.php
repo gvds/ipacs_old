@@ -17,7 +17,8 @@ class CreateTeamUserTable extends Migration
         Schema::create('team_user', function (Blueprint $table) {
             $table->unsignedBigInteger('team_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('site')->nullable();
+            $table->unsignedBigInteger('site_id')->nullable();
+            $table->string('redcap_api_token',32)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
@@ -26,7 +27,7 @@ class CreateTeamUserTable extends Migration
                 ->onUpdate('cascade')->onDelete('cascade');
 
             $table->unique(['user_id', 'team_id']);
-            $table->index('site');
+            $table->index('site_id');
         });
     }
 
