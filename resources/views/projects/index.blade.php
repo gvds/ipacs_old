@@ -18,7 +18,7 @@
 
     @if (count($projects))
 
-    <div x-data="resetModal()">
+    <div x-data="{...resetModal(),...deleteModal()}">
 
         <x-table>
             <x-slot name="head">
@@ -56,16 +56,18 @@
                 </td>
                 <td>
                     <button class='bg-blue-700 text-blue-100 py-1 px-2 rounded-md font-bold'
-                        @click="reset({{$project->id}})">Reset</button>
+                        @click="resetconf({{$project->id}})">Reset</button>
                 </td>
                 <td>
-                    <x-delConfirm url='/project/{{$project->id}}' />
+                    <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                        @click="deleteconf('project','{{$project->project}}',{{$project->id}})">Delete</button>
                 </td>
             </tr>
             @endforeach
         </x-table>
 
         <x-modals.resetModal />
+        <x-modals.deleteModal />
     </div>
 
     @endif
