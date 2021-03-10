@@ -2,7 +2,7 @@
     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-80 transform scale-100"
     x-transition:leave-end="opacity-0 transform scale-0">
 </div>
-<div class="bg-white text-gray-800 shadow-md max-w-sm h-48 m-auto rounded-md fixed inset-0" x-show="showDelete"
+<div class="bg-white text-gray-800 shadow-md max-w-lg h-48 m-auto rounded-md fixed inset-0" x-show="showDelete"
     x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-75"
     x-transition:enter-end="opacity-100 transform scale-100">
     <div class='flex flex-col h-full justify-between'>

@@ -136,7 +136,7 @@
                 @endforeach
             </div>
         </div>
-        <div class='mt-5'>
+        <div class='mt-5' x-data="deleteModal()">
             <x-table>
                 <x-slot name='head'>
                     <th>Unit Name</th>
@@ -166,22 +166,28 @@
                     <td>
                         <a href="/virtualUnits/{{$virtualUnit->id}}/toggleActive">
                             @if ($virtualUnit->active)
-                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
+                                viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
                             </svg>
                             @else
-                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none"
+                                viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
                             </svg>
                             @endif
                         </a>
                     </td>
                     <td>
-                        <x-delConfirm url='/virtualUnits/{{$virtualUnit->id}}' />
+                        <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                            @click="deleteconf('virtualunits','{{$virtualUnit->virtualUnit}}',{{$virtualUnit->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach
             </x-table>
+            <x-modals.deleteModal />
         </div>
     </div>
 

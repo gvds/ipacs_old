@@ -2,7 +2,11 @@
     <x-pageheader>
         Edit Sample Type
         <x-slot name='button'>
-            <x-delConfirm url='/sampletypes/{{$sampletype->id}}' />
+            <div x-data="deleteModal()">
+                <x-modals.deleteModal />
+                <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                    @click="deleteconf('sampletype','{{$sampletype->name}}',{{$sampletype->id}})">Delete</button>
+            </div>
         </x-slot>
     </x-pageheader>
 

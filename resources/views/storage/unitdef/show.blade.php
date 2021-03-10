@@ -8,7 +8,7 @@
 
     @include('layouts.message')
 
-    <div class='flex flex-row'>
+    <div class='flex flex-row' x-data="deleteModal()">
         <div>
             <x-table>
                 <tr>
@@ -48,17 +48,20 @@
                     <td>{{$unitDefinition->rackOrder}}</td>
                 </tr>
             </x-table>
-            <x-delConfirm url='/unitDefinitions/{{$unitDefinition->id}}' />
+            <div>
+                <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                    @click="deleteconf('unitDefinitions','{{$unitDefinition->unitType}}',{{$unitDefinition->id}})">Delete</button>
+            </div>
         </div>
         <div class='flex flex-col ml-20'>
             <div class='font-medium text-lg'>Sections</div>
             <x-table>
                 <x-slot name='head'>
-                        <th>Section</th>
-                        <th>Rows</th>
-                        <th>Columns</th>
-                        <th>Boxes</th>
-                        <th>Positions</th>
+                    <th>Section</th>
+                    <th>Rows</th>
+                    <th>Columns</th>
+                    <th>Boxes</th>
+                    <th>Positions</th>
                 </x-slot>
                 @foreach ($sections as $section)
                 <tr class="odd:bg-gray-100">
@@ -68,7 +71,8 @@
                     <td>{{$section->boxes}}</td>
                     <td>{{$section->positions}}</td>
                     <td>
-                        <x-delConfirm url='/sections/{{$section->id}}' />
+                        <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                            @click="deleteconf('sections','{{$section->section}}',{{$section->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach
@@ -82,9 +86,9 @@
             <div class='font-medium text-lg'>Physical Storage Units</div>
             <x-table>
                 <x-slot name='head'>
-                        <th>Unit ID</th>
-                        <th>Administrator</th>
-                        <th>Available</th>
+                    <th>Unit ID</th>
+                    <th>Administrator</th>
+                    <th>Available</th>
                 </x-slot>
                 @foreach ($physicalUnits as $physicalUnit)
                 <tr class="odd:bg-gray-100">
@@ -93,20 +97,23 @@
                     <td>
                         <a href="/physicalUnits/{{$physicalUnit->id}}/toggleActive">
                             @if ($physicalUnit->available)
-                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
+                                viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
                             </svg>
                             @else
-                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none"
+                                viewBox="0 0 20 20" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
                             </svg>
                             @endif
                         </a>
                     </td>
                     <td>
-                        <x-delConfirm url='/physicalUnits/{{$physicalUnit->id}}' />
+                        <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                            @click="deleteconf('physicalUnits','{{$physicalUnit->unitID}}',{{$physicalUnit->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach
@@ -116,6 +123,7 @@
             {{ Form::submit('Add New Unit', ['class'=>'text-sm']) }}
             {{ Form::close() }}
         </div>
+        <x-modals.deleteModal />
     </div>
 
 
