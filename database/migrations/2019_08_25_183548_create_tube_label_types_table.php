@@ -14,7 +14,8 @@ class CreateTubeLabelTypesTable extends Migration
     public function up()
     {
         Schema::create('tube_label_types', function (Blueprint $table) {
-            $table->string('tubeLabelType',15)->primary();
+            $table->id();
+            $table->string('tubeLabelType',15);
             $table->boolean('preregister')->default(0);
             $table->string('barcodeFormat',30);
             $table->set('registration',['range','single'])->default('range');

@@ -20,9 +20,9 @@ class CreateEventSubjectTable extends Migration
             $table->tinyInteger('iteration')->unsigned()->default(1);
             $table->tinyInteger('eventstatus_id')->unsigned()->default(0);
             $table->tinyInteger('labelStatus')->default(0);
-            $table->date('eventDate');
-            $table->date('minDate');
-            $table->date('maxDate');
+            $table->date('eventDate')->nullable();
+            $table->date('minDate')->nullable();
+            $table->date('maxDate')->nullable();
             // $table->dateTime('reg_timestamp')->nullable();
             // $table->dateTime('log_timestamp')->nullable();
             $table->date('logDate')->nullable();
