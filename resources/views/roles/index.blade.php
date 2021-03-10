@@ -3,7 +3,7 @@
   <x-pageheader>
     Roles
     <x-slot name='button'>
-      <x-buttonlink href="roles/create">
+      <x-buttonlink href="role/create">
         Add New Role
       </x-buttonlink>
     </x-slot>
@@ -29,14 +29,14 @@
         <td>{{$role->restricted}}</td>
         <td>{{implode(" || ",$role->permissions->pluck('name')->toArray())}}</td>
         <td>
-          <x-buttonlink href="roles/{{$role->id}}">Permissions</x-buttonlink>
+          <x-buttonlink href="role/{{$role->id}}">Permissions</x-buttonlink>
         </td>
         <td>
-          <x-buttonlink href="roles/{{$role->id}}/edit">Edit</x-buttonlink>
+          <x-buttonlink href="role/{{$role->id}}/edit">Edit</x-buttonlink>
         </td>
         <td>
           <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-            @click="deleteconf('roles','{{$role->name}}',{{$role->id}})">Delete</button>
+            @click="deleteconf('role','{{$role->name}}',{{$role->id}})">Delete</button>
         </td>
       </tr>
       @endforeach

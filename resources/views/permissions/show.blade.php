@@ -25,7 +25,7 @@
         </div>
         <div class='row'>
           <div class='col-md-2'>
-            {!! Form::open(['url' => ["roles/$role->id/permissions"], 'method' => 'post']) !!}
+            {!! Form::open(['url' => ["role/$role->id/permissions"], 'method' => 'post']) !!}
             <table class="table">
               @foreach ($permissions as $permission_id => $permission)
                 <tr>

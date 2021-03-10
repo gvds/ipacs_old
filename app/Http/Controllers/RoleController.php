@@ -51,7 +51,7 @@ class RoleController extends Controller
       'restricted' => 'required|boolean'
     ]);
     Role::create($request->all());
-    return redirect('/roles');
+    return redirect('/role');
   }
 
   /**
@@ -72,7 +72,7 @@ class RoleController extends Controller
     $permissions = array_keys($request->all());
     array_shift($permissions);
     $role->permissions()->sync($permissions);
-    return redirect('/roles');
+    return redirect('/role');
   }
 
   /**
@@ -102,7 +102,7 @@ class RoleController extends Controller
       'restricted' => 'required|boolean'
     ]);
     $role->update($request->all());
-    return redirect('/roles');
+    return redirect('/role');
   }
 
   /**
@@ -114,6 +114,6 @@ class RoleController extends Controller
   public function destroy(Role $role)
   {
     $role->delete();
-    return redirect('/roles');
+    return redirect('/role');
   }
 }

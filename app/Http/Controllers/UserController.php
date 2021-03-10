@@ -60,7 +60,7 @@ class UserController extends Controller
         Mail::to($user->email)
             ->queue(new NewAccount($user->firstname, 'Your new IPACS account has been created'));
 
-        return redirect('/users');
+        return redirect('/user');
     }
 
     /**
@@ -95,7 +95,7 @@ class UserController extends Controller
             $roles = array_merge($rolesUnrestricted, $userRestricted);
         }
         $user->syncRoles($roles);
-        return redirect('/users');
+        return redirect('/user');
     }
 
     /**
@@ -127,7 +127,7 @@ class UserController extends Controller
             'homesite' => 'required|between:3,20'
         ]);
         $user->update($validatedData);
-        return redirect('/users');
+        return redirect('/user');
     }
 
     /**
@@ -139,7 +139,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect('/users');
+        return redirect('/user/');
     }
 
     public function impersonation()

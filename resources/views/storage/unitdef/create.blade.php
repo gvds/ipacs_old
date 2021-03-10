@@ -2,13 +2,13 @@
     <x-pageheader>
         Create New Storage Unit Definition
         <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions' class='text-orange-600'>Cancel</x-buttonlink>
+            <x-buttonlink href='/unitDefinition' class='text-orange-600'>Cancel</x-buttonlink>
         </x-slot>
     </x-pageheader>
 
     @include('layouts.message')
 
-    {{ Form::open(['url' => '/unitDefinitions', 'class' => 'form', 'method' => 'POST']) }}
+    {{ Form::open(['url' => '/unitDefinition', 'class' => 'form', 'method' => 'POST']) }}
     {{ Form::label('unitType', 'Unit Type Name', ['class'=>'text-sm']) }}
     {{ Form::text('unitType', null, ['required']) }}
     {{ Form::label('orientation', 'Orientation', ['class'=>'text-sm']) }}

@@ -53,7 +53,7 @@ class SectionController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', 'Creation of Section failed: ' . $th->getMessage());
         }
-        return redirect("/unitDefinitions/" . $validatedData['unitDefinition_id']);
+        return redirect("/unitDefinition/" . $validatedData['unitDefinition_id']);
     }
 
     /**
@@ -100,7 +100,7 @@ class SectionController extends Controller
     {
         $unitDefinition_id = $section->unitDefinition_id;
         $section->delete();
-        return redirect("/unitDefinitions/$unitDefinition_id");
+        return redirect("/unitDefinition/$unitDefinition_id");
     }
 
 }

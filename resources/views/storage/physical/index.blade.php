@@ -31,7 +31,7 @@
                 </svg>
                 @endif
             </td>
-            <td><x-buttonlink href='/physicalUnits/{{$physicalUnit->id}}'>-></x-buttonlink></td>
+            <td><x-buttonlink href='/physicalUnit/{{$physicalUnit->id}}'>-></x-buttonlink></td>
         </tr>
         @endforeach
     </x-table>

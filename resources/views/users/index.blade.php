@@ -3,7 +3,7 @@
   <x-pageheader>
     Users
     <x-slot name='button'>
-      <x-buttonlink href="users/create">
+      <x-buttonlink href="/user/create">
         Add New User
       </x-buttonlink>
     </x-slot>
@@ -29,14 +29,14 @@
         <td>{{$user->telephone}}</td>
         <td>{{implode(" || ",$user->roles->pluck('name')->toArray())}}</td>
         <td>
-          <x-buttonlink href="users/{{$user->id}}/roles">Roles</x-buttonlink>
+          <x-buttonlink href="/user/{{$user->id}}/roles">Roles</x-buttonlink>
         </td>
         <td>
-          <x-buttonlink href="users/{{$user->id}}/edit">Edit</x-buttonlink>
+          <x-buttonlink href="/user/{{$user->id}}/edit">Edit</x-buttonlink>
         </td>
         <td>
           <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-            @click="deleteconf('users','{{$user->fullname}}',{{$user->id}})">Delete</button>
+            @click="deleteconf('user','{{$user->fullname}}',{{$user->id}})">Delete</button>
         </td>
       </tr>
       @endforeach

@@ -2,13 +2,13 @@
     <x-pageheader>
         Create New Unit Section for: {{$unitDefinition->unitType}}
         <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions/{{$unitDefinition->id}}' class='text-orange-600'>Cancel</x-buttonlink>
+            <x-buttonlink href='/unitDefinition/{{$unitDefinition->id}}' class='text-orange-600'>Cancel</x-buttonlink>
         </x-slot>
     </x-pageheader>
 
     @include('layouts.message')
 
-    {{ Form::open(['url' => '/sections', 'class' => 'form', 'method' => 'POST']) }}
+    {{ Form::open(['url' => '/section', 'class' => 'form', 'method' => 'POST']) }}
     {{-- {{ Form::label('unitType', 'Unit Type Name', ['class'=>'text-sm']) }} --}}
     {{ Form::hidden('unitDefinition_id', $unitDefinition->id) }}
     {{ Form::hidden('section', $section) }}

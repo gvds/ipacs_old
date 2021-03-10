@@ -2,13 +2,13 @@
     <x-pageheader>
         Create New Physical Unit of type: {{$unitDefinition->unitType}}
         <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions/{{$unitDefinition->id}}' class='text-orange-600'>Cancel</x-buttonlink>
+            <x-buttonlink href='/unitDefinition/{{$unitDefinition->id}}' class='text-orange-600'>Cancel</x-buttonlink>
         </x-slot>
     </x-pageheader>
 
     @include('layouts.message')
 
-    {{ Form::open(['url' => '/physicalUnits', 'class' => 'form', 'method' => 'POST']) }}
+    {{ Form::open(['url' => '/physicalUnit', 'class' => 'form', 'method' => 'POST']) }}
     {{ Form::hidden('unitDefinition_id', $unitDefinition->id) }}
     {{ Form::label('unitID', 'Unit ID', ['class'=>'text-sm']) }}
     {{ Form::text('unitID', null, ['required','maxlength'=>40]) }}

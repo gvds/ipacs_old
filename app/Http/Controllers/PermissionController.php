@@ -45,7 +45,7 @@ class PermissionController extends Controller {
       'description' => 'nullable|max:100'
     ]);
     Permission::create($request->all());
-    return redirect('/permissions');
+    return redirect('/permission');
   }
 
   /**
@@ -84,7 +84,7 @@ class PermissionController extends Controller {
       'description' => 'nullable|max:100'
     ]);
     $permission->update($request->all());
-    return redirect('/permissions');
+    return redirect('/permission');
   }
 
   /**
@@ -95,6 +95,6 @@ class PermissionController extends Controller {
   */
   public function destroy(Permission $permission) {
     $permission->delete();
-    return redirect('/permissions');
+    return redirect('/permission');
   }
 }

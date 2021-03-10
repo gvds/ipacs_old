@@ -49,7 +49,7 @@ class UnitDefinitionController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error','Creation of Unit Definition failed: ' . $th->getMessage());
         }
-        return redirect("/unitDefinitions/$unitDefinition->id");
+        return redirect("/unitDefinition/$unitDefinition->id");
     }
 
     /**
@@ -97,6 +97,6 @@ class UnitDefinitionController extends Controller
     public function destroy(unitDefinition $unitDefinition)
     {
         $unitDefinition->delete();
-        return redirect('/unitDefinitions');
+        return redirect('/unitDefinition');
     }
 }

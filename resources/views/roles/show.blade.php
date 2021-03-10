@@ -6,7 +6,7 @@
 
   @include('layouts.message')
 
-  {{ Form::open(['url' => ["roles/$role->id/permissions"], 'method' => 'POST', 'class'=>'form']) }}
+  {{ Form::open(['url' => ["role/$role->id/permissions"], 'method' => 'POST', 'class'=>'form']) }}
   <x-table class="table table-sm">
     <x-slot name='head'>
       <th>Permission</th>

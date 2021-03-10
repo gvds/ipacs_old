@@ -41,10 +41,10 @@ Route::middleware('auth')->group(function () {
     //     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
 
     Route::group(['middleware' => ['role:sysadmin']], function () {
-        Route::get('/users/impersonate', 'UserController@impersonation');
-        Route::get('/users/impersonate/start/{user}', 'UserController@user_impersonate_start');
+        Route::get('/user/impersonate', 'UserController@impersonation');
+        Route::get('/user/impersonate/start/{user}', 'UserController@user_impersonate_start');
     });
-    Route::get('/users/impersonate/stop', 'UserController@user_impersonate_stop');
+    Route::get('/user/impersonate/stop', 'UserController@user_impersonate_stop');
 
     Route::get('/project/select', 'ProjectController@selectList');
     Route::get('/project/{project}/select', 'ProjectController@select');
@@ -61,23 +61,23 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['middleware' => ['permission:manage-users']], function () {
-        Route::resource('/users', 'UserController', ['except' => ['show']]);
-        Route::get('/users/{user}/roles', 'UserController@editroles');
-        Route::post('/users/{user}/roles', 'UserController@updateroles');
+        Route::resource('/user', 'UserController', ['except' => ['show']]);
+        Route::get('/user/{user}/roles', 'UserController@editroles');
+        Route::post('/user/{user}/roles', 'UserController@updateroles');
 
-        Route::resource('/roles', 'RoleController');
-        Route::post('/roles/{role}/permissions', 'RoleController@updatepermissions');
+        Route::resource('/role', 'RoleController');
+        Route::post('/role/{role}/permissions', 'RoleController@updatepermissions');
 
-        Route::resource('/permissions', 'PermissionController');
+        Route::resource('/permission', 'PermissionController');
     });
 
     Route::group(['middleware' => ['permission:manage-storage']], function () {
-        Route::resource('/unitDefinitions', 'UnitDefinitionController');
-        Route::resource('/sections', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
-        Route::resource('/physicalUnits', 'PhysicalUnitController');
-        Route::get('/physicalUnits/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
-        Route::get('/virtualUnits/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
-        Route::resource('/virtualUnits', 'VirtualUnitController');
+        Route::resource('/unitDefinition', 'UnitDefinitionController');
+        Route::resource('/section', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
+        Route::resource('/physicalUnit', 'PhysicalUnitController');
+        Route::get('/physicalUnit/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
+        Route::get('/virtualUnit/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
+        Route::resource('/virtualUnit', 'VirtualUnitController');
     });
 
     Route::group(['middleware' => ['project.auth:manage-subjects,manage-teams']], function () {
@@ -209,8 +209,8 @@ Route::middleware('auth')->group(function () {
         // Route::group(['middleware' => ['role:admin|sysadmin']], function () {
         Route::get('/redcap/arms', 'RedcapController@arms');
         Route::get('/redcap/events', 'RedcapController@events');
-        Route::get('/redcap/users', 'RedcapController@users');
-        Route::get('/redcap/users/direct', 'RedcapController@usersdirect');
+        Route::get('/redcap/user/', 'RedcapController@users');
+        Route::get('/redcap/user/direct', 'RedcapController@usersdirect');
         Route::get('/redcap/project', 'RedcapController@project');
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });

@@ -9,7 +9,7 @@
         <div class='flex justify-between'>
             <div x-data="storagedata()"
                 x-init="initialise({{$physicalUnit->id}},{{$physicalUnit->unitType}},{{$physicalUnit->unitType->sections}})">
-                {{ Form::open(['url' => '/virtualUnits', 'class' => 'form', 'method' => 'POST']) }}
+                {{ Form::open(['url' => '/virtualUnit', 'class' => 'form', 'method' => 'POST']) }}
                 {{ Form::hidden('physicalUnit_id', $physicalUnit->id) }}
                 {{ Form::label('project_id', 'Project', ['class'=>'text-sm']) }}
                 {{ Form::select('project_id', $projects, null, ['x-model'=>'project_id','x-on:change'=>"getSampletypes()",'required']) }}
@@ -164,7 +164,7 @@
                     <td class='text-center'>{{$virtualUnit->rackCapacity}}</td>
                     <td class='text-center'>{{$virtualUnit->boxCapacity}}</td>
                     <td>
-                        <a href="/virtualUnits/{{$virtualUnit->id}}/toggleActive">
+                        <a href="/virtualUnit/{{$virtualUnit->id}}/toggleActive">
                             @if ($virtualUnit->active)
                             <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
                                 viewBox="0 0 20 20" stroke="currentColor">
@@ -182,7 +182,7 @@
                     </td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                            @click="deleteconf('virtualunits','{{$virtualUnit->virtualUnit}}',{{$virtualUnit->id}})">Delete</button>
+                            @click="deleteconf('virtualunit','{{$virtualUnit->virtualUnit}}',{{$virtualUnit->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach

@@ -2,7 +2,7 @@
     <x-pageheader>
         Manage Storage Unit Definitions
         <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions/create'>Add New Type</x-buttonlink>
+            <x-buttonlink href='/unitDefinition/create'>Add New Type</x-buttonlink>
         </x-slot>
     </x-pageheader>
 
@@ -21,7 +21,7 @@
         @foreach ($unitDefinitions as $unitDefinition)
         <tr class="odd:bg-gray-100">
             <td>
-                <x-buttonlink href='/unitDefinitions/{{$unitDefinition->id}}'>{{$unitDefinition->unitType}}
+                <x-buttonlink href='/unitDefinition/{{$unitDefinition->id}}'>{{$unitDefinition->unitType}}
                 </x-buttonlink>
             </td>
             <td>{{count($unitDefinition->sections)}}</td>

@@ -62,7 +62,7 @@ class PhysicalUnitController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', 'Creation of Physical Unit failed: ' . $th->getMessage());
         }
-        return redirect("/unitDefinitions/" . $validatedData['unitDefinition_id']);
+        return redirect("/unitDefinition/" . $validatedData['unitDefinition_id']);
     }
 
     /**
@@ -122,7 +122,7 @@ class PhysicalUnitController extends Controller
     {
         $unitDefinition_id = $physicalUnit->unitDefinition_id;
         $physicalUnit->delete();
-        return redirect("/unitDefinitions/$unitDefinition_id");
+        return redirect("/unitDefinition/$unitDefinition_id");
     }
 
     public function toggleActive(physicalUnit $physicalUnit)

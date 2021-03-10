@@ -5,7 +5,7 @@
 
   @include('layouts.message')
 
-  {{ Form::open(['url' => ["/users/$user->id/roles"], 'method' => 'post', 'class'=>'form']) }}
+  {{ Form::open(['url' => ["/user/$user->id/roles"], 'method' => 'post', 'class'=>'form']) }}
   <x-table>
     <x-slot name="head">
       <th class='text-left'>Role</th>
@@ -24,7 +24,7 @@
     @endforeach
   </x-table>
   {{ Form::submit('Update Roles', ['class' => "w-full"]) }}
-  <x-buttonlink :href="url('/users')" class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/user/')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>

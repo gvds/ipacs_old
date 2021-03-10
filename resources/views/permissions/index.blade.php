@@ -3,7 +3,7 @@
   <x-pageheader>
     Permissions
     <x-slot name='button'>
-      <x-buttonlink href="/permissions/create">
+      <x-buttonlink href="/permission/create">
         Add New Permission
       </x-buttonlink>
     </x-slot>
@@ -28,11 +28,11 @@
         <td>{{$permission->description}}</td>
         <!-- <td>{{$permission->guard_name}}</td> -->
         <td>
-          <x-buttonlink href="permissions/{{$permission->id}}/edit">Edit</x-buttonlink>
+          <x-buttonlink href="permission/{{$permission->id}}/edit">Edit</x-buttonlink>
         </td>
         <td>
           <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-            @click="deleteconf('permissions','{{$permission->name}}',{{$permission->id}})">Delete</button>
+            @click="deleteconf('permission','{{$permission->name}}',{{$permission->id}})">Delete</button>
         </td>
       </tr>
       @endforeach

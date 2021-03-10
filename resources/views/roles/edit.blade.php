@@ -6,7 +6,7 @@
 
   @include('layouts.message')
 
-  {{ Form::model($role, ['route' => ['roles.update', $role], 'method' => 'PATCH', 'class'=>'form']) }}
+  {{ Form::model($role, ['route' => ['role.update', $role], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}
   {{ Form::text('name', null, ['required'=>'required']) }}
   {{ Form::label('display_name', 'Display Name') }}
@@ -18,7 +18,7 @@
   {{ Form::label('restricted', 'Restricted') }}
   {{ Form::radio('restricted', 0) }} No {{ Form::radio('restricted', 1) }} Yes
   {{ Form::submit('Save Record', ['class' => "w-full mt-2"]) }}
-  <x-buttonlink :href="url('/roles')" class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/role')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>

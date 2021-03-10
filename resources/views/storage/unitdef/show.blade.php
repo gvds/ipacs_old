@@ -2,7 +2,7 @@
     <x-pageheader>
         Unit Definition for: {{$unitDefinition->unitType}}
         <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions'>Show All Types</x-buttonlink>
+            <x-buttonlink href='/unitDefinition'>Show All Types</x-buttonlink>
         </x-slot>
     </x-pageheader>
 
@@ -50,7 +50,7 @@
             </x-table>
             <div>
                 <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                    @click="deleteconf('unitDefinitions','{{$unitDefinition->unitType}}',{{$unitDefinition->id}})">Delete</button>
+                    @click="deleteconf('unitDefinition','{{$unitDefinition->unitType}}',{{$unitDefinition->id}})">Delete</button>
             </div>
         </div>
         <div class='flex flex-col ml-20'>
@@ -72,12 +72,12 @@
                     <td>{{$section->positions}}</td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                            @click="deleteconf('sections','{{$section->section}}',{{$section->id}})">Delete</button>
+                            @click="deleteconf('section','{{$section->section}}',{{$section->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach
             </x-table>
-            {{ Form::open(['url' => '/sections/create', 'class' => '', 'method' => 'GET']) }}
+            {{ Form::open(['url' => '/section/create', 'class' => '', 'method' => 'GET']) }}
             {{ Form::hidden('unitDefinition_id', $unitDefinition->id) }}
             {{ Form::submit('Add New Section', ['class'=>'text-sm']) }}
             {{ Form::close() }}
@@ -95,7 +95,7 @@
                     <td>{{$physicalUnit->unitID}}</td>
                     <td>{{$physicalUnit->administrator->fullname}}</td>
                     <td>
-                        <a href="/physicalUnits/{{$physicalUnit->id}}/toggleActive">
+                        <a href="/physicalUnit/{{$physicalUnit->id}}/toggleActive">
                             @if ($physicalUnit->available)
                             <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
                                 viewBox="0 0 20 20" stroke="currentColor">
@@ -113,12 +113,12 @@
                     </td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                            @click="deleteconf('physicalUnits','{{$physicalUnit->unitID}}',{{$physicalUnit->id}})">Delete</button>
+                            @click="deleteconf('physicalUnit','{{$physicalUnit->unitID}}',{{$physicalUnit->id}})">Delete</button>
                     </td>
                 </tr>
                 @endforeach
             </x-table>
-            {{ Form::open(['url' => '/physicalUnits/create', 'class' => '', 'method' => 'GET']) }}
+            {{ Form::open(['url' => '/physicalUnit/create', 'class' => '', 'method' => 'GET']) }}
             {{ Form::hidden('unitDefinition_id', $unitDefinition->id) }}
             {{ Form::submit('Add New Unit', ['class'=>'text-sm']) }}
             {{ Form::close() }}

@@ -19,7 +19,7 @@
   {!! Form::label('site', 'Site') !!}
   {!! Form::text('homesite', null, ['required']) !!}
   {!! Form::submit('Save Record', ['class' => "w-full mt-2"]) !!}
-  <x-buttonlink :href="url('/users')" class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/user/')" class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}
 
 </x-layout>

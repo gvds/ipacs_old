@@ -2,7 +2,7 @@
     <x-pageheader>
         Manage Virtual Storage Units
         {{-- <x-slot name='button'>
-            <x-buttonlink href='/unitDefinitions/create'>Add New Type</x-buttonlink>
+            <x-buttonlink href='/unitDefinition/create'>Add New Type</x-buttonlink>
         </x-slot> --}}
     </x-pageheader>
 

@@ -6,7 +6,7 @@
 
   @include('layouts.message')
 
-  {{ Form::model($permission, ['route' => ['permissions.update', $permission], 'method' => 'PATCH', 'class'=>'form']) }}
+  {{ Form::model($permission, ['route' => ['permission.update', $permission], 'method' => 'PATCH', 'class'=>'form']) }}
   {{ Form::label('name', 'Permission Name') }}
   {{ Form::text('name', null, ['required'=>'required']) }}
   {{ Form::label('scope', 'Scope') }}
@@ -18,7 +18,7 @@
   <!-- {{ Form::label('guard_name', 'Guard Name') }}
   {{ Form::select('guard_name', ['web'=>'web','api'=>'api']) }} -->
   {{ Form::submit('Save Record', ['class' => "w-full mt-4"]) }}
-  <x-buttonlink :href="url('/permissions')" class='text-orange-500'>Cancel</x-buttonlink>
+  <x-buttonlink :href="url('/permission')" class='text-orange-500'>Cancel</x-buttonlink>
   {{ Form::close() }}
 
 </x-layout>

@@ -12,7 +12,7 @@
             <tr>
                 <td>{{$user->currentSite[0]->name}}</td>
                 <td>{{$user->fullname}}</td>
-                <td><x-buttonlink href='/users/impersonate/start/{{$user->id}}'>-></x-buttonlink></td>
+                <td><x-buttonlink href='/user/impersonate/start/{{$user->id}}'>-></x-buttonlink></td>
             </tr>
         @endforeach
     </x-table>

@@ -113,9 +113,9 @@
           <x-slot name="nav_item">
             <div>Access Control</div>
           </x-slot>
-          <x-nav.dropdown-link href="/users">Users</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/roles">Roles</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/permissions">Permissions</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/user">Users</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/role">Roles</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/permission">Permissions</x-nav.dropdown-link>
           {{-- <x-nav.dropdown-link href="/laratrust">Access Control</x-nav.dropdown-link> --}}
         </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="/project">Projects</x-nav.dropdown-link>
@@ -124,8 +124,8 @@
           <x-slot name="nav_item">
             <div>Freezer Management</div>
           </x-slot>
-          <x-nav.dropdown-link href="/unitDefinitions">Physical Storage</x-nav.dropdown-link>
-          <x-nav.dropdown-link href="/physicalUnits">Virtual Storage</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/unitDefinition">Physical Storage</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/physicalUnit">Virtual Storage</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
       </x-nav.dropdown>
 
@@ -145,10 +145,10 @@
         </x-nav.dropdown-link>
         <x-nav.dropdown-link href="/substitute/{{Auth::user()->id}}">My Substitutes</x-nav.dropdown-link>
         @if (Auth::user()->hasRole('sysadmin'))
-        <x-nav.dropdown-link href="/users/impersonate">Impersonation</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/user/impersonate">Impersonation</x-nav.dropdown-link>
         @endif
         @if( Session::has('original_user') )
-        <x-nav.dropdown-link href="/users/impersonate/stop">Revert to Me</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/user/impersonate/stop">Revert to Me</x-nav.dropdown-link>
         @endif
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
