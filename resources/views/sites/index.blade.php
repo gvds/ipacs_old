@@ -24,7 +24,7 @@
                 </td>
                 <td>
                     <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                        @click="deleteconf('site','{{$site->name}}',{{$site->id}})">Delete</button>
+                        @click="deleteconf('sites','{{$site->name}}',{{$site->id}})">Delete</button>
                 </td>
             </tr>
             @endforeach
