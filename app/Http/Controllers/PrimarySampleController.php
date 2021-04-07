@@ -224,6 +224,9 @@ class PrimarySampleController extends Controller
                     break;
             }
             $event_sample->samplestatus_id = 2;
+            $user = auth()->user();
+            $event_sample->loggedBy = $user->id;
+            $event_sample->logTime = now();
             $event_sample->save();
         } catch (\Throwable $th) {
             return back()->withErrors($th->getMessage());

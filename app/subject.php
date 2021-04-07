@@ -216,7 +216,7 @@ class subject extends Model
         'minDate' => $minDate,
         'maxDate' => $maxDate,
         'logDate' => $timestamp
-      ]);
+        ]);
       if ($response === 1) {
         return true;
       } else {

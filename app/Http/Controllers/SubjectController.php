@@ -85,7 +85,7 @@ class SubjectController extends Controller
      */
     public function show(subject $subject)
     {
-        if (!$subject->checkAccessPermission()){
+        if (!$subject->checkAccessPermission()) {
             return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
         }
 
@@ -134,7 +134,7 @@ class SubjectController extends Controller
             'address3' => "present|max:50",
         ]);
         $subject->update($validatedData);
-        return redirect("/subjects/$subject->id")->with('message','Subject details updated');
+        return redirect("/subjects/$subject->id")->with('message', 'Subject details updated');
     }
 
     /**
@@ -171,6 +171,7 @@ class SubjectController extends Controller
 
             // Schedule event dates
             $events = $subject->arm()->first()->events()->get();
+
             foreach ($events as $event) {
                 $response = $subject->setEventDates($event, $validatedData['enrolDate']);
                 if ($response !== true) {
@@ -194,8 +195,8 @@ class SubjectController extends Controller
 
     public function switch(Request $request, Subject $subject)
     {
-        if (!$subject->checkAccessPermission()){
-            return back()->with('error',"You don't have permission to switch this subject");
+        if (!$subject->checkAccessPermission()) {
+            return back()->with('error', "You don't have permission to switch this subject");
         };
 
         $monthPrior = Carbon::today()->subMonth()->toDateString();
@@ -299,15 +300,15 @@ class SubjectController extends Controller
     {
         if (auth()->user()->hasRole('sysadmin')) {
             return subject::where('subjectID', 'like', "%{$searchterm}%")
-            ->where('project_id', session('currentProject'))
-            ->pluck('subjectID', 'id')
-            ->take(15);
+                ->where('project_id', session('currentProject'))
+                ->pluck('subjectID', 'id')
+                ->take(15);
         } else {
             return subject::where('subjectID', 'like', "%{$searchterm}%")
-            ->where('project_id', session('currentProject'))
-            ->where('user_id', auth()->user()->id)
-            ->pluck('subjectID', 'id')
-            ->take(15);
+                ->where('project_id', session('currentProject'))
+                ->where('user_id', auth()->user()->id)
+                ->pluck('subjectID', 'id')
+                ->take(15);
         }
     }
 

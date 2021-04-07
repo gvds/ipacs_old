@@ -29,7 +29,7 @@
                     {{-- <tr> --}}
                         @foreach ($subject->events as $event)
                         <td>{{$event->arm->name}}<br/>{{$event->name}}<br />{{$eventStatuses[$event->pivot->eventstatus_id]}}</td>
-                            
+
                         @endforeach
                     {{-- </tr> --}}
                 {{-- </table> --}}
