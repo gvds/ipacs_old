@@ -16,11 +16,23 @@
         {{ Form::hidden('parent_sample_id',$parent_sample->id)}}
         <div>
             <x-table>
+                @php
+                $group = "";
+                @endphp
                 @foreach ($sampletypes as $sampletype)
+                @if ($sampletype->sampleGroup !== $group)
+                <tr>
+                    <th class='text-left bg-gray-300  leading-none' colspan={{$maxaliquots + 1}}> {{$sampletype->sampleGroup}}</th>
+                </tr>
+                @php
+                $group = $sampletype->sampleGroup;
+                @endphp
+                @endif
                 <tr>
                     <td>
                         <div class='font-medium w-max-content'>{{$sampletype->name}}</div>
-                        <div class='text-gray-500 italic text-xs mt-1 w-max-content'>Volume ({{$sampletype->volumeUnit}})</div>
+                        <div class='text-gray-500 italic text-xs mt-1 w-max-content'>Volume
+                            ({{$sampletype->volumeUnit}})</div>
                     </td>
                     @for ($aliquot = 1; $aliquot < $sampletype->aliquots + 1; $aliquot++)
                         <td class='justify-start'>

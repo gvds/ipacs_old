@@ -60,11 +60,15 @@ class PrimarySampleController extends Controller
                 ->orderBy('sampleGroup')
                 ->orderBy('name')
                 ->get();
+            $maxaliquots = 1;
+            foreach ($sampletypes as $sampletype) {
+                $maxaliquots = max($maxaliquots, $sampletype->aliquots);
+            }
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
         $samplestatuses = \App\sampleStatus::pluck('samplestatus', 'id');
-        return view('primarysamples.register', compact('sampletypes', 'samplestatuses', 'event_subject_id'));
+        return view('primarysamples.register', compact('sampletypes', 'samplestatuses', 'event_subject_id', 'maxaliquots'));
     }
 
     public function registerprimary(Request $request)

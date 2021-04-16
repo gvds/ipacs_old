@@ -23,7 +23,18 @@
         </div>
         <div>
             <x-table>
+                @php
+                    $group = "";
+                @endphp
                 @foreach ($sampletypes as $sampletype)
+                @if ($sampletype->sampleGroup !== $group)
+                    <tr>
+                        <th class='text-left bg-gray-300  leading-none' colspan={{$maxaliquots + 1}}>{{$sampletype->sampleGroup}}</th>
+                    </tr>
+                    @php
+                        $group = $sampletype->sampleGroup;
+                    @endphp
+                @endif
                 <tr>
                     <td>
                         <div class='font-medium w-max-content'>{{$sampletype->name}}</div>

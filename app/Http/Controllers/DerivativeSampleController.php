@@ -56,7 +56,7 @@ class DerivativeSampleController extends Controller
                 ->where('primary', true)
                 ->orderBy('sampleGroup')
                 ->orderBy('name')
-            ->get();
+                ->get();
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -100,8 +100,12 @@ class DerivativeSampleController extends Controller
             ->orderBy('sampleGroup')
             ->orderBy('name')
             ->get();
+        $maxaliquots = 1;
+        foreach ($sampletypes as $sampletype) {
+            $maxaliquots = max($maxaliquots, $sampletype->aliquots);
+        }
         $parent_sample = $event_sample;
-        return view('derivativesamples.log', compact('sampletypes', 'parent_sample'));
+        return view('derivativesamples.log', compact('sampletypes', 'parent_sample', 'maxaliquots'));
     }
 
     public function log(Request $request)
