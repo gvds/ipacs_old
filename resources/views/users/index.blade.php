@@ -42,6 +42,8 @@
       @endforeach
     </x-table>
 
+    {{ $users->links('vendor.pagination.tailwind') }}
+
     <x-modals.deleteModal />
   </div>
 
