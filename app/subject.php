@@ -26,6 +26,7 @@ class subject extends Model
   public function events()
   {
     return $this->belongsToMany(event::class)
+      ->orderBy('offset')
       ->withPivot('id', 'eventstatus_id', 'logDate', 'eventDate', 'minDate', 'maxDate', 'iteration', 'labelStatus')
       ->withTimestamps();
   }
@@ -178,7 +179,7 @@ class subject extends Model
       if ($event->active) {
         if ($event->autolog == 1) {
           $labelStatus = 2;
-        } elseif ($event->offset == 0){
+        } elseif ($event->offset == 0) {
           $labelStatus = 1;
         } else {
           $labelStatus = 0;
@@ -216,7 +217,7 @@ class subject extends Model
         'minDate' => $minDate,
         'maxDate' => $maxDate,
         'logDate' => $timestamp
-        ]);
+      ]);
       if ($response === 1) {
         return true;
       } else {
@@ -320,10 +321,11 @@ class subject extends Model
 
   public function checkAccessPermission()
   {
-    if ($this->user_id === auth()->user()->id or auth()->user()->hasRole('sysadmin')) {
-      return true;
+    foreach (auth()->user()->substitutees as $substitutee) {
+      if ($substitutee->id === $this->user_id) {
+        return true;
+      }
     }
-    return false;
+    return $this->user_id === auth()->user()->id or auth()->user()->hasRole('sysadmin');
   }
-
 }

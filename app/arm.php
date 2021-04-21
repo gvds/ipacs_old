@@ -14,9 +14,9 @@ class arm extends Model
         'manual_enrol',
         'switcharms'
     ];
-  
+
     public function events()
     {
-        return $this->hasMany(event::class);
+        return $this->hasMany(event::class)->orderBy('offset');
     }
 }

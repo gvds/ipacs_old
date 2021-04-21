@@ -16,10 +16,10 @@ class event_subject extends Pivot
     {
         return $this->belongsTo(event::class);
     }
-    
+
     public function status()
     {
-        return $this->belongsTo(eventStatus::class,'eventstatus_id','id');
+        return $this->belongsTo(eventStatus::class, 'eventstatus_id', 'id');
     }
 
 }
