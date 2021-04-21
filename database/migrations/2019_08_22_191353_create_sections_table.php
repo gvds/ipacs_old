@@ -15,14 +15,13 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('unitDefinition_id');
+            $table->foreignId('unitDefinition_id')->constrained();
             $table->tinyInteger('section')->unsigned()->default(1);
             $table->tinyInteger('rows')->unsigned()->default(1);
             $table->tinyInteger('columns')->unsigned()->default(1);
             $table->tinyInteger('boxes')->unsigned()->default(0);
             $table->tinyInteger('positions')->unsigned()->default(1);
             $table->timestamps();
-            $table->foreign('unitDefinition_id')->references('id')->on('unitDefinitions');
         });
     }
 

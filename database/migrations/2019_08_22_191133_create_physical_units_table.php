@@ -15,13 +15,12 @@ class CreatePhysicalUnitsTable extends Migration
     {
         Schema::create('physicalUnits', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('unitDefinition_id');
+            $table->foreignId('unitDefinition_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->string('unitID', 40);
-            $table->string('unitType', 100)->default(null);
+            $table->string('unitType', 100)->nullable();
             $table->boolean('available')->default(1);
-            $table->unsignedBigInteger('administrator');
             $table->timestamps();
-            $table->foreign('unitDefinition_id')->references('id')->on('unitDefinitions');
         });
     }
 

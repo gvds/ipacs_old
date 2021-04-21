@@ -15,16 +15,15 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('virtualUnit_id');
+            $table->foreignId('virtualUnit_id')->constrained();
             $table->string('storageProjectName',40);
-            $table->string('barcode',20);
-            $table->tinyInteger('rack')->unsigned()->nullable();
+            $table->string('barcode',20)->nullable();
+            $table->unsignedTinyInteger('rack')->nullable();
             $table->string('box')->nullable();
-            $table->smallInteger('position')->unsigned()->nullable();
+            $table->unsignedSmallInteger('position')->nullable();
             $table->boolean('used')->default(0);
             $table->boolean('virgin')->default(1);
             $table->timestamps();
-            $table->foreign('virtualUnit_id')->references('id')->on('virtualUnits');
         });
     }
 

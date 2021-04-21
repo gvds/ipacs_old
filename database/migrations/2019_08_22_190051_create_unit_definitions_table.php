@@ -14,9 +14,9 @@ class CreateUnitDefinitionsTable extends Migration
     public function up()
     {
         Schema::create('unitDefinitions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('unitType',100);
-            $table->unsignedTinyInteger('sections')->default(1);
+            $table->unsignedTinyInteger('section_count')->default(0);
             $table->unsignedsmallInteger('racks')->nullable();
             $table->unsignedsmallInteger('boxes')->nullable();
             $table->string('sectionLayout',10)->nullable();

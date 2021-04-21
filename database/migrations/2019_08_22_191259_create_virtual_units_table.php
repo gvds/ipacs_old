@@ -17,11 +17,12 @@ class CreateVirtualUnitsTable extends Migration
             $table->id();
             $table->string('virtualUnit', 50);
             $table->unsignedBigInteger('physicalUnit_id');
-            $table->unsignedBigInteger('project_id');
+            // $table->foreignId('project_id');
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->string('project', 50);
             $table->unsignedTinyInteger('section');
-            $table->unsignedTinyInteger('startRack')->nullable();
-            $table->unsignedTinyInteger('endRack')->nullable();
+            $table->unsignedTinyInteger('startRack');
+            $table->unsignedTinyInteger('endRack');
             $table->string('startBox', 3)->nullable();
             $table->string('endBox', 3)->nullable();
             $table->string('storageSampleType', 50)->nullable();
@@ -29,7 +30,6 @@ class CreateVirtualUnitsTable extends Migration
             $table->unsignedSmallInteger('rackCapacity')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
-            $table->foreign('physicalUnit_id')->references('id')->on('physicalUnits');
         });
     }
 
