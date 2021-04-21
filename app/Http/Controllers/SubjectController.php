@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\event_subject;
 use App\subject;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -145,7 +146,9 @@ class SubjectController extends Controller
      */
     public function destroy(subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         $subject->delete();
         return redirect('/subjects');
@@ -153,7 +156,9 @@ class SubjectController extends Controller
 
     public function enrol(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         $monthPrior = Carbon::today()->subMonth()->toDateString();
         $validatedData = $request->validate([
@@ -178,6 +183,14 @@ class SubjectController extends Controller
                     throw new \ErrorException("Event dates for $subject->subjectID could not be set : $response");
                 }
             }
+
+            // Log the event
+            $event_subject_id = $subject->events->first()->pivot->id;
+            $event_subject = event_subject::find($event_subject_id);
+            $event_subject->eventstatus_id = 3;
+            $event_subject->logDate = Carbon::today();
+            $event_subject->labelStatus = 2;
+            $event_subject->save();
 
             if (isset($request->currentProject->redcapProject_id)) {
                 $subject->createREDCapRecord();
@@ -243,7 +256,9 @@ class SubjectController extends Controller
 
     public function reverseSwitch(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         try {
             DB::beginTransaction();
@@ -267,7 +282,9 @@ class SubjectController extends Controller
 
     public function drop(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         if ($subject->subject_status !== 1) {
             return redirect()->back()->with('error', "This subject cannot be dropped");
@@ -279,7 +296,9 @@ class SubjectController extends Controller
 
     public function restore(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
 
         if ($subject->subject_status !== 2) {
             return redirect()->back()->with('error', "This subject cannot be restored");
@@ -304,9 +323,13 @@ class SubjectController extends Controller
                 ->pluck('subjectID', 'id')
                 ->take(15);
         } else {
+            $substitutees = array_column(auth()->user()->substitutees->toArray(), 'id');
             return subject::where('subjectID', 'like', "%{$searchterm}%")
                 ->where('project_id', session('currentProject'))
-                ->where('user_id', auth()->user()->id)
+                ->where(function (Builder $query) use ($substitutees) {
+                    return $query->where('user_id', auth()->user()->id)
+                        ->orWhereIn('user_id', $substitutees);
+                })
                 ->pluck('subjectID', 'id')
                 ->take(15);
         }
@@ -319,7 +342,9 @@ class SubjectController extends Controller
      */
     public function addEvent(Request $request, Subject $subject)
     {
-        $subject->checkAccessPermission();
+        if (!$subject->checkAccessPermission()) {
+            return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
+        }
         $validatedData = $request->validate([
             'event_subject_id' => "required|integer|exists:event_subject,id",
         ]);

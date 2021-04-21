@@ -28,8 +28,9 @@ class EventSubjectController extends Controller
                 throw new Exception("The event record could not be found");
             });
             $subject = \App\subject::where('id', $event_subject->subject_id)->first();
-            if ($subject->user_id !== auth()->user()->id) {
-                throw new Exception("You do not have permission to access this subject's record", 1);
+
+            if (!$subject->checkAccessPermission()) {
+                return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
             }
             if ($subjectID != $subject->subjectID) {
                 throw new Exception('Invalid PSE: The subject ID does not match the event record');
@@ -74,8 +75,8 @@ class EventSubjectController extends Controller
             if ($subject->project_id !== session('currentProject')) {
                 throw new Exception("This event does not belong to the current project", 1);
             }
-            if ($subject->user_id !== auth()->user()->id) {
-                throw new Exception("You do not have permission to access this subject's record", 1);
+            if (!$subject->checkAccessPermission()) {
+                return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
             }
             switch ($subject->subject_status) {
                 case 0:
