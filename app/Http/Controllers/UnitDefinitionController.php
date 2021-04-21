@@ -38,11 +38,11 @@ class UnitDefinitionController extends Controller
     {
         $validatedData = $request->validate([
             'unitType' => 'required|Min:5|Max:100',
-            'sectionLayout' => 'required|in:vertical,horizontal',
-            'boxDesignation' => 'required|in:alpha,numeric',
-            'storageType' => 'required|in:minus80,ln,minus20,bios',
-            'rackOrder' => 'required|in:columnwise,rowwise',
-            'orientation' => 'required|in:vertical,horizontal'
+            'orientation' => 'required|in:Chest,Upright',
+            'sectionLayout' => 'required|in:Vertical,Horizontal',
+            'boxDesignation' => 'required|in:Alpha,Numeric',
+            'storageType' => 'required|in:Minus 80,Liquid Nitrogen,Minus 20,BiOS',
+            'rackOrder' => 'required|in:By Column,By Row'
         ]);
         try {
             $unitDefinition = unitDefinition::create($validatedData);
