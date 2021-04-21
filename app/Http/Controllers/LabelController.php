@@ -18,6 +18,10 @@ class LabelController extends PDF_Label
 
     public function printLabels()
     {
+
+        $users_id_list = array_column(auth()->user()->substitutees->toArray(), 'id');
+        array_push($users_id_list, auth()->user()->id);
+
         $events = event_subject::where('labelStatus', '1')
             ->join('subjects', 'subject_id', 'subjects.id')
             ->join('events', 'event_id', 'events.id')
@@ -37,7 +41,7 @@ class LabelController extends PDF_Label
                 'iteration'
             ])
             ->where('subjects.project_id', session('currentProject'))
-            ->where('user_id', auth()->user()->id)
+            ->whereIn('user_id', $users_id_list)
             ->where('active', true)
             ->get();
 
