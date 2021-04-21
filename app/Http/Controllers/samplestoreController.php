@@ -23,13 +23,13 @@ class samplestoreController extends Controller
 
     /**
      * Finds next available appropriate storage location and marks location as used
-     * 
+     *
      * @param  int  $project
      * @param  int  $sampletype
      * @param  int  $virgin
      * @param  str  $barcode
      * @return  \Illuminate\Http\Response  $nextLocation
-     * 
+     *
      */
     private function storesample(int $project, int $sampletype, int $reuse, string $barcode)
     {
@@ -67,10 +67,10 @@ class samplestoreController extends Controller
 
     // /**
     //  * Frees storage location and optionally unsets virgin flag
-    //  * 
+    //  *
     //  * @param  \Illuminate\Http\Request  $request
     //  * @return  \Illuminate\Http\Response
-    //  * 
+    //  *
     //  */
     // public static function freelocation(Request $request)
     // {
@@ -97,9 +97,9 @@ class samplestoreController extends Controller
 
     /**
      * Presents sets of logged, unstored samples for storage
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function listSamples()
     {
