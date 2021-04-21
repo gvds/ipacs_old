@@ -26,7 +26,7 @@
     {{ Form::label('storageType', 'Storage Type', ['class'=>'text-sm']) }}
     {{ Form::select('storageType', ['Minus 80'=>'Minus 80','Liquid Nitrogen'=>'Liquid Nitrogen','Minus 20'=>'Minus 20','BiOS'=>'BiOS'], ['required']) }}
     {{ Form::label('rackOrder', 'Rack Order', ['class'=>'text-sm']) }}
-    {{ Form::select('rackOrder', ['Column-wise'=>'Column-wise','Row-wise'=>'Row-wise'], ['required']) }}
+    {{ Form::select('rackOrder', ['By Column'=>'By Column','By Row'=>'By Row'], ['required']) }}
 
     {{ Form::submit('Save Record', ['class' => "w-full mt-4"]) }}
     {{ Form::close() }}
