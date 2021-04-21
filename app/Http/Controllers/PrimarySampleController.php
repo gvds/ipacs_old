@@ -107,6 +107,7 @@ class PrimarySampleController extends Controller
             } else {
                 $event_subject->eventstatus_id = 3;
             }
+            $event_subject->logDate = Carbon::today();
             $event_subject->save();
         }
 
