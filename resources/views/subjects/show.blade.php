@@ -15,7 +15,11 @@
     <div class='flex-col'>
       <div class='text-lg font-bold flex justify-between mb-1'>
         <span>Details</span>
-        <span><x-buttonlink href="/subjects/{{$subject->id}}/edit">Edit</x-buttonlink></span>
+        @if ($subject->status > 0)
+        <span>
+          <x-buttonlink href="/subjects/{{$subject->id}}/edit">Edit</x-buttonlink>
+        </span>
+        @endif
       </div>
       <div>
         <x-table class="table table-sm">
