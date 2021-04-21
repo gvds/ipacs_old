@@ -30,8 +30,8 @@
             <div class='mb-5 mt-2 flex items-center justify-between'>
                 <span class='font-semibold'>Allow Previously Used Locations</span>
                 <span class='flex border border-gray-300 bg-gray-200 px-3 py-1 ml-4 shaddow rounded space-x-3'>
-                    <span>{{Form::radio('reuse[]', 1, true)}} No</span>
-                    <span>{{Form::radio('reuse[]', 0)}} Yes</span>
+                    <span>{{Form::radio('reuse[]', 0, true)}} No</span>
+                    <span>{{Form::radio('reuse[]', 1)}} Yes</span>
                 </span>
             </div>
 
