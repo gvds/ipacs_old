@@ -35,11 +35,10 @@ class samplestoreController extends Controller
     {
 
         if ($reuse == 1) {
-            $virgin = [1];
-        } else {
             $virgin = [0, 1];
+        } else {
+            $virgin = [1];
         }
-
         $project = \App\project::find($project);
         $sampletype = \App\sampletype::find($sampletype);
 
@@ -174,7 +173,7 @@ class samplestoreController extends Controller
                 } else {
                     foreach ($sampletype->event_samples as $sample) {
                         // Allocate storage position
-                        $location_id = $this->storesample($project_id, $sampletype->id, $request->reuse[0], $sample->barcode);
+                        $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
                         if (!empty($location_id)) {
                             // Update sample record
                             $sample->location = $location_id;
