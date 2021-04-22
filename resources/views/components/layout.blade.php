@@ -17,7 +17,7 @@
   <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
 
   @stack('scripts')
-  
+
 </head>
 
 <body>
@@ -26,11 +26,11 @@
   @endphp
   <div class="flex flex-col h-screen">
     <header class='bg-gray-600'>
-      @if ($currentProject)
       <div class="text-xl font-bold text-white px-6">
+        @if ($currentProject)
         {{ $currentProject->project }}
+        @endif
       </div>
-      @endif
       @include('layouts.nav')
     </header>
     <main class="flex flex-1 overflow-y-auto bg-gray-50 py-6 px-6">

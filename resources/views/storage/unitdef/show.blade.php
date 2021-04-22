@@ -113,14 +113,14 @@
                     <td>
                         <a href="/physicalUnit/{{$physicalUnit->id}}/toggleActive">
                             @if ($physicalUnit->available)
-                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
-                                viewBox="0 0 20 20" stroke="currentColor">
+                            <svg class="h-5 w-5 text-green-600 bg-gray-200 border rounded shadow" fill="none"
+                                viewBox="0 0 25 25" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
                             @else
-                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none"
-                                viewBox="0 0 20 20" stroke="currentColor">
+                            <svg class="h-5 w-5 text-red-600 bg-gray-200 border rounded shadow" fill="none"
+                                viewBox="0 0 25 25" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -128,7 +128,7 @@
                         </a>
                     </td>
                     <td>
-                        <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
+                        <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold leading-none'
                             @click="deleteconf('physicalUnit','{{$physicalUnit->unitID}}',{{$physicalUnit->id}})">Delete</button>
                     </td>
                 </tr>

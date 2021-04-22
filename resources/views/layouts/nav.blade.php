@@ -4,8 +4,8 @@
 
     <!-- Left Side Of Navbar -->
     <div class="flex space-x-5">
+      {{-- <x-nav.link href="/"><x-logo class="w-8 h-8 mx-auto text-gray-50" /></x-nav.link> --}}
       <x-nav.link href="/">{{ config('app.name') }}</x-nav.link>
-      {{-- <x-nav.link href="/selectproject">My Projects</x-nav.link> --}}
       @auth
       <x-nav.link href="/project/select">My Projects</x-nav.link>
       @endauth
