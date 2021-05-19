@@ -28,9 +28,19 @@ class SampleTypesController extends Controller
     public function create()
     {
         $currentProject = request('currentProject');
-        $tubeLabelTypes = \App\tubeLabelType::orderBy('tubeLabelType')
+
+        $project_tubeLabelTypes = \App\tubeLabelType::where('project_id', $currentProject->id)
+            ->orderBy('tubeLabelType')
+            ->pluck('tubeLabelType', 'id');
+
+        $generic_tubeLabelTypes = \App\tubeLabelType::whereNull('project_id')
+        ->whereNotIn('tubeLabelType', $project_tubeLabelTypes)
+            ->orderBy('tubeLabelType')
             ->pluck('tubeLabelType', 'id')
             ->prepend('', '');
+
+        $tubeLabelTypes = $generic_tubeLabelTypes->union($project_tubeLabelTypes);
+
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
         return view('sampletypes.create', compact('tubeLabelTypes', 'sampleTypes'));
     }
@@ -83,10 +93,21 @@ class SampleTypesController extends Controller
     public function edit(sampletype $sampletype)
     {
         $currentProject = request('currentProject');
-        $tubeLabelTypes = \App\tubeLabelType::orderBy('tubeLabelType')
+
+        $project_tubeLabelTypes = \App\tubeLabelType::where('project_id', $currentProject->id)
+            ->orderBy('tubeLabelType')
+            ->pluck('tubeLabelType', 'id');
+
+        $generic_tubeLabelTypes = \App\tubeLabelType::whereNull('project_id')
+            ->whereNotIn('tubeLabelType', $project_tubeLabelTypes)
+            ->orderBy('tubeLabelType')
             ->pluck('tubeLabelType', 'id')
             ->prepend('', '');
+
+        $tubeLabelTypes = $generic_tubeLabelTypes->union($project_tubeLabelTypes);
+
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
+
         return view('sampletypes.edit', compact('sampletype', 'tubeLabelTypes', 'sampleTypes'));
     }
 
