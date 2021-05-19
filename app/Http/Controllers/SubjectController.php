@@ -179,9 +179,6 @@ class SubjectController extends Controller
 
             foreach ($events as $event) {
                 $response = $subject->setEventDates($event, $validatedData['enrolDate']);
-                if ($response !== true) {
-                    throw new \ErrorException("Event dates for $subject->subjectID could not be set : $response");
-                }
             }
 
             // Log the event

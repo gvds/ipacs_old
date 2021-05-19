@@ -218,10 +218,8 @@ class subject extends Model
         'maxDate' => $maxDate,
         'logDate' => $timestamp
       ]);
-      if ($response === 1) {
-        return true;
-      } else {
-        return ($response);
+      if ($response !== 1) {
+        throw new \ErrorException("Event dates for $this->subjectID could not be set");
       }
     }
   }
