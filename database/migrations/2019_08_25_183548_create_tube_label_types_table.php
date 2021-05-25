@@ -20,6 +20,7 @@ class CreateTubeLabelTypesTable extends Migration
             $table->string('barcodeFormat',30);
             $table->set('registration',['range','single'])->default('range');
             $table->unsignedBigInteger('project_id')->nullable();
+            $table->timestamps();
         });
     }
 

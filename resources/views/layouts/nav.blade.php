@@ -3,7 +3,7 @@
   <nav class="flex justify-between">
 
     <!-- Left Side Of Navbar -->
-    <div class="flex space-x-5">
+    <div class="flex space-x-5 text-indigo-200">
       {{-- <x-nav.link href="/"><x-logo class="w-8 h-8 mx-auto text-gray-50" /></x-nav.link> --}}
       <x-nav.link href="/">{{ config('app.name') }}</x-nav.link>
       @auth
@@ -90,6 +90,7 @@
         <x-nav.dropdown-link href="/sites">Sites</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/arms">Arms</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/events">Events</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/tubelabeltype">Tube Label-types</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sampletypes">Sample Types</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="/substitute">Colleague Substitution</x-nav.dropdown-link>

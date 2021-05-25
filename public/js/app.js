@@ -1929,8 +1929,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/ipacs/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/ipacs/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/gvds/Documents/Programming/Laravel/ipacs/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/gvds/Documents/Programming/Laravel/ipacs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

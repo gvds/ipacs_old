@@ -27,7 +27,7 @@
   <div class="flex flex-col h-screen">
     <header class='bg-gray-600'>
       <div class="text-xl font-bold text-white px-6">
-        @if ($currentProject)
+        @if (isset($currentProject))
         {{ $currentProject->project }}
         @endif
       </div>

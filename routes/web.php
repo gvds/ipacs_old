@@ -105,6 +105,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('/arms', 'ArmController')->except('show');
         Route::resource('/events', 'EventController')->except('show');
         Route::resource('/sampletypes', 'SampleTypesController')->except('show');
+        Route::resource('/tubelabeltype', 'TubeLabelTypeController')->except('show');
+        Route::get('/tubelabeltype/{tubelabeltype}/override', 'TubeLabelTypeController@override');
     });
 
     Route::middleware('project.auth:manage-subjects')->group(function () {
