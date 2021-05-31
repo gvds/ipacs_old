@@ -19,6 +19,8 @@
   {!! Form::text('telephone', null, ['placeholder'=>'0## ###-####']) !!}
   {!! Form::label('homesite', 'Site') !!}
   {!! Form::text('homesite', null, ['required']) !!}
+  {{ Form::label('active', 'Active') }}
+  {{ Form::radio('active', 0, true) }} No {{ Form::radio('active', 1) }} Yes
   {!! Form::submit('Update Record', ['class' => "w-full mt-2"]) !!}
   <x-buttonlink :href="url('/user')" class='text-orange-500'>Cancel</x-buttonlink>
   {!! Form::close() !!}

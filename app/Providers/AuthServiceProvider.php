@@ -25,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        \Illuminate\Support\Facades\Auth::provider('AuthValidateStatusServiceProvider', function ($app, array $config) {
+            return new AuthValidateStatusServiceProvider($app['hash'], $config['model']);
+        });
     }
 }

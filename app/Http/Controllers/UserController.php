@@ -53,7 +53,8 @@ class UserController extends Controller
             'surname' => 'required|between:2,50',
             'email' => 'required|email|unique:users',
             'telephone' => 'nullable|regex:/^0\d{2} \d{3}-\d{4}$/',
-            'homesite' => 'required|between:3,20'
+            'homesite' => 'required|between:3,20',
+            'active' => 'required|boolean'
         ]);
         $user = User::create(array_merge($validatedData, ['password' => bcrypt(Str::random(30))]));
 
@@ -124,7 +125,8 @@ class UserController extends Controller
             'surname' => 'required|between:2,50',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'telephone' => 'nullable|regex:/^0\d{2} \d{3}-\d{4}$/',
-            'homesite' => 'required|between:3,20'
+            'homesite' => 'required|between:3,20',
+            'active' => 'required|boolean'
         ]);
         $user->update($validatedData);
         return redirect('/user');

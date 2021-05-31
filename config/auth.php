@@ -67,7 +67,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            // 'driver' => 'eloquent',
+            'driver' => 'AuthValidateStatusServiceProvider',
             'model' => App\User::class,
         ],
 
