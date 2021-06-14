@@ -24,6 +24,7 @@ class CreateProjectsTable extends Migration
             $table->integer('last_subject_id')->unsigned()->nullable();
             $table->string('storageProjectName',40)->nullable();
             $table->string('label_id',40)->nullable();
+            $table->string('nexus_token',64)->nullable();
             $table->timestamps();
             $table->foreign('owner')->references('id')->on('users');
         });

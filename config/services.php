@@ -34,4 +34,9 @@ return [
         'url' => env('REDCAP_URL'),
     ],
 
+    'nexus' => [
+        'url' => env('NEXUS_URL'),
+        'token' => env("NEXUS_TOKEN"),
+    ],
+
 ];

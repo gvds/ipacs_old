@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\event_sample;
 use App\location;
 use App\sampletype;
 use App\storageLog;
@@ -10,6 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Exception;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rules\Exists;
 
 class samplestoreController extends Controller
 {
@@ -292,5 +297,65 @@ class samplestoreController extends Controller
         $this->fpdf->Cell(0, 1, '', 'TB', 1, 'L');
 
         $this->fpdf->Output("storageReport.pdf", "I");
+    }
+
+    public function nexusReport()
+    {
+        try {
+            if (count(auth()->user()->currentSite) !== 0) {
+                $siteID = auth()->user()->currentSite[0]->id;
+            } else {
+                $siteID = '%';
+            }
+            $samples = event_sample::with('sampletype')
+                ->whereHas('sampletype', function ($query) {
+                    return $query->where('project_id', session('currentProject'));
+                })
+                ->where('site_id', 'like', $siteID)
+                ->where('location', 0)
+                ->get();
+            if (count($samples) == 0) {
+                throw new Exception('There are no samples assigned to BiOS storage', 1);
+            }
+            $storageProjectName = request('currentProject')->storageProjectName;
+            $containers = Http::withToken(config('services.nexus.token'))
+                ->acceptJson()
+                ->timeout(5)
+                ->withOptions([
+                    'verify' => false
+                ])
+                ->post(config('services.nexus.url') . 'containers', [
+                    'storageName' => $storageProjectName
+                ]);
+            if ($containers->clientError()) {
+                throw new Exception('Could not get sample storage status data from Nexus: ' . $containers['message'], 1);
+            }
+            if ($containers->serverError()) {
+                throw new Exception('Nexus server error', 1);
+            }
+
+            $container_arr = (array) json_decode($containers->body());
+            foreach ($samples as $key => $sample) {
+                $samples[$key]->status = array_key_exists($sample->barcode, $container_arr) ? $container_arr[$sample->barcode] : 'No BiOS Record';
+            }
+
+            $headers = [
+                'Content-type'        => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="nexusreport.csv"',
+            ];
+
+            $data = "Barcode\tSampleType\tStatus\n";
+            foreach ($samples as $sample) {
+                $nexusSamples = [
+                    $sample->barcode,
+                    $sample->sampletype->name,
+                    $sample->status
+                ];
+                $data .= implode("\t", $nexusSamples) . "\n";
+            }
+            return Response::make($data, 200, $headers);
+        } catch (\Throwable $th) {
+            return redirect('/')->withErrors($th->getMessage());
+        }
     }
 }

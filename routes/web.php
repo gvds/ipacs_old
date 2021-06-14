@@ -194,6 +194,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/samplestore', 'samplestoreController@allocateStorage');
         Route::get('/samplestore/report', 'samplestoreController@reportList');
         Route::get('/samplestore/{storageReport}/report', 'samplestoreController@report');
+        Route::get('/samplestore/nexus', 'samplestoreController@nexusReport');
     });
 
     Route::middleware('project.auth:monitor-progress')->group(function () {
@@ -202,7 +203,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/datafiles', 'DatafileController@index');
     Route::middleware('project.auth:manage-datafiles')->group(function () {
-        Route::resource('/datafiles', 'DatafileController')->except('index','show');
+        Route::resource('/datafiles', 'DatafileController')->except('index', 'show');
     });
     Route::get('/datafiles/{datafile}', 'DatafileController@show');
     Route::get('/datafiles/{datafile}/download', 'DatafileController@download');
@@ -216,6 +217,27 @@ Route::middleware('auth')->group(function () {
         Route::get('/redcap/project', 'RedcapController@project');
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
+});
+
+
+Route::get('/nexus', function () {
+    try {
+        $response = Illuminate\Support\Facades\Http::withToken('5|Dp9nFldJbvuRnZ5OBSFTxOgGFNgRffXviZ1NfABA')
+            ->acceptJson()
+            ->timeout(5)
+            ->post('https://nexus.test/api/containers', [
+                'storageName' => 'TP'
+            ]);
+        if ($response->clientError()) {
+            throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
+        }
+        if ($response->serverError()) {
+            throw new Exception('Nexus server error', 1);
+        }
+        return $response;
+    } catch (\Throwable $th) {
+        return redirect('/')->withErrors($th->getMessage());
+    }
 });
 
 URL::forceScheme('https');
