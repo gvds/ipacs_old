@@ -322,7 +322,8 @@ class samplestoreController extends Controller
                 ->acceptJson()
                 ->timeout(5)
                 ->withOptions([
-                    'verify' => false
+                    'verify' => public_path('nexus.pem')
+                    // 'verify' => false
                 ])
                 ->post(config('services.nexus.url') . 'containers', [
                     'storageName' => $storageProjectName
