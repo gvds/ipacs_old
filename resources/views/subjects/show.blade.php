@@ -140,7 +140,7 @@
   {{ Form::submit('Enrol', ['class' => 'w-full mt-1']) }}
   {{ Form::close() }}
 
-  @else
+  @endif
 
   <div class='mt-5'>
     <div class='text-lg font-bold w-auto'>Events</div>
@@ -228,7 +228,6 @@
     </x-table>
   </div>
 
-  @endif
 </x-layout>
 
 <script>
