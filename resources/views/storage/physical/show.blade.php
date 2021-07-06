@@ -109,7 +109,7 @@
                                 </th>
                                 @for ($c = 1; $c <= $section->columns; $c++)
                                     @php
-                                    if ($physicalUnit->unitType->rackOrder == 'Row-wise') {
+                                    if ($physicalUnit->unitType->rackOrder == 'By Row') {
                                     $rack = $section->columns * ($r-1) + $c + $rackCount;
                                     } else {
                                     $rack = $section->rows * ($c - 1) + $r + $rackCount;

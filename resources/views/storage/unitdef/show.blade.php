@@ -108,7 +108,7 @@
                 </x-slot>
                 @foreach ($physicalUnits as $physicalUnit)
                 <tr class="odd:bg-gray-100">
-                    <td>{{$physicalUnit->unitID}}</td>
+                    <td><a class='text-blue-800 font-semibold' href='/physicalUnit/{{$physicalUnit->id}}'>{{$physicalUnit->unitID}}</a></td>
                     <td>{{$physicalUnit->administrator->fullname}}</td>
                     <td>
                         <a href="/physicalUnit/{{$physicalUnit->id}}/toggleActive">
