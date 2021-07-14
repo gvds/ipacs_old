@@ -54,11 +54,11 @@ class VirtualUnitController extends Controller
                 })
             ],
             'section' => 'required|integer|min:1',
-            'partial' => 'sometimes|boolean',
+            'selection_type' => 'required|in:full,partial',
             'startRack' => 'required|integer|min:1',
             'endRack' => 'required|integer|gte:startRack',
-            'startBox' => 'required_with:partial',
-            'endBox' => 'required_with:partial|gte:startBox',
+            'startBox' => 'required_with:selection_type',
+            'endBox' => 'required_with:selection_type|gte:startBox',
             'rackCapacity' => 'required|integer|min:1',
             'boxCapacity' => 'required|integer|min:1'
         ]);
@@ -66,28 +66,27 @@ class VirtualUnitController extends Controller
             $project = \App\project::find($validatedData['project_id']);
             $validatedData['project'] = $project->storageProjectName;
             $unitDefinition = physicalUnit::find($validatedData['physicalUnit_id'])->unitType;
-            if (isset($validatedData['partial'])) {
-                if ($unitDefinition->boxDesignation === 'Alpha') {
-                    if (ord($validatedData['startBox']) > ord($validatedData['endBox'])) {
-                        throw new Exception("End Box must be ≥ Start Box", 1);
-                    }
+            if ($validatedData['selection_type'] == 'partial') {
+                if (ord($validatedData['startBox']) > ord($validatedData['endBox'])) {
+                    throw new Exception("End Box must be ≥ Start Box", 1);
                 }
                 $validatedData['endRack'] = $validatedData['startRack'];
-                $startBox = $validatedData['startBox'];
-                $endBox = $validatedData['endBox'];
+                if ($unitDefinition->boxDesignation === 'Alpha') {
+                    $validatedData['startBox'] = chr(65 + $validatedData['startBox']);
+                    $validatedData['endBox'] = chr(65 + $validatedData['endBox']);
+                }
             } else {
                 if ($unitDefinition->boxDesignation === 'Alpha') {
-                    $startBox = 'A';
-                    $endBox = chr(64 + $validatedData['rackCapacity'] - 1);
+                    $validatedData['startBox'] = 'A';
+                    $validatedData['endBox'] = chr(64 + $validatedData['rackCapacity'] - 1);
                 } else {
-                    $startBox = '1';
-                    $endBox = $validatedData['rackCapacity'] - 1;
+                    $validatedData['startBox'] = '1';
+                    $validatedData['endBox'] = $validatedData['rackCapacity'] - 1;
                 }
             }
-            $boxes = range($startBox, $endBox);
-
+            $boxes = range($validatedData['startBox'], $validatedData['endBox']);
             DB::beginTransaction();
-            $virtualUnit = virtualUnit::create(Arr::except($validatedData, ['partial']));
+            $virtualUnit = virtualUnit::create(Arr::except($validatedData, ['selection_type']));
             for ($rack = $validatedData['startRack']; $rack <= $validatedData['endRack']; $rack++) {
                 foreach ($boxes as $box) {
                     for ($position = 1; $position <= $validatedData['boxCapacity']; $position++) {
