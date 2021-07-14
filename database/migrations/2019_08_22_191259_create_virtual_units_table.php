@@ -16,7 +16,7 @@ class CreateVirtualUnitsTable extends Migration
         Schema::create('virtualUnits', function (Blueprint $table) {
             $table->id();
             $table->string('virtualUnit', 50);
-            $table->unsignedBigInteger('physicalUnit_id');
+            $table->foreignId('physicalUnit_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             // $table->foreignId('project_id');
             $table->unsignedBigInteger('project_id')->nullable();
             $table->string('project', 50);

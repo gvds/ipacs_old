@@ -15,7 +15,7 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('unitDefinition_id')->constrained();
+            $table->foreignId('unitDefinition_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->tinyInteger('section')->unsigned()->default(1);
             $table->tinyInteger('rows')->unsigned()->default(1);
             $table->tinyInteger('columns')->unsigned()->default(1);

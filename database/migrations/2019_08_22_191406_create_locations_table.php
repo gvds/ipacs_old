@@ -15,7 +15,7 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('virtualUnit_id')->constrained();
+            $table->foreignId('virtualUnit_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('storageProjectName',40);
             $table->string('barcode',20)->nullable();
             $table->unsignedTinyInteger('rack')->nullable();
