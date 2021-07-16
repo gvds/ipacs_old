@@ -57,8 +57,8 @@ class VirtualUnitController extends Controller
             'selection_type' => 'required|in:full,partial',
             'startRack' => 'required|integer|min:1',
             'endRack' => 'required|integer|gte:startRack',
-            'startBox' => 'required_with:selection_type',
-            'endBox' => 'required_with:selection_type|gte:startBox',
+            'startBox' => 'required_if:selection_type,partial',
+            'endBox' => 'required_if:selection_type,partial|gte:startBox',
             'rackCapacity' => 'required|integer|min:1',
             'boxCapacity' => 'required|integer|min:1'
         ]);
