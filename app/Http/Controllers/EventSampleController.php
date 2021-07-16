@@ -239,7 +239,7 @@ class EventSampleController extends Controller
                 Carbon::parse($sample->logTime)->toDateString()
             ];
             if (!empty($sample->storagelocation)) {
-                array_push($sampledata, $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
+                array_push($sampledata, '(' . $sample->storagelocation->virtualUnit->physicalUnit->unitID . ') ' . $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
             }
             $data .= implode("\t", $sampledata) . "\n";
         }
