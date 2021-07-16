@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class ManifestController extends Controller
 {
@@ -22,7 +23,7 @@ class ManifestController extends Controller
         $manifests = manifest::where('project_id', session('currentProject'))
             ->where('sourceSite_id', Auth::user()->ProjectSite)
             ->whereIn('manifestStatus_id', [1, 2])
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->get();
         $sites = \App\site::where('project_id', session('currentProject'))
             ->where('id', '!=', Auth::user()->ProjectSite)
@@ -41,7 +42,7 @@ class ManifestController extends Controller
         $manifests = manifest::where('project_id', session('currentProject'))
             ->where('destinationSite_id', Auth::user()->ProjectSite)
             ->whereIn('manifestStatus_id', [2, 3])
-            ->orderBy('created_at','desc')
+            ->orderBy('created_at', 'desc')
             ->get();
         return view('manifests.index_received', compact('manifests'));
     }
@@ -226,5 +227,43 @@ class ManifestController extends Controller
             return back()->with('error', $th->getMessage());
         }
         return redirect('/manifest/receive');
+    }
+
+    public function samplelist(manifest $manifest)
+    {
+        // dd($manifest->destination->name);
+        $event_samples = event_sample::with('storagelocation', 'sampletype')
+            ->whereIn('samplestatus_id', [2,3])
+            ->whereHas('sampletype', function ($query) use ($manifest) {
+                return $query->where('project_id', session('currentProject'))
+                    ->where('transferDestination', $manifest->destination->name);
+            })
+            ->whereHas('site', function ($query) {
+                return $query->where('id', auth()->user()->currentsite[0]->id);
+            })
+            ->get();
+        $headers = [
+            'Content-type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="samplelist.csv"',
+        ];
+
+        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tLocation\n";
+        foreach ($event_samples as $key => $sample) {
+            $sampledata = [
+                $sample->barcode,
+                $sample->sampletype->name,
+                $sample->event_subject->event->arm->name,
+                $sample->event_subject->event->name,
+                $sample->aliquot,
+                $sample->volume . $sample->sampletype->volumeUnit,
+                $sample->status->samplestatus,
+                $sample->event_subject->subject->subjectID
+            ];
+            if (!empty($sample->storagelocation)) {
+                array_push($sampledata, '(' . $sample->storagelocation->virtualUnit->physicalUnit->unitID . ') ' . $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
+            }
+            $data .= implode("\t", $sampledata) . "\n";
+        }
+        return Response::make($data, 200, $headers);
     }
 }

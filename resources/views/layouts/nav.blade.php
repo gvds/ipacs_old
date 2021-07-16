@@ -71,7 +71,7 @@
         <x-nav.dropdown-link href="/sample/logused">Log Sample as Used</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/sample/loglost">Log Sample as Lost</x-nav.dropdown-link>
         <hr />
-        <x-nav.dropdown-link href="/manifest/samplelist">Select Samples for Shipping</x-nav.dropdown-link>
+        {{-- <x-nav.dropdown-link href="/manifest/samplelist">Select Samples for Shipping</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="/manifest">Shipping Manifests</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/manifest/receive">Receive Manifest Shipment</x-nav.dropdown-link>
         {{-- <x-nav.dropdown-link href="#">Receive External Shipment</x-nav.dropdown-link> --}}

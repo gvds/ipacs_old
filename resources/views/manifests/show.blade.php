@@ -11,14 +11,19 @@
         </x-slot>
     </x-pageheader>
 
-    <div class='text-l font-bold'>
-        Destination: {{$manifest->destination->name}} <br>
-        <i>Created by: {{$manifest->user->fullname}}</i>
+    <div class='flex justify-between mt-4 mb-1 items-end border border-gray-300 bg-gray-100 rounded-md px-4 py-2'>
+        <div class='text-l font-bold'>
+            Destination: {{$manifest->destination->name}} <br>
+            <i>Created by: {{$manifest->user->fullname}}</i>
+        </div>
+        <div class='mb-2'>
+            <x-buttonlink href="/manifest/{{$manifest->id}}/samplelist">Sample List</x-buttonlink>
+        </div>
     </div>
 
     @include('layouts.message')
 
-    <div class='flex flex-row justify-between'>
+    <div class='flex flex-row justify-between items-end'>
         <div>
             {{ Form::open(['url' => "/manifestitem", 'class' => 'form', 'method' => 'POST']) }}
             {{ Form::hidden('manifest_id', $manifest->id)}}
@@ -28,7 +33,7 @@
         </div>
         <div x-data="confirmation()">
             {{ Form::open(['url' => "/manifest/$manifest->id/ship", 'class' => 'form', 'method' => 'POST', 'x-on:submit.prevent'=>'ship()', 'x-ref'=>'shipform']) }}
-            {{ Form::submit('Ship Samples') }}
+            {{ Form::submit('Ship Samples',['class'=>'text-blue-700']) }}
             {{ Form::close() }}
         </div>
     </div>

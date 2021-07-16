@@ -176,7 +176,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('project.auth:manage-samples')->group(function () {
         // Route::resource('/manifest', 'ManifestController');
         Route::get('/manifest', 'ManifestController@index');
-        Route::get('/manifest/samplelist', 'ManifestController@samplelist');
+        Route::get('/manifest/{manifest}/samplelist', 'ManifestController@samplelist');
         Route::get('/manifest/receive', 'ManifestController@index_received');
         Route::get('/manifest/receive/{manifest}', 'ManifestController@show_received');
         Route::get('/manifest/{manifest}', 'ManifestController@show');
