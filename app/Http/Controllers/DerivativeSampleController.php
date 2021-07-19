@@ -105,7 +105,7 @@ class DerivativeSampleController extends Controller
             $maxaliquots = max($maxaliquots, $sampletype->aliquots);
         }
         $parent_sample = $event_sample;
-        return view('derivativesamples.log', compact('sampletypes', 'parent_sample', 'maxaliquots'));
+        return view('derivativesamples.log', compact('sampletypes', 'parent_sample', 'maxaliquots', 'subject'));
     }
 
     public function log(Request $request)

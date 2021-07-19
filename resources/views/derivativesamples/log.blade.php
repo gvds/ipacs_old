@@ -10,6 +10,7 @@
     @php
     $fieldnum = 0;
     @endphp
+    <div class='font-semibold h-3'>PSE: {{session('currentProject')}}_{{$subject->subjectID}}_{{$parent_sample->event_subject_id}}</div>
     <div x-data="">
         {{ Form::open(['url' => '/derivative', 'class' => 'form max-w-none mt-2', 'method' => 'POST', 'x-on:keydown.enter.prevent' => '']) }}
         {{ Form::hidden('event_subject_id',$parent_sample->event_subject_id)}}
@@ -22,7 +23,8 @@
                 @foreach ($sampletypes as $sampletype)
                 @if ($sampletype->sampleGroup !== $group)
                 <tr>
-                    <th class='text-left bg-gray-300  leading-none' colspan={{$maxaliquots + 1}}> {{$sampletype->sampleGroup}}</th>
+                    <th class='text-left bg-gray-300  leading-none' colspan={{$maxaliquots + 1}}>
+                        {{$sampletype->sampleGroup}}</th>
                 </tr>
                 @php
                 $group = $sampletype->sampleGroup;
