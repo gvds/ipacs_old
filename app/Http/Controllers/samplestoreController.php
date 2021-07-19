@@ -332,7 +332,7 @@ class samplestoreController extends Controller
                 throw new Exception('Could not get sample storage status data from Nexus: ' . $containers['message'], 1);
             }
             if ($containers->serverError()) {
-                throw new Exception('Nexus server error', 1);
+                throw new Exception('Nexus server error: ' . $containers['message'], 1);
             }
 
             $container_arr = (array) json_decode($containers->body());
