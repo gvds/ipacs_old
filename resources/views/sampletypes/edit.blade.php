@@ -26,13 +26,14 @@
     {{ Form::label('volumeUnit', 'Volume Unit') }}
     {{ Form::text('volumeUnit', null) }}
     {{ Form::label('transferDestination', 'Transfer Destination') }}
-    {{ Form::text('transferDestination', null) }}
-    {{ Form::label('transferSource', 'Transfer Source') }}
-    {{ Form::text('transferSource', null) }}
+    {{ Form::select('transferDestination', $destinations) }}
+    {{ Form::text('transferSource', null) }} --}}
     {{ Form::label('sampleGroup', 'Sample Group') }}
     {{ Form::text('sampleGroup', null) }}
     {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
     {{ Form::select('tubeLabelType_id', $tubeLabelTypes) }}
+    {{ Form::label('storageType', 'Storage Type') }}
+    {{ Form::select('storageType', [''=>'','Internal'=>'Internal','BiOS'=>'BiOS','Nexus'=>'Nexus']) }}
     {{ Form::label('storageSampleType', 'Storage Sample Type') }}
     {{ Form::text('storageSampleType', null) }}
     {{ Form::label('parentSampleType_id', 'Parent Sample Type') }}

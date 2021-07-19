@@ -16,12 +16,10 @@
             <th>Aliquots</th>
             <th>Pooled</th>
             <th>Default Volume</th>
-            <th>Volume Unit</th>
-            {{-- <th>Store</th> --}}
             <th>Transfer Destination</th>
-            <th>Transfer Source</th>
             <th>Sample Group</th>
             <th>Tube Label Type</th>
+            <th>Storage Type</th>
             <th>Storage Sample Type</th>
             <th>Parent Sample Type</th>
             <th>Active</th>
@@ -33,13 +31,11 @@
             <td>{{$sampletype->primary}}</td>
             <td>{{$sampletype->aliquots}}</td>
             <td>{{$sampletype->pooled}}</td>
-            <td>{{$sampletype->defaultVolume}}</td>
-            <td>{{$sampletype->volumeUnit}}</td>
-            {{-- <td>{{$sampletype->store}}</td> --}}
+            <td>{{$sampletype->defaultVolume}} {{$sampletype->volumeUnit}}</td>
             <td>{{$sampletype->transferDestination}}</td>
-            <td>{{$sampletype->transferSource}}</td>
             <td>{{$sampletype->sampleGroup}}</td>
             <td>{{$sampletype->tubeLabelType->tubeLabelType ?? ''}}</td>
+            <td>{{$sampletype->storageType}}</td>
             <td>{{$sampletype->storageSampleType}}</td>
             <td>{{$sampletype->parentSampleType->name ?? ''}}</td>
             <td>{{$sampletype->active}}</td>
@@ -56,4 +52,3 @@
     </x-table>
 
 </x-layout>
-

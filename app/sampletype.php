@@ -15,10 +15,10 @@ class sampletype extends Model
     'pooled',
     'defaultVolume',
     'volumeUnit',
-    'tranferDestination',
-    'transferSource',
+    'transferDestination',
     'sampleGroup',
     'tubeLabelType_id',
+    'storageType',
     'storageSampleType',
     'parentSampleType_id',
     'active'
@@ -43,5 +43,5 @@ class sampletype extends Model
   // {
   //   return $this->hasMany(sampletype::class, 'parentSampleType_id', 'id');
   // }
-  
+
 }

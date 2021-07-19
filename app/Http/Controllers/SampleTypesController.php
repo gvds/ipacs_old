@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\sampletype;
+use App\site;
 use Illuminate\Http\Request;
 
 class SampleTypesController extends Controller
@@ -34,15 +35,19 @@ class SampleTypesController extends Controller
             ->pluck('tubeLabelType', 'id');
 
         $generic_tubeLabelTypes = \App\tubeLabelType::whereNull('project_id')
-        ->whereNotIn('tubeLabelType', $project_tubeLabelTypes)
+            ->whereNotIn('tubeLabelType', $project_tubeLabelTypes)
             ->orderBy('tubeLabelType')
             ->pluck('tubeLabelType', 'id')
             ->prepend('', '');
 
         $tubeLabelTypes = $generic_tubeLabelTypes->union($project_tubeLabelTypes);
+        $destinations = site::where('project_id', session('currentProject'))
+            ->pluck('name', 'name')
+            ->prepend('', '');
 
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
-        return view('sampletypes.create', compact('tubeLabelTypes', 'sampleTypes'));
+
+        return view('sampletypes.create', compact('tubeLabelTypes', 'sampleTypes', 'destinations'));
     }
 
     /**
@@ -62,10 +67,10 @@ class SampleTypesController extends Controller
             'defaultVolume' => 'nullable|numeric',
             'volumeUnit' => 'nullable',
             'transferDestination' => 'nullable|max:25',
-            'transferSource' => 'nullable|max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
-            'storageSampleType' => 'nullable|max:25',
+            'storageType' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',
+            'storageSampleType' => 'nullable|required_unless:storageType,,BiOS|min:3|max:25',
             'parentSampleType_id' => 'nullable|integer'
         ]);
         $validatedData['project_id'] = $currentProject->id;
@@ -108,7 +113,11 @@ class SampleTypesController extends Controller
 
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
 
-        return view('sampletypes.edit', compact('sampletype', 'tubeLabelTypes', 'sampleTypes'));
+        $destinations = site::where('project_id', session('currentProject'))
+            ->pluck('name', 'name')
+            ->prepend('', '');
+
+        return view('sampletypes.edit', compact('sampletype', 'tubeLabelTypes', 'sampleTypes', 'destinations'));
     }
 
     /**
@@ -128,10 +137,10 @@ class SampleTypesController extends Controller
             'defaultVolume' => 'nullable|numeric',
             'volumeUnit' => 'nullable',
             'transferDestination' => 'nullable|max:25',
-            'transferSource' => 'nullable|max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
-            'storageSampleType' => 'nullable|max:25',
+            'storageType' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',
+            'storageSampleType' => 'nullable|required_unless:storageType,,BiOS|min:3|max:25',
             'parentSampleType_id' => 'nullable|integer',
             'active' => 'required|boolean'
         ]);
