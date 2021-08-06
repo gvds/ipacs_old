@@ -20,7 +20,6 @@
     {{ Form::text('volumeUnit', null) }}
     {{ Form::label('transferDestination', 'Transfer Destination') }}
     {{ Form::select('transferDestination', $destinations) }}
-    {{ Form::text('transferSource', null) }} --}}
     {{ Form::label('sampleGroup', 'Sample Group') }}
     {{ Form::text('sampleGroup', null) }}
     {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
