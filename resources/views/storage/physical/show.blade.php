@@ -312,11 +312,12 @@
                                 }
                             }
                         } else if (!this.selectedracks[$rack-1]&1 && ($rack >= this.sections[this.section_number-1].startRack) && ($rack <= this.sections[this.section_number-1].endRack)) {
-                            if (this.selectedracks[$rack-2]==1 || this.selectedracks[$rack]==1) {
+                            if (this.selectedracks[$rack-2]==1 || this.selectedracks[$rack]==1) { // The adjacent rack is part of the current selection
                                 this.selectedracks[$rack-1]+=1;
-                                if (this.selectedracks.reduce((a,b)=>a+(b&1),0)>1) {
+                                if (this.selectedracks.reduce((a,b)=>a+(b&1),0)>1) { // The current selection is multi-rack
                                     this.selection_type='full';
                                     this.partial_lock=true;
+                                    this.boxSelectionReset();
                                 }
                             }
                         }
@@ -337,6 +338,7 @@
                                 }
                             }
                         });
+                        this.endBox = this.startBox = this.boxes_disabled.indexOf(false);
                     } else { // For a full rack selection
                         this.startRack = this.selectedracks.indexOf(1) != -1 ? this.selectedracks.indexOf(1) + 1 : null;
                         this.endRack = this.selectedracks.lastIndexOf(1) != -1 ? this.selectedracks.lastIndexOf(1) + 1 : null;

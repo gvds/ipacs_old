@@ -14,7 +14,6 @@ use Codedge\Fpdf\Fpdf\Fpdf;
 use Exception;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Validation\Rules\Exists;
 
 class samplestoreController extends Controller
 {

@@ -23,9 +23,7 @@ class PhysicalUnitController extends Controller
         // ->orderBy('unitDefinition_id')
         // ->orderBy('unitID')
         // ->get();
-        $physicalUnits = physicalUnit::orderBy('unitDefinition_id')
-        ->orderBy('unitID')
-        ->get();
+        $physicalUnits = physicalUnit::orderBy('unitID')->get();
         return view('storage.physical.index', compact('physicalUnits'));
     }
 
