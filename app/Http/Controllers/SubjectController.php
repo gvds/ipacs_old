@@ -209,10 +209,10 @@ class SubjectController extends Controller
             return back()->with('error', "You don't have permission to switch this subject");
         };
 
-        $monthPrior = Carbon::today()->subMonth()->toDateString();
+        // $monthPrior = Carbon::today()->subMonth()->toDateString();
         $switcharms = json_decode($subject->arm->switcharms);
         $validatedData = $request->validate([
-            'switchDate' => "required|date|before_or_equal:today|after:$monthPrior",
+            'switchDate' => "required|date|before_or_equal:today",
             'switchArm' => [
                 'required',
                 Rule::in($switcharms),
