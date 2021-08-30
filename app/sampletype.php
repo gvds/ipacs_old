@@ -18,7 +18,7 @@ class sampletype extends Model
     'transferDestination',
     'sampleGroup',
     'tubeLabelType_id',
-    'storageType',
+    'storageDestination',
     'storageSampleType',
     'parentSampleType_id',
     'active'

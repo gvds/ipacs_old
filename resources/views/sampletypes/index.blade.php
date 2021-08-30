@@ -19,7 +19,7 @@
             <th>Transfer Destination</th>
             <th>Sample Group</th>
             <th>Tube Label Type</th>
-            <th>Storage Type</th>
+            <th>Storage Destination</th>
             <th>Storage Sample Type</th>
             <th>Parent Sample Type</th>
             <th>Active</th>
@@ -35,7 +35,7 @@
             <td>{{$sampletype->transferDestination}}</td>
             <td>{{$sampletype->sampleGroup}}</td>
             <td>{{$sampletype->tubeLabelType->tubeLabelType ?? ''}}</td>
-            <td>{{$sampletype->storageType}}</td>
+            <td>{{$sampletype->storageDestination}}</td>
             <td>{{$sampletype->storageSampleType}}</td>
             <td>{{$sampletype->parentSampleType->name ?? ''}}</td>
             <td>{{$sampletype->active}}</td>

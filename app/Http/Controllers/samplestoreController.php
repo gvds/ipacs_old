@@ -167,7 +167,14 @@ class samplestoreController extends Controller
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
-                if ($sampletype->storageSampleType === 'BiOS') {
+                if ($sampletype->storageDestination === 'BiOS') {
+                    foreach ($sampletype->event_samples as $sample) {
+                        $sample->location = 0;
+                        $sample->samplestatus_id = 3;
+                        $sample->save();
+                        $stored_count++;
+                    }
+                } else if ($sampletype->storageDestination === 'Nexus') {
                     foreach ($sampletype->event_samples as $sample) {
                         $sample->location = 0;
                         $sample->samplestatus_id = 3;

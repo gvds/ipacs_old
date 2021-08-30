@@ -24,8 +24,8 @@
     {{ Form::text('sampleGroup', null) }}
     {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
     {{ Form::select('tubeLabelType_id', $tubeLabelTypes) }}
-    {{ Form::label('storageType', 'Storage Type') }}
-    {{ Form::select('storageType', [''=>'','Internal'=>'Internal','BiOS'=>'BiOS','Nexus'=>'Nexus']) }}
+    {{ Form::label('storageDestination', 'Storage Destination') }}
+    {{ Form::select('storageDestination', [''=>'','Internal'=>'Internal','BiOS'=>'BiOS','Nexus'=>'Nexus']) }}
     {{ Form::label('storageSampleType', 'Storage Sample Type') }}
     {{ Form::text('storageSampleType', null) }}
     {{ Form::label('parentSampleType_id', 'Parent Sample Type') }}
