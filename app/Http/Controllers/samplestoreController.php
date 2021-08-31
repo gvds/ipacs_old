@@ -111,17 +111,22 @@ class samplestoreController extends Controller
                 ->where('samplestatus_id', 2);
         }])
             ->where('project_id', session('currentProject'))
-            ->whereNotNull('storageSampleType')
+            ->whereNotNull('storageDestination')
             ->get();
-        $sampleSets = [];
+        $storageDestinations = [];
         foreach ($sampletypes as $id => $sampletype) {
-            array_push($sampleSets, [
-                'sampletype_id' => $sampletype->id,
-                'name' => $sampletype->name,
-                'count' => $sampletype->event_samples->count(),
-            ]);
+            if (count($sampletype->event_samples) > 0) {
+                if (!array_key_exists($sampletype->storageDestination, $storageDestinations)) {
+                    $storageDestinations[$sampletype->storageDestination] = [];
+                }
+                array_push($storageDestinations[$sampletype->storageDestination], [
+                    'sampletype_id' => $sampletype->id,
+                    'name' => $sampletype->name,
+                    'count' => $sampletype->event_samples->count()
+                ]);
+            }
         }
-        $sampleSets = collect($sampleSets);
+        $storageDestinations = collect($storageDestinations);
 
         $project = \App\project::find(session('currentProject'));
         $lowstorage = location::join('virtualUnits', 'virtualUnit_id', 'virtualUnits.id')
@@ -133,7 +138,7 @@ class samplestoreController extends Controller
             ->havingRaw('(total - used) / total < ?', [0.1])
             ->get();
 
-        return view('samples.allocateStorage', compact('sampleSets', 'lowstorage'));
+        return view('samples.allocateStorage', compact('storageDestinations', 'lowstorage'));
     }
 
     public function allocateStorage(Request $request)
