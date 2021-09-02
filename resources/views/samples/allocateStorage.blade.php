@@ -26,41 +26,44 @@
                 </x-table>
                 @endif
             </div>
-            {{ Form::open(['url' => '/samplestore', 'class' => 'form', 'method' => 'POST', 'class' => 'max-w-lg']) }}
-            <div class='mb-5 mt-2 flex items-center justify-between'>
-                <span class='font-semibold'>Allow Previously Used Locations</span>
-                <span class='flex border border-gray-300 bg-gray-200 px-3 py-1 ml-4 shaddow rounded space-x-3'>
-                    <span>{{Form::radio('reuse[]', 0, true)}} No</span>
-                    <span>{{Form::radio('reuse[]', 1)}} Yes</span>
-                </span>
+            <div x-data="restrictSelection()">
+                {{ Form::open(['url' => '/samplestore', 'class' => 'form', 'method' => 'POST', 'class' => 'max-w-lg']) }}
+                {{ Form::hidden('storageDestination', null, ['x-model'=>'destination'])}}
+                <div class='mb-5 mt-2 flex items-center justify-between'>
+                    <span class='font-semibold'>Allow Previously Used Locations</span>
+                    <span class='flex border border-gray-300 bg-gray-200 px-3 py-1 ml-4 shaddow rounded space-x-3'>
+                        <span>{{Form::radio('reuse[]', 0, true)}} No</span>
+                        <span>{{Form::radio('reuse[]', 1)}} Yes</span>
+                    </span>
+                </div>
+
+                <x-table class='w-full'>
+                    <x-slot name='head'>
+                        <th>Destination</th>
+                        <th>Sample Type</th>
+                        <th>Samples</th>
+                        <th>Select</th>
+                    </x-slot>
+                    @foreach ($storageDestinations as $storageDestination => $sampleSets)
+                    <tr class="border-b border-gray-300">
+                        @foreach ($sampleSets as $sampleSet)
+                    <tr>
+                        @if ($loop->first)
+                        <th class="align-top" rowspan="{{count($sampleSets)}}">{{$storageDestination}}</th>
+                        @endif
+
+                        <td>{{$sampleSet['name']}}</td>
+                        <td>{{$sampleSet['count']}}</td>
+                        <td>{{Form::checkbox('sampletype[]', $sampleSet['sampletype_id'], false, ["x-bind:disabled" => "destination!='$storageDestination' && destination!=''", "x-ref" => "$sampleSet[sampletype_id]", "x-on:click" => "updateDestinations('$storageDestination','$sampleSet[sampletype_id]')"])}}
+                        </td>
+                    </tr>
+                    @endforeach
+                    </tr>
+                    @endforeach
+                </x-table>
+                {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2"]) }}
+                {{ Form::close() }}
             </div>
-
-            <x-table class='w-full' x-data="restrictSelection()">
-                <x-slot name='head'>
-                    <th>Destination</th>
-                    <th>Sample Type</th>
-                    <th>Samples</th>
-                    <th>Select</th>
-                </x-slot>
-                @foreach ($storageDestinations as $storageDestination => $sampleSets)
-                <tr class="border-b border-gray-300">
-                    @foreach ($sampleSets as $sampleSet)
-                <tr>
-                    @if ($loop->first)
-                    <th class="align-top" rowspan="{{count($sampleSets)}}">{{$storageDestination}}</th>
-                    @endif
-
-                    <td>{{$sampleSet['name']}}</td>
-                    <td>{{$sampleSet['count']}}</td>
-                    <td>{{Form::checkbox('sampletype[]', $sampleSet['sampletype_id'], false, ["x-bind:disabled" => "destination!='$storageDestination' && destination!=''", "x-ref" => "$sampleSet[sampletype_id]", "x-on:click" => "updateDestinations('$storageDestination','$sampleSet[sampletype_id]')"])}}
-                    </td>
-                </tr>
-                @endforeach
-                </tr>
-                @endforeach
-            </x-table>
-            {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2"]) }}
-            {{ Form::close() }}
         </div>
         <div class='ml-20'>
             @if (session('unallocated'))

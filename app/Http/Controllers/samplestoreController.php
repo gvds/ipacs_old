@@ -14,6 +14,7 @@ use Codedge\Fpdf\Fpdf\Fpdf;
 use Exception;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Http;
+use PhpOffice\PhpSpreadsheet\Helper\Sample;
 
 class samplestoreController extends Controller
 {
@@ -25,6 +26,15 @@ class samplestoreController extends Controller
         define('FPDF_FONTPATH', public_path() . '/font');
     }
 
+    private function logToStorageLog($sample, $sampletype, $storageEvent, $location_id = null)
+    {
+        $storageLog = new storageLog();
+        $storageLog->storageReport_id = $storageEvent->id;
+        $storageLog->sampletype_id = $sampletype->id;
+        $storageLog->sample_id = $sample->id;
+        $storageLog->location_id = $location_id;
+        $storageLog->save();
+    }
     /**
      * Finds next available appropriate storage location and marks location as used
      *
@@ -145,6 +155,7 @@ class samplestoreController extends Controller
     {
         $request->validate([
             'sampletype' => 'required|array',
+            'storageDestination' => 'required',
             'sampletype.*' => 'integer',
             'reuse.*' => [
                 'required',
@@ -169,6 +180,7 @@ class samplestoreController extends Controller
             $storageEvent = new storageReport();
             $storageEvent->project_id = session('currentProject');
             $storageEvent->user_id = auth()->user()->id;
+            $storageEvent->storageDestination = $request->storageDestination;
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
@@ -177,6 +189,7 @@ class samplestoreController extends Controller
                         $sample->location = 0;
                         $sample->samplestatus_id = 3;
                         $sample->save();
+                        $this->logToStorageLog($sample, $sampletype, $storageEvent);
                         $stored_count++;
                     }
                 } else if ($sampletype->storageDestination === 'Nexus') {
@@ -184,6 +197,7 @@ class samplestoreController extends Controller
                         $sample->location = 0;
                         $sample->samplestatus_id = 3;
                         $sample->save();
+                        $this->logToStorageLog($sample, $sampletype, $storageEvent);
                         $stored_count++;
                     }
                 } else {
@@ -204,12 +218,7 @@ class samplestoreController extends Controller
                             }
                         }
                         // log to storage logs table
-                        $storageLog = new storageLog();
-                        $storageLog->storageReport_id = $storageEvent->id;
-                        $storageLog->sampletype_id = $sampletype->id;
-                        $storageLog->sample_id = $sample->id;
-                        $storageLog->location_id = $location_id;
-                        $storageLog->save();
+                        $this->logToStorageLog($sample, $sampletype, $storageEvent, $location_id);
                     }
                 }
             }
@@ -232,82 +241,100 @@ class samplestoreController extends Controller
 
     public function report(Request $request, storageReport $storageReport)
     {
+        if ($storageReport->storageDestination == 'Internal') {
 
-        $storageLogs = $storageReport->storageLogs->whereNotNull('location_id');
+            $storageLogs = $storageReport->storageLogs->whereNotNull('location_id');
 
-        $layout = 'P';
-        if ($layout == "P") {
-            $this->fpdf = new Fpdf('P');
-        } else {
-            $this->fpdf = new Fpdf('L');
-        }
-
-        $this->fpdf->AddFont('Calibri', 'B', 'calibrib.php');
-        $this->fpdf->AddFont('Calibri', '', 'calibri.php');
-        $this->fpdf->SetDisplayMode('fullpage');
-        $this->fpdf->SetMargins(5, 5);
-        $this->fpdf->AddPage();
-        $this->fpdf->SetFont('Calibri', 'B', 16);
-        $this->fpdf->Cell(0, 9, $request->currentProject->project . " Sample Storage", 0, 1, 'C');
-        $this->fpdf->SetFont('Calibri', 'B', 14);
-        $this->fpdf->Cell(0, 9, "(" . $storageReport->created_at . " - " . $storageReport->user->fullname . ")", 0, 1, 'C');
-        $this->fpdf->SetFont('Calibri', 'B', 11);
-        $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
-        $this->fpdf->Cell(42, 7, "Sample Type", '', 0, 'L');
-        $this->fpdf->Cell(24, 7, "Subject", '', 0, 'L');
-        $this->fpdf->Cell(20, 7, "Event", '', 0, 'L');
-        $this->fpdf->Cell(14, 7, "Aliquot", '', 0, 'L');
-        if ($layout == "P") {
-            $this->fpdf->Cell(23, 7, "Barcode", '', 0, 'L');
-        } else {
-            $this->fpdf->Cell(40, 7, "Barcode", '', 0, 'L');
-        }
-        $this->fpdf->Cell(18, 7, "Unit", '', 0, 'L');
-        $this->fpdf->SetFont('Calibri', 'B', 8);
-        $this->fpdf->Cell(30, 7, " (Virtual-Unit Rack:Box:Position)", '', 1, 'L');
-        $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
-
-        $this->fpdf->SetFont('Calibri', '', 9);
-
-        foreach ($storageLogs as $storageLog) {
-            $this->fpdf->Cell(42, 7, $storageLog->sampletype->name, 0, 0, 'L');
-            $this->fpdf->Cell(24, 7, $storageLog->sample->event_subject->subject->subjectID, 0, 0, 'L');
-            $this->fpdf->Cell(20, 7, $storageLog->sample->event_subject->event->name, 0, 0, 'L');
-            $this->fpdf->Cell(14, 7, $storageLog->sample->aliquot, 0, 0, 'C');
+            $layout = 'P';
             if ($layout == "P") {
-                $this->fpdf->Cell(23, 7, $storageLog->sample->barcode, 0, 0, 'L');
+                $this->fpdf = new Fpdf('P');
             } else {
-                $this->fpdf->Cell(40, 7, $storageLog->sample->barcode, 0, 0, 'L');
+                $this->fpdf = new Fpdf('L');
             }
-            if (!empty($storageLog->location_id)) {
-                $locstring = "[" . $storageLog->storageLocation->virtualUnit->physicalUnit->unitID . "] : " . $storageLog->storageLocation->virtualUnit->virtualUnit . "   " . $storageLog->storageLocation->rack . " : " . $storageLog->storageLocation->box . " : " . $storageLog->storageLocation->position;
-            } else {
-                $locstring = "No Storage location allocated";
-            }
-            $this->fpdf->Cell(60, 7, $locstring, 0, 1, 'L');
-        }
-        $this->fpdf->Cell(0, 1, '', 'TB', 1, 'L');
 
-        $storageLogs = $storageReport->storageLogs->whereNull('location_id');
-        if ($storageLogs->count() > 0) {
-            $this->fpdf->SetFont('Calibri', 'B', 12);
-            $this->fpdf->Cell(0, 3, '', '', 1, 'L');
-            $this->fpdf->Cell(0, 9, "Samples not allocated storage positions due to the lack of available space", 0, 1, 'L');
+            $this->fpdf->AddFont('Calibri', 'B', 'calibrib.php');
+            $this->fpdf->AddFont('Calibri', '', 'calibri.php');
+            $this->fpdf->SetDisplayMode('fullpage');
+            $this->fpdf->SetMargins(5, 5);
+            $this->fpdf->AddPage();
+            $this->fpdf->SetFont('Calibri', 'B', 16);
+            $this->fpdf->Cell(0, 9, $request->currentProject->project . " Sample Storage", 0, 1, 'C');
+            $this->fpdf->SetFont('Calibri', 'B', 14);
+            $this->fpdf->Cell(0, 9, "(" . $storageReport->created_at . " - " . $storageReport->user->fullname . ")", 0, 1, 'C');
             $this->fpdf->SetFont('Calibri', 'B', 11);
             $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
-            $this->fpdf->Cell(30, 7, "Barcode", '', 0, 'L');
-            $this->fpdf->Cell(55, 7, "Sample Type", '', 1, 'L');
+            $this->fpdf->Cell(42, 7, "Sample Type", '', 0, 'L');
+            $this->fpdf->Cell(24, 7, "Subject", '', 0, 'L');
+            $this->fpdf->Cell(20, 7, "Event", '', 0, 'L');
+            $this->fpdf->Cell(14, 7, "Aliquot", '', 0, 'L');
+            if ($layout == "P") {
+                $this->fpdf->Cell(23, 7, "Barcode", '', 0, 'L');
+            } else {
+                $this->fpdf->Cell(40, 7, "Barcode", '', 0, 'L');
+            }
+            $this->fpdf->Cell(18, 7, "Unit", '', 0, 'L');
+            $this->fpdf->SetFont('Calibri', 'B', 8);
+            $this->fpdf->Cell(30, 7, " (Virtual-Unit Rack:Box:Position)", '', 1, 'L');
             $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
+
             $this->fpdf->SetFont('Calibri', '', 9);
 
             foreach ($storageLogs as $storageLog) {
-                $this->fpdf->Cell(30, 7, $storageLog->sample->barcode, 0, 0, 'L');
-                $this->fpdf->Cell(55, 7, $storageLog->sampletype->name, 0, 1, 'L');
+                $this->fpdf->Cell(42, 7, $storageLog->sampletype->name, 0, 0, 'L');
+                $this->fpdf->Cell(24, 7, $storageLog->sample->event_subject->subject->subjectID, 0, 0, 'L');
+                $this->fpdf->Cell(20, 7, $storageLog->sample->event_subject->event->name, 0, 0, 'L');
+                $this->fpdf->Cell(14, 7, $storageLog->sample->aliquot, 0, 0, 'C');
+                if ($layout == "P") {
+                    $this->fpdf->Cell(23, 7, $storageLog->sample->barcode, 0, 0, 'L');
+                } else {
+                    $this->fpdf->Cell(40, 7, $storageLog->sample->barcode, 0, 0, 'L');
+                }
+                if (!empty($storageLog->location_id)) {
+                    $locstring = "[" . $storageLog->storageLocation->virtualUnit->physicalUnit->unitID . "] : " . $storageLog->storageLocation->virtualUnit->virtualUnit . "   " . $storageLog->storageLocation->rack . " : " . $storageLog->storageLocation->box . " : " . $storageLog->storageLocation->position;
+                } else {
+                    $locstring = "No Storage location allocated";
+                }
+                $this->fpdf->Cell(60, 7, $locstring, 0, 1, 'L');
             }
-        }
-        $this->fpdf->Cell(0, 1, '', 'TB', 1, 'L');
+            $this->fpdf->Cell(0, 1, '', 'TB', 1, 'L');
 
-        $this->fpdf->Output("storageReport.pdf", "I");
+            $storageLogs = $storageReport->storageLogs->whereNull('location_id');
+            if ($storageLogs->count() > 0) {
+                $this->fpdf->SetFont('Calibri', 'B', 12);
+                $this->fpdf->Cell(0, 3, '', '', 1, 'L');
+                $this->fpdf->Cell(0, 9, "Samples not allocated storage positions due to the lack of available space", 0, 1, 'L');
+                $this->fpdf->SetFont('Calibri', 'B', 11);
+                $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
+                $this->fpdf->Cell(30, 7, "Barcode", '', 0, 'L');
+                $this->fpdf->Cell(55, 7, "Sample Type", '', 1, 'L');
+                $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
+                $this->fpdf->SetFont('Calibri', '', 9);
+
+                foreach ($storageLogs as $storageLog) {
+                    $this->fpdf->Cell(30, 7, $storageLog->sample->barcode, 0, 0, 'L');
+                    $this->fpdf->Cell(55, 7, $storageLog->sampletype->name, 0, 1, 'L');
+                }
+            }
+            $this->fpdf->Cell(0, 1, '', 'TB', 1, 'L');
+
+            $this->fpdf->Output("storageReport.pdf", "I");
+        } else {
+            $storageLogs = $storageReport->storageLogs;
+            $headers = [
+                'Content-type'        => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="nexusreport.csv"',
+            ];
+            $data = "Barcode\tSampleType\tStatus\n";
+            foreach ($storageLogs as $log) {
+                $samples = [
+                    $log->sample->barcode,
+                    $log->sampletype->name,
+                    $log->sample->status->samplestatus
+                ];
+                $data .= implode("\t", $samples) . "\n";
+            }
+            return Response::make($data, 200, $headers);
+        }
     }
 
     public function nexusReport()

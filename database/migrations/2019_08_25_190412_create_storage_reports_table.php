@@ -17,6 +17,7 @@ class CreateStorageReportsTable extends Migration
             $table->id();
             $table->bigInteger('project_id')->unsigned();
             $table->unsignedBigInteger('user_id')->references('id')->on('users');
+            $table->enum('storageDestination', ['Internal', 'BiOS', 'Nexus']);
             $table->timestamps();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });

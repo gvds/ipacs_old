@@ -14,6 +14,6 @@ class storageReport extends Model
 
   public function storageLogs()
   {
-    return $this->hasMany(storageLog::class,'storageReport_id','id');
+    return $this->hasMany(storageLog::class,'storageReport_id','id')->with('sample');
   }
 }
