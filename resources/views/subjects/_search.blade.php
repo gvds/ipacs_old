@@ -1,7 +1,7 @@
 <div x-data='subjectSearch()' class="flex flex-col">
     <input type="search" placeholder="Search for subject ID..." name="subjectSearch" x-model="subjectSearch"
         x-on:input.debounce.500="fetchSubject()" @click.away="clearSearch()"
-        class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg px-4" autofocus />
+        class="bg-white focus:outline-none focus:ring border border-gray-300 rounded-lg px-4" autofocus />
     <template x-if="subjects">
         <div class="text-sm flex flex-col bg-white border border-gray-300 rounded shadow-md absolute mt-10 w-56"
             x-transition:enter="transition ease-out duration-250"

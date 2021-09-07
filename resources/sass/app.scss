@@ -53,7 +53,7 @@ select {
 
 input:focus, select:focus {
     outline: none;
-    @apply shadow-outline;
+    @apply ring;
 }
 
 label {

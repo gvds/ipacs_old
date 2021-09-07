@@ -13,12 +13,8 @@ module.exports = {
     ],
     options: {
       // defaultExtractor: (content) => content.match(/[\w-/.:]+(?<!:)/g) || [],
-      // whitelistPatterns: [/-active$/, /-enter$/, /-leave-to$/, /show$/],
+      // safelistPatterns: [/-active$/, /-enter$/, /-leave-to$/, /show$/],
     },
-  },
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
   },
   theme: {
     extend: {
