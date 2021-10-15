@@ -160,9 +160,9 @@ class SubjectController extends Controller
             return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
         }
 
-        $monthPrior = Carbon::today()->subMonth()->toDateString();
+        // $monthPrior = Carbon::today()->subMonth()->toDateString();
         $validatedData = $request->validate([
-            'enrolDate' => "required|date|before_or_equal:today|after:$monthPrior",
+            'enrolDate' => "required|date|before_or_equal:today",
             'firstname' => "present|max:30",
             'surname' => "present|max:30",
             'address1' => "present|max:50",
