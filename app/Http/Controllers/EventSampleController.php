@@ -196,9 +196,11 @@ class EventSampleController extends Controller
             ->whereHas('sampletype', function ($query) {
                 return $query->where('project_id', session('currentProject'));
             })
-            ->when($subjectIDs, function ($query, $subjectIDs) {
+            ->when($subjectIDs, function ($query) use ($subjectIDs) {
                 return $query->whereHas('event_subject', function ($query) use ($subjectIDs) {
-                    return $query->whereIn('subject_id', $subjectIDs);
+                    return $query->whereHas('subject', function($query) use ($subjectIDs) {
+                        return $query->whereIn('subjectID', $subjectIDs);
+                    });
                 });
             })
             ->when($sampletypes, function ($query, $sampletypes) {
@@ -215,8 +217,7 @@ class EventSampleController extends Controller
                         return $query->whereIn('site_id', $sites);
                     });
                 });
-            })
-            ->get();
+            })->get();
 
         $headers = [
             'Content-type'        => 'text/csv',
