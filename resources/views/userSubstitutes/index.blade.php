@@ -20,7 +20,11 @@
         <tr class="odd:bg-gray-100">
             <td class='py-2'>{{$user->firstname}}</td>
             <td>{{$user->surname}}</td>
-            <td>{{$user['currentSite'][0]['name']}}</td>
+            <td>
+                @if (!empty($user['currentSite'][0]))
+                {{$user['currentSite'][0]['name']}}
+                @endif
+            </td>
             <td>{{$user->email}}</td>
             <td>{{$user->telephone}}</td>
             <td>
