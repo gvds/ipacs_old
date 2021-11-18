@@ -135,7 +135,7 @@ class EventSampleController extends Controller
             return back()->with('error', 'This sample cannot be unlogged as it no longer exists');
         }
 
-        $event_sample->delete();
+        $event_sample->unlog();
         return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
 

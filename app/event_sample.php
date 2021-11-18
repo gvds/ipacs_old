@@ -105,4 +105,13 @@ class event_sample extends Pivot
             throw new Exception("Error returning sample $this->barcode to source site", 1);
         }
     }
+
+    public function unlog()
+    {
+        if ($this->location and in_array($this->samplestatus_id, [3, 9])) {
+            $location = \App\location::find($this->location);
+            $location->freelocation();
+        }
+        $this->delete();
+    }
 }
