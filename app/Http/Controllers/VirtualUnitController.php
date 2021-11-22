@@ -67,7 +67,7 @@ class VirtualUnitController extends Controller
             $validatedData['project'] = $project->storageProjectName;
             $unitDefinition = physicalUnit::find($validatedData['physicalUnit_id'])->unitType;
             if ($validatedData['selection_type'] == 'partial') {
-                if (ord($validatedData['startBox']) > ord($validatedData['endBox'])) {
+                if ($validatedData['startBox'] > $validatedData['endBox']) {
                     throw new Exception("End Box must be ≥ Start Box", 1);
                 }
                 $validatedData['endRack'] = $validatedData['startRack'];
