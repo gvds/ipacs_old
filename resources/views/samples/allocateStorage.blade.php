@@ -61,7 +61,7 @@
                     </tr>
                     @endforeach
                 </x-table>
-                {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2"]) }}
+                {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2",'x-on:click'=>"buttonDisabled = true",'x-bind:disabled'=>"buttonDisabled"]) }}
                 {{ Form::close() }}
             </div>
         </div>
