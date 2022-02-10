@@ -72,7 +72,7 @@
                 @endforeach
             </x-table>
         </div>
-        {{ Form::submit('Log Samples', ['class' => 'mt-2 w-40']) }}
+        {{ Form::submit('Log Samples', ['class' => 'mt-2 w-40','x-on:click'=>"buttonDisabled = true",'x-bind:disabled'=>"buttonDisabled"]) }}
         {{ Form::close() }}
     </div>
     @endif
