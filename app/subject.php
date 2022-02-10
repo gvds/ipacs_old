@@ -26,8 +26,10 @@ class subject extends Model
   public function events()
   {
     return $this->belongsToMany(event::class)
-      ->orderBy('offset')
       ->withPivot('id', 'eventstatus_id', 'logDate', 'eventDate', 'minDate', 'maxDate', 'iteration', 'labelStatus')
+      ->with('arm')
+      ->orderBy('event_order')
+      ->orderBy('pivot_iteration')
       ->withTimestamps();
   }
 
