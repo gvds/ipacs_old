@@ -18,7 +18,7 @@ class UserSubstituteController extends Controller
         $substitutableUsers = \App\Team::find(session('currentProject'))
             ->subject_managers()
             ->where(function ($query) use ($request) {
-                if (!(Auth::user()->isAbleTo('manage-teams', $request->currentProject->team->name) or Auth::user()->owns($request->currentProject, 'owner'))) {
+                if (!(Auth::user()->isAbleTo('manage-teams', $request->currentProject->team->name) or Auth::user()->owns($request->currentProject, 'owner') or Auth::user()->hasRole(['sysadmin','admin']))) {
                     $query->where('site_id', Auth::user()->project_site);
                 }
             })
@@ -98,7 +98,7 @@ class UserSubstituteController extends Controller
 
     private function checkPermissions(int $user_id, \app\project $currentProject)
     {
-        if ($user_id === Auth::user()->id or Auth::user()->isAbleTo('manage-teams', $currentProject->team->name) or Auth::user()->owns($currentProject, 'owner')) {
+        if ($user_id === Auth::user()->id or Auth::user()->isAbleTo('manage-teams', $currentProject->team->name) or Auth::user()->owns($currentProject, 'owner') or Auth::user()->hasRole(['sysadmin', 'admin'])) {
             return true;
         }
         return false;
