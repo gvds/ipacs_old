@@ -16,9 +16,10 @@ class ProgressController extends Controller
     {
         $subjects = subject::where('project_id',session('currentProject'))
         ->with('events')
-        ->get();
+        ->paginate(15);
+        // ->get();
         $eventStatuses = \App\eventStatus::pluck('eventstatus','id');
-        return view('/progress.index', compact('subjects','eventStatuses'));
+        return view('progress.index', compact('subjects','eventStatuses'));
     }
 
     /**
