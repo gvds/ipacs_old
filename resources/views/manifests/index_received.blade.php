@@ -29,7 +29,7 @@
             <td>{{$manifest->user->fullname}}</td>
             <td>{{$manifest->source->name}}</td>
             <td>{{$manifest->shippedDate}}</td>
-            <td>{{$manifest->receiver->fullname}}</td>
+            <td>{{$manifest->receiver->fullname ?? null}}</td>
             <td>{{$manifest->receivedDate}}</td>
         </tr>
         @endforeach

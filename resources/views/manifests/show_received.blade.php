@@ -2,13 +2,6 @@
 
     <x-pageheader>
         Shipping Manifest
-        {{-- <x-slot name='secondary'>
-            <div x-data="confirmation()">
-                {{ Form::open(['url' => "/manifest/$manifest->id", 'class' => 'form', 'method' => 'DELETE', 'x-on:submit.prevent'=>'del()', 'x-ref'=>'delform']) }}
-        {{ Form::submit('Delete Manifest', ['class'=>'text-red-600']) }}
-        {{ Form::close() }}
-        </div>
-        </x-slot> --}}
     </x-pageheader>
 
     <div class='text-l font-bold'>
@@ -19,15 +12,24 @@
     @include('layouts.message')
 
     <div class='flex flex-row justify-between'>
-        <div>
-            {{ Form::open(['url' => "/manifestitem", 'class' => 'form', 'method' => 'PATCH']) }}
-            {{ Form::hidden('manifest_id', $manifest->id)}}
-            {{ Form::label('barcode', 'Log Manifest Sample as Received')}}
-            {{ Form::text('barcode',null,['placeholder'=>'Scan sample barcode...'])}}
-            {{ Form::close() }}
+        <div class='flex flex-col'>
+            <div>
+                {{ Form::open(['url' => "/manifestitem", 'class' => 'form', 'method' => 'PATCH']) }}
+                {{ Form::hidden('manifest_id', $manifest->id)}}
+                {{ Form::label('barcode', 'Log Manifest Sample as Received')}}
+                {{ Form::text('barcode',null,['placeholder'=>'Scan sample barcode...'])}}
+                {{ Form::close() }}
+            </div>
+            <div x-data="receiveAllConfirmation()">
+                {{ Form::open(['url' => "/manifest/$manifest->id/receiveall", 'class' => 'form', 'method' => 'POST',
+                'x-on:submit.prevent'=>'receivall()', 'x-ref'=>'receiveallform']) }}
+                {{ Form::submit('Mark all samples as received',['class'=>'text-blue-700']) }}
+                {{ Form::close() }}
+            </div>
         </div>
         <div x-data="confirmation()">
-            {{ Form::open(['url' => "/manifest/$manifest->id/receive", 'class' => 'form', 'method' => 'POST', 'x-on:submit.prevent'=>'finalise()', 'x-ref'=>'finaliseform']) }}
+            {{ Form::open(['url' => "/manifest/$manifest->id/receive", 'class' => 'form', 'method' => 'POST',
+            'x-on:submit.prevent'=>'finalise()', 'x-ref'=>'finaliseform']) }}
             {{ Form::submit('Finalise Manifest Receipt',['class'=>'text-red-600']) }}
             {{ Form::close() }}
         </div>
@@ -64,13 +66,24 @@
 
 <script>
     function confirmation() {
-    return {
-        finalise() {
-            var response = confirm("Click OK to confirm finalising received manifest.\nAll unscanned samples will revert to the source site.\n\nNote that this step is irreversible!");
-            if (response === true) {
-                this.$refs.finaliseform.submit();
+        return {
+            finalise() {
+                var response = confirm("Click OK to confirm finalising received manifest.\nAll unscanned samples will revert to the source site.\n\nNote that this step is irreversible!");
+                if (response === true) {
+                    this.$refs.finaliseform.submit();
+                }
             }
         }
     }
-  }
+    function receiveAllConfirmation() {
+        return {
+            receiveall() {
+                var response = confirm("Click OK to log all samples as received");
+                source site.\n\nNote that this step is irreversible!");
+                if (response === true) {
+                    this.$refs.receiveallform.submit();
+                }
+            }
+        }
+    }
 </script>

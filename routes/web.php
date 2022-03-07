@@ -183,6 +183,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/manifest', 'ManifestController@store');
         Route::delete('/manifest/{manifest}', 'ManifestController@destroy');
         Route::post('/manifest/{manifest}/ship', 'ManifestController@ship');
+        Route::post('/manifest/{manifest}/receiveall', 'ManifestController@receiveall');
         Route::post('/manifest/{manifest}/receive', 'ManifestController@receive');
         Route::post('/manifestitem', 'ManifestItemController@store');
         Route::patch('/manifestitem', 'ManifestItemController@update');

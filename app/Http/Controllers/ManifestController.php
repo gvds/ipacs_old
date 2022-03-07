@@ -229,6 +229,17 @@ class ManifestController extends Controller
         return redirect('/manifest/receive');
     }
 
+    public function receiveall(manifest $manifest)
+    {
+        if ($manifest->destinationSite_id !== Auth::user()->ProjectSite) {
+            return back()->with('error', 'That manifest does not belong to your site');
+        }
+        $timestamp = now();
+        manifestItem::where('manifest_id', $manifest->id)
+            ->update(['received' => 1, 'receivedTime' => $timestamp]);
+        return redirect("/manifest/receive/$manifest->id");
+    }
+
     public function samplelist(manifest $manifest)
     {
         // dd($manifest->destination->name);
