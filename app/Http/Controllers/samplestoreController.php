@@ -234,7 +234,7 @@ class samplestoreController extends Controller
     {
         $reports = storageReport::where('project_id', session('currentProject'))
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(30);
 
         return view('samples.storageReports', compact('reports'));
     }
