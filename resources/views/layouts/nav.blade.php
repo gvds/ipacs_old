@@ -21,7 +21,6 @@
         </x-slot>
         <x-nav.dropdown-link href="/subjects">Manage Subjects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/subjects/create">Generate Subject IDs</x-nav.dropdown-link>
-        {{-- <x-nav.dropdown-link href="#">Enrol Subject</x-nav.dropdown-link> --}}
         <x-nav.dropdown-submenu>
           <x-slot name="nav_item">
             <div>Follow-up Schedule</div>
@@ -33,9 +32,6 @@
         <x-nav.dropdown-link href="/labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels">Manage Label Print Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels/print">Print Labels</x-nav.dropdown-link>
-        {{-- <x-nav.dropdown-link href="#">Switch Arm</x-nav.dropdown-link> --}}
-        {{-- <x-nav.dropdown-link href="#">Update Switch Arm Date</x-nav.dropdown-link> --}}
-        {{-- <x-nav.dropdown-link href="#">Revert Arm Switch</x-nav.dropdown-link> --}}
       </x-nav.dropdown>
 
       <x-nav.dropdown>
