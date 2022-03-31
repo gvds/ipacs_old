@@ -192,7 +192,7 @@
           @default
           Pending
           @endswitch
-          @if ($event->pivot->labelStatus === 2)
+          @if ($event->pivot->labelStatus === 2 or ($event->pivot->eventstatus_id === 2 and $event->pivot->labelStatus !== 1))
           <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
             <x-buttonlink href="/labels/{{$event->pivot->id}}/queue" class='ml-2 inline-block'>
               Q
