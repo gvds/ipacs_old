@@ -18,7 +18,7 @@
                     <option :value="value" x-text="value"></option>
                 </template>
             </select>
-            {{ Form::label('virtualUnit', 'Unit Name', ['class'=>'text-sm']) }}
+            {{ Form::label('virtualUnit', 'Virtual Unit Name', ['class'=>'text-sm']) }}
             {{ Form::text('virtualUnit',null,['required']) }}
             <div class='flex flex-col justify-between'>
                 <div class='flex flex-row justify-between items-center space-x-4'>
