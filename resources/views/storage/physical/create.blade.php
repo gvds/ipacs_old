@@ -12,6 +12,8 @@
     {{ Form::hidden('unitDefinition_id', $unitDefinition->id) }}
     {{ Form::label('unitID', 'Unit ID', ['class'=>'text-sm']) }}
     {{ Form::text('unitID', null, ['required','maxlength'=>40]) }}
+    {{ Form::label('serial', 'Serial Number', ['class'=>'text-sm']) }}
+    {{ Form::text('serial', null, ['required','maxlength'=>40]) }}
     {{ Form::label('user_id', 'Administrator', ['class'=>'text-sm']) }}
     {{ Form::select('user_id', $adminlist, ['required']) }}
 

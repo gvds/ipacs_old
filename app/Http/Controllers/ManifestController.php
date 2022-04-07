@@ -21,7 +21,7 @@ class ManifestController extends Controller
     {
         $manifests = manifest::where('project_id', session('currentProject'))
             ->where('sourceSite_id', Auth::user()->ProjectSite)
-            ->whereIn('manifestStatus_id', [1, 2])
+            // ->whereIn('manifestStatus_id', [1, 2])
             ->orderBy('created_at', 'desc')
             ->get();
         $sites = \App\site::where('project_id', session('currentProject'))

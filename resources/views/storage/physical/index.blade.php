@@ -8,6 +8,7 @@
     <x-table>
         <x-slot name='head'>
             <th>Unit Name</th>
+            <th>Serial Number</th>
             <th>Storage Type</th>
             <th>Unit Type</th>
             <th>Available</th>
@@ -16,6 +17,7 @@
         @foreach ($physicalUnits as $physicalUnit)
         <tr class="odd:bg-gray-100">
             <td>{{$physicalUnit->unitID}}</td>
+            <td>{{$physicalUnit->serial}}</td>
             <td>{{$physicalUnit->unitType->storageType}}</td>
             <td>{{$physicalUnit->unitType->unitType}}</td>
             <td>

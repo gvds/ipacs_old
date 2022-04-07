@@ -22,8 +22,8 @@ class PhysicalUnitController extends Controller
         // ->orderBy('unitDefinitions.storageType')
         // ->orderBy('unitDefinition_id')
         // ->orderBy('unitID')
-        // ->get();
-        $physicalUnits = physicalUnit::orderBy('unitID')->get();
+        $physicalUnits = physicalUnit::orderBy('unitID')
+            ->get();
         return view('storage.physical.index', compact('physicalUnits'));
     }
 
@@ -53,6 +53,7 @@ class PhysicalUnitController extends Controller
         $validatedData = $request->validate([
             'unitDefinition_id' => 'required|exists:unitDefinitions,id',
             'unitID' => 'required|min:5',
+            'serial' => 'nullable|min:5|max:40',
             'user_id' => 'required|integer|exists:users,id',
         ]);
         try {

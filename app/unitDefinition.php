@@ -17,6 +17,6 @@ class unitDefinition extends Model
 
     public function physicalUnits()
     {
-        return $this->hasMany(physicalUnit::class, 'unitDefinition_id', 'id');
+        return $this->hasMany(physicalUnit::class, 'unitDefinition_id', 'id')->orderBy('unitID');
     }
 }
