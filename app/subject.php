@@ -33,6 +33,10 @@ class subject extends Model
       ->withTimestamps();
   }
 
+  public function minimalevents()
+  {
+    return $this->belongsToMany(event::class);
+  }
   public function arm()
   {
     return $this->belongsTo(arm::class);
@@ -154,7 +158,7 @@ class subject extends Model
 
   public function revertArmSwitchEvents($currentArm, $previousArm)
   {
-    $response = $this->events()->detach($this->events()->where('arm_id', $currentArm)->pluck('events.id'));
+    $response = $this->events()->detach($this->minimalevents()->where('arm_id', $currentArm)->pluck('events.id'));
     if ($response === 0) {
       throw new \ErrorException("Events for $this->subjectID could not be reverted");
     }
