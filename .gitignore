@@ -8,6 +8,7 @@
 .phpunit.result.cache
 .directory
 .gitignore
+.vscode
 Homestead.json
 Homestead.yaml
 npm-debug.log
