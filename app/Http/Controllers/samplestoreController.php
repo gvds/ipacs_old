@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Http;
-use PhpOffice\PhpSpreadsheet\Helper\Sample;
 
 class samplestoreController extends Controller
 {

@@ -198,7 +198,7 @@ class EventSampleController extends Controller
             })
             ->when($subjectIDs, function ($query) use ($subjectIDs) {
                 return $query->whereHas('event_subject', function ($query) use ($subjectIDs) {
-                    return $query->whereHas('subject', function($query) use ($subjectIDs) {
+                    return $query->whereHas('subject', function ($query) use ($subjectIDs) {
                         return $query->whereIn('subjectID', $subjectIDs);
                     });
                 });
@@ -219,7 +219,7 @@ class EventSampleController extends Controller
                 });
             })->get();
 
-        $headers = [
+            $headers = [
             'Content-type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
