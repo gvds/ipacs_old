@@ -69,12 +69,13 @@ class samplestoreController extends Controller
             ->orderBy('position')
             ->first();
 
-        if (!empty($nextLocation)) {
-            $nextLocation->used = 1;
-            $nextLocation->barcode = $barcode;
-            $nextLocation->save();
-        }
 
+        if (empty($nextLocation)) {
+            return null;
+        }
+        $nextLocation->used = 1;
+        $nextLocation->barcode = $barcode;
+        $nextLocation->save();
         return $nextLocation->id;
     }
 
@@ -184,6 +185,7 @@ class samplestoreController extends Controller
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
+
                 if ($sampletype->storageDestination === 'BiOS') {
                     foreach ($sampletype->event_samples as $sample) {
                         $sample->location = 0;
@@ -204,7 +206,7 @@ class samplestoreController extends Controller
                     foreach ($sampletype->event_samples as $sample) {
                         // Allocate storage position
                         $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
-                        if (!empty($location_id)) {
+                        if (!is_null($location_id)) {
                             // Update sample record
                             $sample->location = $location_id;
                             $sample->samplestatus_id = 3;
