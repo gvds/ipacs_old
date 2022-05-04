@@ -166,7 +166,8 @@ class samplestoreController extends Controller
         $sampletypes = sampletype::whereIn('id', $request->sampletype)
             ->with(['event_samples' => function ($query) {
                 $query->where('site_id', auth()->user()->project_site)
-                    ->where('samplestatus_id', 2);
+                    ->where('samplestatus_id', 2)
+                    ->orderBy('logTime');
             }])
             ->where('project_id', session('currentProject'))
             ->whereNotNull('storageSampleType')
