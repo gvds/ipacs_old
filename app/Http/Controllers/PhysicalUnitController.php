@@ -76,16 +76,15 @@ class PhysicalUnitController extends Controller
         foreach ($physicalUnit->unitType->sections as $key => $section) {
             $rackCount += $section->rows * $section->columns;
         }
-        $racks = array_fill_keys(range(1,$rackCount,1),0);
+        $racks = array_fill_keys(range(1, $rackCount, 1), 0);
         $virtualUnits = $physicalUnit->virtualUnits;
         $boxDesignation = $physicalUnit->unitType->boxDesignation;
         foreach ($virtualUnits as $key => $virtualUnit) {
-            for ($i=$virtualUnit->startRack; $i <= $virtualUnit->endRack ; $i++) {
+            for ($i = $virtualUnit->startRack; $i <= $virtualUnit->endRack; $i++) {
                 $racks[$i] = is_null($virtualUnit->startBox) ? 1 : 2; // Full [1] or partial [2] rack
             }
         }
-        $projects = \App\project::where('active',1)->orderBy('project')->pluck('project','id')->prepend('','');
-        return view('storage.physical.show', compact('physicalUnit','virtualUnits','projects','racks'));
+        return view('storage.physical.show', compact('physicalUnit', 'virtualUnits', 'racks'));
     }
 
     /**
@@ -96,7 +95,20 @@ class PhysicalUnitController extends Controller
      */
     public function edit(physicalUnit $physicalUnit)
     {
-        //
+        $rackCount = 0;
+        foreach ($physicalUnit->unitType->sections as $key => $section) {
+            $rackCount += $section->rows * $section->columns;
+        }
+        $racks = array_fill_keys(range(1, $rackCount, 1), 0);
+        $virtualUnits = $physicalUnit->virtualUnits;
+        $boxDesignation = $physicalUnit->unitType->boxDesignation;
+        foreach ($virtualUnits as $key => $virtualUnit) {
+            for ($i = $virtualUnit->startRack; $i <= $virtualUnit->endRack; $i++) {
+                $racks[$i] = is_null($virtualUnit->startBox) ? 1 : 2; // Full [1] or partial [2] rack
+            }
+        }
+        $projects = \App\project::where('active', 1)->orderBy('project')->pluck('project', 'id')->prepend('', '');
+        return view('storage.physical.edit', compact('physicalUnit', 'virtualUnits', 'projects', 'racks'));
     }
 
     /**

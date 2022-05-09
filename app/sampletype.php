@@ -39,6 +39,12 @@ class sampletype extends Model
     return $this->belongsTo(sampletype::class, 'parentSampleType_id', 'id');
   }
 
+  public function virtualUnits()
+  {
+    return $this->hasMany(virtualUnit::class, 'storageSampleType', 'storageSampleType');
+    // return $this->hasMany(virtualUnit::class, 'storageSampleType', 'storageSampleType')->where('project_id', $this->project_id);
+  }
+
   // public function derivativeSampleTypes()
   // {
   //   return $this->hasMany(sampletype::class, 'parentSampleType_id', 'id');
