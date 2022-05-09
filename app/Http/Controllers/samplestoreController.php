@@ -7,12 +7,12 @@ use App\location;
 use App\sampletype;
 use App\storageLog;
 use App\storageReport;
+use App\virtualUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Http;
 
@@ -399,5 +399,34 @@ class samplestoreController extends Controller
         } catch (\Throwable $th) {
             return redirect('/')->withErrors($th->getMessage());
         }
+    }
+
+    public function storageStatusReport()
+    {
+        if (count(auth()->user()->currentSite) !== 0) {
+            $siteID = auth()->user()->currentSite[0]->id;
+        } else {
+            $siteID = '%';
+        }
+
+        $locationSummary = location::select('virtualUnit_id', DB::raw('sum(If(locations.used = 0, 1, 0)) as free'), DB::raw('sum(If(locations.used = 1, 1, 0)) as used'))
+            ->groupBy('virtualUnit_id');
+        $virtualUnits = virtualUnit::join('sampletypes', function ($join) {
+            $join->on('virtualUnits.project_id', '=', 'sampletypes.project_id');
+            $join->on('virtualUnits.storageSampleType', '=', 'sampletypes.storageSampleType');
+        })
+            ->join('event_sample', 'event_sample.sampletype_id', 'sampletypes.id')
+            ->join('physicalUnits', 'virtualUnits.physicalUnit_id', 'physicalUnits.id')
+            ->joinSub($locationSummary, 'location_summary', function($join){
+                $join->on('location_summary.virtualUnit_id', '=', 'virtualUnits.id');
+            })
+            ->select('virtualUnits.virtualUnit', 'virtualUnits.physicalUnit_id', 'virtualUnits.section','virtualUnits.startRack','virtualUnits.endRack','virtualUnits.startBox','virtualUnits.endBox', 'sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', DB::raw('count(event_sample.id) as samples'), 'used', 'free')
+            ->where('virtualUnits.project_id', session('currentProject'))
+            ->where('site_id', 'like', $siteID)
+            ->groupBy('virtualUnits.virtualUnit','virtualUnits.physicalUnit_id', 'virtualUnits.section', 'virtualUnits.startRack', 'virtualUnits.endRack', 'virtualUnits.startBox', 'virtualUnits.endBox','sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', 'used', 'free')
+            ->orderBy('sampletypes.name')
+            ->get();
+
+        return view('samples.storageStatus', compact('virtualUnits'));
     }
 }

@@ -59,6 +59,7 @@
         <hr />
         <x-nav.dropdown-link href="/samplestore">Allocate Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/report">Storage Reports</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samplestore/status">Sample Storage Status</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/nexus">Nexus Storage Status</x-nav.dropdown-link>
         <hr />
         <x-nav.dropdown-link href="/sample/logout">Log Sample out of Storage</x-nav.dropdown-link>
@@ -92,7 +93,6 @@
         {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="/substitute">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/progress">Progress Report</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       @endif
