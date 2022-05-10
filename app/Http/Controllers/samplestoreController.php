@@ -117,27 +117,38 @@ class samplestoreController extends Controller
      */
     public function listSamples()
     {
-        $sampletypes = sampletype::with(['event_samples' => function ($query) {
-            $query->where('site_id', auth()->user()->project_site)
-                ->where('samplestatus_id', 2);
-        }])
-            ->where('project_id', session('currentProject'))
-            ->whereNotNull('storageDestination')
-            ->get();
-        $storageDestinations = [];
-        foreach ($sampletypes as $id => $sampletype) {
-            if (count($sampletype->event_samples) > 0) {
-                if (!array_key_exists($sampletype->storageDestination, $storageDestinations)) {
-                    $storageDestinations[$sampletype->storageDestination] = [];
-                }
-                array_push($storageDestinations[$sampletype->storageDestination], [
-                    'sampletype_id' => $sampletype->id,
-                    'name' => $sampletype->name,
-                    'count' => $sampletype->event_samples->count()
-                ]);
-            }
-        }
-        $storageDestinations = collect($storageDestinations);
+        // if (auth()->user()->username == 'gvds') {
+            $sampleSets = DB::table('sampletypes')
+                ->join('event_sample', 'sampletypes.id', '=', 'event_sample.sampletype_id')
+                ->select('sampletypes.id', 'sampletypes.name', DB::raw('count(event_sample.id) as total'))
+                ->where('project_id', session('currentProject'))
+                ->where('site_id', auth()->user()->project_site)
+                ->where('samplestatus_id', 2)
+                ->where('storageDestination', 'Internal')
+                ->groupBy('sampletypes.id','sampletypes.name')
+                ->get();
+        // }
+        // $sampletypes = sampletype::with(['event_samples' => function ($query) {
+        //     $query->where('site_id', auth()->user()->project_site)
+        //         ->where('samplestatus_id', 2);
+        // }])
+        //     ->where('project_id', session('currentProject'))
+        //     ->whereNotNull('storageDestination')
+        //     ->get();
+        // $storageDestinations = [];
+        // foreach ($sampletypes as $id => $sampletype) {
+        //     if (count($sampletype->event_samples) > 0) {
+        //         if (!array_key_exists($sampletype->storageDestination, $storageDestinations)) {
+        //             $storageDestinations[$sampletype->storageDestination] = [];
+        //         }
+        //         array_push($storageDestinations[$sampletype->storageDestination], [
+        //             'sampletype_id' => $sampletype->id,
+        //             'name' => $sampletype->name,
+        //             'count' => $sampletype->event_samples->count()
+        //         ]);
+        //     }
+        // }
+        // $storageDestinations = collect($storageDestinations);
 
         $project = \App\project::find(session('currentProject'));
         $lowstorage = location::join('virtualUnits', 'virtualUnit_id', 'virtualUnits.id')
@@ -149,14 +160,15 @@ class samplestoreController extends Controller
             ->havingRaw('(total - used) / total < ?', [0.1])
             ->get();
 
-        return view('samples.allocateStorage', compact('storageDestinations', 'lowstorage'));
+        return view('samples.allocateStorage', compact('sampleSets', 'lowstorage'));
+        // return view('samples.allocateStorage', compact('storageDestinations', 'lowstorage'));
     }
 
     public function allocateStorage(Request $request)
     {
         $request->validate([
             'sampletype' => 'required|array',
-            'storageDestination' => 'required',
+            // 'storageDestination' => 'required',
             'sampletype.*' => 'integer',
             'reuse.*' => [
                 'required',
@@ -182,28 +194,29 @@ class samplestoreController extends Controller
             $storageEvent = new storageReport();
             $storageEvent->project_id = session('currentProject');
             $storageEvent->user_id = auth()->user()->id;
-            $storageEvent->storageDestination = $request->storageDestination;
+            // $storageEvent->storageDestination = $request->storageDestination;
+            $storageEvent->storageDestination = 'Internal';
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
 
-                if ($sampletype->storageDestination === 'BiOS') {
-                    foreach ($sampletype->event_samples as $sample) {
-                        $sample->location = 0;
-                        $sample->samplestatus_id = 3;
-                        $sample->save();
-                        $this->logToStorageLog($sample, $sampletype, $storageEvent);
-                        $stored_count++;
-                    }
-                } else if ($sampletype->storageDestination === 'Nexus') {
-                    foreach ($sampletype->event_samples as $sample) {
-                        $sample->location = 0;
-                        $sample->samplestatus_id = 3;
-                        $sample->save();
-                        $this->logToStorageLog($sample, $sampletype, $storageEvent);
-                        $stored_count++;
-                    }
-                } else {
+                // if ($sampletype->storageDestination === 'BiOS') {
+                //     foreach ($sampletype->event_samples as $sample) {
+                //         $sample->location = 0;
+                //         $sample->samplestatus_id = 3;
+                //         $sample->save();
+                //         $this->logToStorageLog($sample, $sampletype, $storageEvent);
+                //         $stored_count++;
+                //     }
+                // } else if ($sampletype->storageDestination === 'Nexus') {
+                //     foreach ($sampletype->event_samples as $sample) {
+                //         $sample->location = 0;
+                //         $sample->samplestatus_id = 3;
+                //         $sample->save();
+                //         $this->logToStorageLog($sample, $sampletype, $storageEvent);
+                //         $stored_count++;
+                //     }
+                // } else {
                     foreach ($sampletype->event_samples as $sample) {
                         // Allocate storage position
                         $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
@@ -223,7 +236,7 @@ class samplestoreController extends Controller
                         // log to storage logs table
                         $this->logToStorageLog($sample, $sampletype, $storageEvent, $location_id);
                     }
-                }
+                // }
             }
             DB::commit();
         } catch (\Throwable $th) {
@@ -417,13 +430,13 @@ class samplestoreController extends Controller
         })
             ->join('event_sample', 'event_sample.sampletype_id', 'sampletypes.id')
             ->join('physicalUnits', 'virtualUnits.physicalUnit_id', 'physicalUnits.id')
-            ->joinSub($locationSummary, 'location_summary', function($join){
+            ->joinSub($locationSummary, 'location_summary', function ($join) {
                 $join->on('location_summary.virtualUnit_id', '=', 'virtualUnits.id');
             })
-            ->select('virtualUnits.virtualUnit', 'virtualUnits.physicalUnit_id', 'virtualUnits.section','virtualUnits.startRack','virtualUnits.endRack','virtualUnits.startBox','virtualUnits.endBox', 'sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', DB::raw('count(event_sample.id) as samples'), 'used', 'free')
+            ->select('virtualUnits.virtualUnit', 'virtualUnits.physicalUnit_id', 'virtualUnits.section', 'virtualUnits.startRack', 'virtualUnits.endRack', 'virtualUnits.startBox', 'virtualUnits.endBox', 'sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', DB::raw('count(event_sample.id) as samples'), 'used', 'free')
             ->where('virtualUnits.project_id', session('currentProject'))
             ->where('site_id', 'like', $siteID)
-            ->groupBy('virtualUnits.virtualUnit','virtualUnits.physicalUnit_id', 'virtualUnits.section', 'virtualUnits.startRack', 'virtualUnits.endRack', 'virtualUnits.startBox', 'virtualUnits.endBox','sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', 'used', 'free')
+            ->groupBy('virtualUnits.virtualUnit', 'virtualUnits.physicalUnit_id', 'virtualUnits.section', 'virtualUnits.startRack', 'virtualUnits.endRack', 'virtualUnits.startBox', 'virtualUnits.endBox', 'sampletypes.name', 'sampletypes.active', 'sampletypes.storageSampleType', 'used', 'free')
             ->orderBy('sampletypes.name')
             ->get();
 

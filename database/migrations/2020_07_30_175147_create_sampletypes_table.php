@@ -27,7 +27,7 @@ class CreateSampleTypesTable extends Migration
             $table->string('sampleGroup',50)->nullable();
             $table->unsignedBigInteger('tubeLabelType_id');
             $table->string('storageDestination',10)->nullable();
-            $table->string('storageSampleType',50)->nullable();
+            $table->string('storageSampleType',50)->nullable()->index();
             $table->unsignedBigInteger('parentSampleType_id')->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();
