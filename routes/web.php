@@ -71,10 +71,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('/permission', 'PermissionController');
     });
 
-    Route::group(['middleware' => ['permission:manage-storage']], function () {
+    Route::group(['middleware' => ['permission:manage-freezers']], function () {
         Route::resource('/unitDefinition', 'UnitDefinitionController');
         Route::resource('/section', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
-        Route::resource('/physicalUnit', 'PhysicalUnitController', ['except' => ['show']]);
+    });
+
+    Route::resource('/physicalUnit', 'PhysicalUnitController', ['except' => ['show']]);
+    Route::group(['middleware' => ['permission:manage-storage']], function () {
         Route::get('/physicalUnit/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
         Route::get('/virtualUnit/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
         Route::resource('/virtualUnit', 'VirtualUnitController');

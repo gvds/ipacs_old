@@ -84,7 +84,12 @@ class PhysicalUnitController extends Controller
                 $racks[$i] = is_null($virtualUnit->startBox) ? 1 : 2; // Full [1] or partial [2] rack
             }
         }
-        return view('storage.physical.show', compact('physicalUnit', 'virtualUnits', 'racks'));
+        if (auth()->user()->isAbleTo('manage-storage')) {
+            $projects = \App\project::where('active', 1)->orderBy('project')->pluck('project', 'id')->prepend('', '');
+            return view('storage.physical.configure', compact('physicalUnit', 'virtualUnits', 'projects', 'racks'));
+        } else {
+            return view('storage.physical.show', compact('physicalUnit', 'virtualUnits', 'racks'));
+        }
     }
 
     /**
@@ -95,20 +100,8 @@ class PhysicalUnitController extends Controller
      */
     public function edit(physicalUnit $physicalUnit)
     {
-        $rackCount = 0;
-        foreach ($physicalUnit->unitType->sections as $key => $section) {
-            $rackCount += $section->rows * $section->columns;
-        }
-        $racks = array_fill_keys(range(1, $rackCount, 1), 0);
-        $virtualUnits = $physicalUnit->virtualUnits;
-        $boxDesignation = $physicalUnit->unitType->boxDesignation;
-        foreach ($virtualUnits as $key => $virtualUnit) {
-            for ($i = $virtualUnit->startRack; $i <= $virtualUnit->endRack; $i++) {
-                $racks[$i] = is_null($virtualUnit->startBox) ? 1 : 2; // Full [1] or partial [2] rack
-            }
-        }
-        $projects = \App\project::where('active', 1)->orderBy('project')->pluck('project', 'id')->prepend('', '');
-        return view('storage.physical.edit', compact('physicalUnit', 'virtualUnits', 'projects', 'racks'));
+        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name', 'id');
+        return view('/storage.physical.edit', compact('physicalUnit', 'adminlist'));
     }
 
     /**
@@ -120,7 +113,17 @@ class PhysicalUnitController extends Controller
      */
     public function update(Request $request, physicalUnit $physicalUnit)
     {
-        //
+        $validatedData = $request->validate([
+            'unitID' => 'required|min:5',
+            'serial' => 'nullable|min:5|max:40',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+        try {
+            $physicalUnit->update($validatedData);
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Update of Physical Unit failed: ' . $th->getMessage());
+        }
+        return redirect("/unitDefinition/" . $physicalUnit->unitDefinition_id);
     }
 
     /**
