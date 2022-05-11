@@ -369,7 +369,7 @@ class samplestoreController extends Controller
                 ->where('location', 0)
                 ->get();
             if (count($samples) == 0) {
-                throw new Exception('There are no samples assigned to BiOS storage', 1);
+                throw new Exception('There are no samples assigned to Biorepository storage', 1);
             }
             $storageProjectName = request('currentProject')->storageProjectName;
             $containers = Http::withToken(config('services.nexus.token'))
@@ -390,8 +390,16 @@ class samplestoreController extends Controller
             }
 
             $container_arr = (array) json_decode($containers->body());
+
             foreach ($samples as $key => $sample) {
-                $samples[$key]->status = array_key_exists($sample->barcode, $container_arr) ? $container_arr[$sample->barcode] : 'No BiOS Record';
+                // $samples[$key]->status = array_key_exists($sample->barcode, $container_arr) ? $container_arr[$sample->barcode]->status : 'No Biorepository Record';
+                if(array_key_exists($sample->barcode, $container_arr)){
+                    $samples[$key]->status = $container_arr[$sample->barcode]->status;
+                    $samples[$key]->location = $container_arr[$sample->barcode]->location;
+                } else {
+                    $samples[$key]->status = 'No Biorepository Record';
+                    $samples[$key]->location = null;
+                }
             }
 
             $headers = [
@@ -399,14 +407,24 @@ class samplestoreController extends Controller
                 'Content-Disposition' => 'attachment; filename="nexusreport.csv"',
             ];
 
-            $data = "Barcode\tSampleType\tStatus\n";
+            $data = "Barcode\tSampleType\tStatus\tVirtual Freezer\tRack\tBox\tPosition\n";
             foreach ($samples as $sample) {
                 $nexusSamples = [
                     $sample->barcode,
                     $sample->sampletype->name,
                     $sample->status
                 ];
-                $data .= implode("\t", $nexusSamples) . "\n";
+                $data .= implode("\t", $nexusSamples);
+                if (! is_null($sample->location)) {
+                    $location = [
+                        $sample->location->virtual_unit->virtualUnit,
+                        $sample->location->rack,
+                        $sample->location->box,
+                        $sample->location->position
+                    ];
+                    $data .= "\t" . implode("\t", $location);
+                }
+                $data .= "\n";
             }
             return Response::make($data, 200, $headers);
         } catch (\Throwable $th) {
