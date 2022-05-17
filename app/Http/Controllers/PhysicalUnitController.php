@@ -52,7 +52,7 @@ class PhysicalUnitController extends Controller
     {
         $validatedData = $request->validate([
             'unitDefinition_id' => 'required|exists:unitDefinitions,id',
-            'unitID' => 'required|min:5',
+            'unitID' => 'required|min:3',
             'serial' => 'nullable|min:5|max:40',
             'user_id' => 'required|integer|exists:users,id',
         ]);
@@ -114,7 +114,7 @@ class PhysicalUnitController extends Controller
     public function update(Request $request, physicalUnit $physicalUnit)
     {
         $validatedData = $request->validate([
-            'unitID' => 'required|min:5',
+            'unitID' => 'required|min:3',
             'serial' => 'nullable|min:5|max:40',
             'user_id' => 'required|integer|exists:users,id',
         ]);
