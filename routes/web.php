@@ -194,12 +194,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('project.auth:store-samples')->group(function () {
-        Route::get('/samplestore', 'samplestoreController@listSamples');
-        Route::post('/samplestore', 'samplestoreController@allocateStorage');
-        Route::get('/samplestore/report', 'samplestoreController@reportList');
-        Route::get('/samplestore/{storageReport}/report', 'samplestoreController@report');
-        Route::get('/samplestore/status', 'samplestoreController@storageStatusReport');
-        Route::get('/samplestore/nexus', 'samplestoreController@nexusReport');
+        Route::get('/samplestore', 'SamplestoreController@listSamples');
+        Route::post('/samplestore', 'SamplestoreController@allocateStorage');
+        Route::get('/samplestore/report', 'SamplestoreController@reportList');
+        Route::get('/samplestore/{storageReport}/report', 'SamplestoreController@report');
+        Route::get('/samplestore/status', 'SamplestoreController@storageStatusReport');
+        Route::get('/samplestore/nexus', 'SamplestoreController@nexusReport');
         Route::get('/physicalUnit/{physicalUnit}', 'PhysicalUnitController@show');
     });
 
@@ -226,21 +226,43 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/nexus', function () {
+// Route::get('/nexus', function () {
+//     try {
+//         $response = Illuminate\Support\Facades\Http::withToken('5|Dp9nFldJbvuRnZ5OBSFTxOgGFNgRffXviZ1NfABA')
+//             ->acceptJson()
+//             ->timeout(5)
+//             ->post('https://irods.mb.sun.ac.za/api/containers', [
+//                 'storageName' => 'TP'
+//             ]);
+//         if ($response->clientError()) {
+//             throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
+//         }
+//         if ($response->serverError()) {
+//             throw new Exception('Nexus server error', 1);
+//         }
+//         return $response;
+//     } catch (\Throwable $th) {
+//         return redirect('/')->withErrors($th->getMessage());
+//     }
+// });
+
+Route::get('/nexusstatus', function () {
     try {
-        $response = Illuminate\Support\Facades\Http::withToken('5|Dp9nFldJbvuRnZ5OBSFTxOgGFNgRffXviZ1NfABA')
+        $response = Illuminate\Support\Facades\Http::withToken('2|OoUjjzgqEfV4xQ5R1z3QbEqQYIQ1CfXZNdVd4H2d')
             ->acceptJson()
             ->timeout(5)
-            ->post('https://nexus.test/api/containers', [
-                'storageName' => 'TP'
-            ]);
+            ->withOptions([
+                // 'verify' => public_path('nexus.pem')
+                'verify' => false
+            ])
+            ->post('https://irods.mb.sun.ac.za/api/containerStatus', []);
         if ($response->clientError()) {
             throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
         }
         if ($response->serverError()) {
             throw new Exception('Nexus server error', 1);
         }
-        return $response;
+        dd((array) json_decode($response->body()));
     } catch (\Throwable $th) {
         return redirect('/')->withErrors($th->getMessage());
     }

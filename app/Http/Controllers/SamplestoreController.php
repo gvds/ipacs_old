@@ -16,7 +16,7 @@ use Exception;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Http;
 
-class samplestoreController extends Controller
+class SamplestoreController extends Controller
 {
 
     private $fpdf;
@@ -118,15 +118,15 @@ class samplestoreController extends Controller
     public function listSamples()
     {
         // if (auth()->user()->username == 'gvds') {
-            $sampleSets = DB::table('sampletypes')
-                ->join('event_sample', 'sampletypes.id', '=', 'event_sample.sampletype_id')
-                ->select('sampletypes.id', 'sampletypes.name', DB::raw('count(event_sample.id) as total'))
-                ->where('project_id', session('currentProject'))
-                ->where('site_id', auth()->user()->project_site)
-                ->where('samplestatus_id', 2)
-                ->where('storageDestination', 'Internal')
-                ->groupBy('sampletypes.id','sampletypes.name')
-                ->get();
+        $sampleSets = DB::table('sampletypes')
+            ->join('event_sample', 'sampletypes.id', '=', 'event_sample.sampletype_id')
+            ->select('sampletypes.id', 'sampletypes.name', DB::raw('count(event_sample.id) as total'))
+            ->where('project_id', session('currentProject'))
+            ->where('site_id', auth()->user()->project_site)
+            ->where('samplestatus_id', 2)
+            ->where('storageDestination', 'Internal')
+            ->groupBy('sampletypes.id', 'sampletypes.name')
+            ->get();
         // }
         // $sampletypes = sampletype::with(['event_samples' => function ($query) {
         //     $query->where('site_id', auth()->user()->project_site)
@@ -217,25 +217,25 @@ class samplestoreController extends Controller
                 //         $stored_count++;
                 //     }
                 // } else {
-                    foreach ($sampletype->event_samples as $sample) {
-                        // Allocate storage position
-                        $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
-                        if (!is_null($location_id)) {
-                            // Update sample record
-                            $sample->location = $location_id;
-                            $sample->samplestatus_id = 3;
-                            $sample->save();
-                            $stored_count++;
+                foreach ($sampletype->event_samples as $sample) {
+                    // Allocate storage position
+                    $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
+                    if (!is_null($location_id)) {
+                        // Update sample record
+                        $sample->location = $location_id;
+                        $sample->samplestatus_id = 3;
+                        $sample->save();
+                        $stored_count++;
+                    } else {
+                        if (array_key_exists($sampletype->name, $arr_nospace)) {
+                            $arr_nospace[$sampletype->name] += 1;
                         } else {
-                            if (array_key_exists($sampletype->name, $arr_nospace)) {
-                                $arr_nospace[$sampletype->name] += 1;
-                            } else {
-                                $arr_nospace[$sampletype->name] = 1;
-                            }
+                            $arr_nospace[$sampletype->name] = 1;
                         }
-                        // log to storage logs table
-                        $this->logToStorageLog($sample, $sampletype, $storageEvent, $location_id);
                     }
+                    // log to storage logs table
+                    $this->logToStorageLog($sample, $sampletype, $storageEvent, $location_id);
+                }
                 // }
             }
             DB::commit();
@@ -393,7 +393,7 @@ class samplestoreController extends Controller
 
             foreach ($samples as $key => $sample) {
                 // $samples[$key]->status = array_key_exists($sample->barcode, $container_arr) ? $container_arr[$sample->barcode]->status : 'No Biorepository Record';
-                if(array_key_exists($sample->barcode, $container_arr)){
+                if (array_key_exists($sample->barcode, $container_arr)) {
                     $samples[$key]->status = $container_arr[$sample->barcode]->status;
                     $samples[$key]->location = $container_arr[$sample->barcode]->location;
                 } else {
@@ -415,7 +415,7 @@ class samplestoreController extends Controller
                     $sample->status
                 ];
                 $data .= implode("\t", $nexusSamples);
-                if (! is_null($sample->location)) {
+                if (!is_null($sample->location)) {
                     $location = [
                         $sample->location->virtual_unit->virtualUnit,
                         $sample->location->rack,
@@ -460,4 +460,5 @@ class samplestoreController extends Controller
 
         return view('samples.storageStatus', compact('virtualUnits'));
     }
+
 }

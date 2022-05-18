@@ -227,4 +227,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
     ],
 
+    'system_admin' => env('SYSTEM_ADMIN', null),
+
 ];
