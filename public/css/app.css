@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);/**
+@import url(https://fonts.googleapis.com/css?family=Nunito);
+/**
  * This injects Tailwind's base styles, which is a combination of
  * Normalize.css and some additional base styles.
  *
@@ -6,7 +7,7 @@
  * https://unpkg.com/tailwindcss/dist/base.css
  */
 
-/*! tailwindcss v2.2.16 | MIT License | https://tailwindcss.com
+/*! tailwindcss v2.2.19 | MIT License | https://tailwindcss.com
  */
 
 /*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
@@ -844,6 +845,7 @@ td, th {
 }
 
 .sticky{
+  position: -webkit-sticky;
   position: sticky;
 }
 
@@ -10194,7 +10196,6 @@ td, th {
 .select-all{
   -webkit-user-select: all;
      -moz-user-select: all;
-      -ms-user-select: all;
           user-select: all;
 }
 
@@ -31370,6 +31371,7 @@ td, th {
   }
 
   .sm\:sticky{
+    position: -webkit-sticky;
     position: sticky;
   }
 
@@ -40654,7 +40656,6 @@ td, th {
   .sm\:select-all{
     -webkit-user-select: all;
        -moz-user-select: all;
-        -ms-user-select: all;
             user-select: all;
   }
 
@@ -60136,6 +60137,7 @@ td, th {
   }
 
   .md\:sticky{
+    position: -webkit-sticky;
     position: sticky;
   }
 
@@ -69420,7 +69422,6 @@ td, th {
   .md\:select-all{
     -webkit-user-select: all;
        -moz-user-select: all;
-        -ms-user-select: all;
             user-select: all;
   }
 
@@ -88902,6 +88903,7 @@ td, th {
   }
 
   .lg\:sticky{
+    position: -webkit-sticky;
     position: sticky;
   }
 
@@ -98186,7 +98188,6 @@ td, th {
   .lg\:select-all{
     -webkit-user-select: all;
        -moz-user-select: all;
-        -ms-user-select: all;
             user-select: all;
   }
 
@@ -117668,6 +117669,7 @@ td, th {
   }
 
   .xl\:sticky{
+    position: -webkit-sticky;
     position: sticky;
   }
 
@@ -126952,7 +126954,6 @@ td, th {
   .xl\:select-all{
     -webkit-user-select: all;
        -moz-user-select: all;
-        -ms-user-select: all;
             user-select: all;
   }
 
@@ -146434,6 +146435,7 @@ td, th {
   }
 
   .\32xl\:sticky{
+    position: -webkit-sticky;
     position: sticky;
   }
 
@@ -155718,7 +155720,6 @@ td, th {
   .\32xl\:select-all{
     -webkit-user-select: all;
        -moz-user-select: all;
-        -ms-user-select: all;
             user-select: all;
   }
 

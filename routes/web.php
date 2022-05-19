@@ -246,26 +246,4 @@ Route::middleware('auth')->group(function () {
 //     }
 // });
 
-Route::get('/nexusstatus', function () {
-    try {
-        $response = Illuminate\Support\Facades\Http::withToken('2|OoUjjzgqEfV4xQ5R1z3QbEqQYIQ1CfXZNdVd4H2d')
-            ->acceptJson()
-            ->timeout(5)
-            ->withOptions([
-                // 'verify' => public_path('nexus.pem')
-                'verify' => false
-            ])
-            ->post('https://irods.mb.sun.ac.za/api/containerStatus', []);
-        if ($response->clientError()) {
-            throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
-        }
-        if ($response->serverError()) {
-            throw new Exception('Nexus server error', 1);
-        }
-        dd((array) json_decode($response->body()));
-    } catch (\Throwable $th) {
-        return redirect('/')->withErrors($th->getMessage());
-    }
-});
-
-URL::forceScheme('https');
+// URL::forceScheme('https');
