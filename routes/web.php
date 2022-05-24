@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
         // Route::resource('/manifest', 'ManifestController');
         Route::get('/manifest', 'ManifestController@index');
         Route::get('/manifest/{manifest}/samplelist', 'ManifestController@samplelist');
+        Route::get('/manifest/{manifest}/itemlist', 'ManifestController@itemlist');
         Route::get('/manifest/receive', 'ManifestController@index_received');
         Route::get('/manifest/receive/{manifest}', 'ManifestController@show_received');
         Route::get('/manifest/{manifest}', 'ManifestController@show');
@@ -188,6 +189,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/manifest/{manifest}/ship', 'ManifestController@ship');
         Route::post('/manifest/{manifest}/receiveall', 'ManifestController@receiveall');
         Route::post('/manifest/{manifest}/receive', 'ManifestController@receive');
+        Route::post('/manifest/{manifest}/shipperLogReceived', 'ManifestController@shipperLogReceived');
         Route::post('/manifestitem', 'ManifestItemController@store');
         Route::patch('/manifestitem', 'ManifestItemController@update');
         Route::delete('/manifestitem/{manifestItem}', 'ManifestItemController@destroy');
