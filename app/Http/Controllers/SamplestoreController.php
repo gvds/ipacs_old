@@ -67,6 +67,7 @@ class SamplestoreController extends Controller
             ->orderBy('rack')
             ->orderBy('box')
             ->orderBy('position')
+            ->lockForUpdate()
             ->first();
 
 
@@ -168,7 +169,6 @@ class SamplestoreController extends Controller
     {
         $request->validate([
             'sampletype' => 'required|array',
-            // 'storageDestination' => 'required',
             'sampletype.*' => 'integer',
             'reuse.*' => [
                 'required',
@@ -194,29 +194,11 @@ class SamplestoreController extends Controller
             $storageEvent = new storageReport();
             $storageEvent->project_id = session('currentProject');
             $storageEvent->user_id = auth()->user()->id;
-            // $storageEvent->storageDestination = $request->storageDestination;
             $storageEvent->storageDestination = 'Internal';
             $storageEvent->save();
 
             foreach ($sampletypes as $sampletype) {
 
-                // if ($sampletype->storageDestination === 'BiOS') {
-                //     foreach ($sampletype->event_samples as $sample) {
-                //         $sample->location = 0;
-                //         $sample->samplestatus_id = 3;
-                //         $sample->save();
-                //         $this->logToStorageLog($sample, $sampletype, $storageEvent);
-                //         $stored_count++;
-                //     }
-                // } else if ($sampletype->storageDestination === 'Nexus') {
-                //     foreach ($sampletype->event_samples as $sample) {
-                //         $sample->location = 0;
-                //         $sample->samplestatus_id = 3;
-                //         $sample->save();
-                //         $this->logToStorageLog($sample, $sampletype, $storageEvent);
-                //         $stored_count++;
-                //     }
-                // } else {
                 foreach ($sampletype->event_samples as $sample) {
                     // Allocate storage position
                     $location_id = $this->storesample($project_id, $sampletype->id, (int)$request->reuse[0], $sample->barcode);
@@ -236,8 +218,8 @@ class SamplestoreController extends Controller
                     // log to storage logs table
                     $this->logToStorageLog($sample, $sampletype, $storageEvent, $location_id);
                 }
-                // }
             }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -245,6 +227,7 @@ class SamplestoreController extends Controller
         }
         return back()->with(['message' => $stored_count . " samples allocated to storage", 'unallocated' => $arr_nospace]);
     }
+
 
     public function reportList()
     {
@@ -460,5 +443,4 @@ class SamplestoreController extends Controller
 
         return view('samples.storageStatus', compact('virtualUnits'));
     }
-
 }
