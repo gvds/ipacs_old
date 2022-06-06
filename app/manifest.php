@@ -73,7 +73,9 @@ class manifest extends Model
 
     public function itemlist()
     {
-        $items = manifestItem::with('event_sample')
+        $items = manifestItem::with('event_sample.sampletype')
+            ->with('event_sample.event_subject.event.arm')
+            ->with('event_sample.event_subject.subject')
             ->where('manifest_id', $this->id)
             ->get();
         $headers = [
@@ -81,11 +83,16 @@ class manifest extends Model
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
 
-        $data = "Barcode\tAlquot\n";
+        $data = "Subject\tBarcode\tArm\tEvent\tSample Type\tAlquot\tVolume\n";
         foreach ($items as $key => $item) {
             $sampledata = [
-                $item->event_sample->barcode,
+                $item->event_sample->event_subject->subject->subjectID,
+                "'" . $item->event_sample->barcode . "'",
+                $item->event_sample->event_subject->event->arm->name,
+                $item->event_sample->event_subject->event->name,
+                $item->event_sample->sampletype->name,
                 $item->event_sample->aliquot,
+                $item->event_sample->volume . ' ' . $item->event_sample->sampletype->volumeUnit,
             ];
             $data .= implode("\t", $sampledata) . "\n";
         }
