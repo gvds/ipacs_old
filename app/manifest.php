@@ -77,6 +77,7 @@ class manifest extends Model
             ->with('event_sample.event_subject.event.arm')
             ->with('event_sample.event_subject.subject')
             ->where('manifest_id', $this->id)
+            ->orderBy('id')
             ->get();
         $headers = [
             'Content-type'        => 'text/csv',
