@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\URL;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
-
 Auth::routes(['register' => false]);
 
 Route::get('/', 'HomeController@index')->name('home');
@@ -225,27 +221,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/redcap/project', 'RedcapController@project');
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
+
+    Route::post('/storagebox/search', 'StorageboxController@search');
+    Route::resource('/storagebox', 'StorageboxController');
 });
-
-
-// Route::get('/nexus', function () {
-//     try {
-//         $response = Illuminate\Support\Facades\Http::withToken('5|Dp9nFldJbvuRnZ5OBSFTxOgGFNgRffXviZ1NfABA')
-//             ->acceptJson()
-//             ->timeout(5)
-//             ->post('https://irods.mb.sun.ac.za/api/containers', [
-//                 'storageName' => 'TP'
-//             ]);
-//         if ($response->clientError()) {
-//             throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
-//         }
-//         if ($response->serverError()) {
-//             throw new Exception('Nexus server error', 1);
-//         }
-//         return $response;
-//     } catch (\Throwable $th) {
-//         return redirect('/')->withErrors($th->getMessage());
-//     }
-// });
 
 // URL::forceScheme('https');
