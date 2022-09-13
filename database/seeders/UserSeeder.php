@@ -14,13 +14,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        if (! \App\User::where('username','gvds')->exists()) {
+        if (!\App\User::where('username', 'gvds')->exists()) {
             DB::table('users')->insert([
                 'username' => 'gvds',
                 'firstname' => 'Gian',
                 'surname' => 'van der Spuy',
                 'email' => 'gvds@test.mail',
-                'site' => 'SUN',
+                'homesite' => 'SUN',
                 'password' => '$2y$10$WKkqjxnKR963QGPJVllPheFXZI33Bs2lfsryRAm0k.kSBXpY6MIoq',
                 'created_at' => now(),
                 'updated_at' => now()

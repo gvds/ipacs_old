@@ -17,7 +17,7 @@ class CreateEventsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('arm_id')->unsigned();
             $table->bigInteger('redcap_event_id')->unsigned()->nullable();
-            $table->string('name',50)->nullable();
+            $table->string('name', 50)->nullable();
             $table->boolean('autolog')->default(0);
             $table->mediumInteger('offset')->unsigned()->nullable();
             $table->mediumInteger('offset_ante_window')->unsigned()->nullable();
@@ -25,11 +25,11 @@ class CreateEventsTable extends Migration
             $table->tinyInteger('name_labels')->unsigned()->default(0);
             $table->tinyInteger('subject_event_labels')->unsigned()->default(0);
             $table->tinyInteger('study_id_labels')->unsigned()->default(0);
-            // $table->tinyInteger('event_order')->unsigned()->default(0);
+            $table->tinyInteger('event_order')->unsigned()->default(0);
             $table->boolean('repeatable')->default(0);
             $table->boolean('active')->default(1);
             $table->timestamps();
-            
+
             $table->foreign('arm_id')->references('id')->on('arms');
         });
     }
