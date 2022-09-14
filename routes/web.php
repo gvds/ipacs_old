@@ -136,6 +136,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/event_subject/{event_subject}', 'EventSubjectController@update');
     });
 
+    Route::middleware('project.auth:manage-subjects')->group(function () {
+        Route::get('/subjects/{subject}/changeDate', 'SubjectController@changeDate');
+        Route::post('/subjects/{subject}/changeDate', 'SubjectController@updateDate');
+    });
+
     Route::middleware('project.auth:register-samples')->group(function () {
         Route::view('/primary', 'primarysamples.register');
         Route::get('/primary/retrieve', 'PrimarySampleController@primary');

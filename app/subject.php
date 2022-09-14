@@ -37,6 +37,11 @@ class subject extends Model
   {
     return $this->belongsToMany(event::class);
   }
+
+  public function currentEvents()
+  {
+    return $this->events()->where('arm_id', $this->arm_id);
+  }
   public function arm()
   {
     return $this->belongsTo(arm::class);
@@ -331,5 +336,26 @@ class subject extends Model
       }
     }
     return $this->user_id === auth()->user()->id or auth()->user()->hasRole('sysadmin');
+  }
+
+  public function updateEventDates($armBaselineDate)
+  {
+    $offset = Carbon::parse($this->armBaselineDate)->diffInDays(Carbon::parse($armBaselineDate), false);
+    $events = $this->currentEvents()->get();
+    if ($this->enrolDate === $this->armBaselineDate) {
+      $this->enrolDate = Carbon::parse($this->enrolDate)->addDays($offset);
+    }
+    $this->armBaselineDate = Carbon::parse($this->armBaselineDate)->addDays($offset);
+    $this->save();
+    foreach ($events as $key => $event) {
+      $eventDate = Carbon::parse($event->pivot->eventDate)->addDays($offset);
+      $minDate = Carbon::parse($event->pivot->minDate)->addDays($offset);
+      $maxDate = Carbon::parse($event->pivot->maxDate)->addDays($offset);
+      $this->events()->updateExistingPivot($event->id, [
+        'eventDate' => $eventDate,
+        'minDate' => $minDate,
+        'maxDate' => $maxDate,
+      ]);
+    }
   }
 }
