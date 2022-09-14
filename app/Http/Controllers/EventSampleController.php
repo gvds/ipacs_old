@@ -219,7 +219,7 @@ class EventSampleController extends Controller
                 });
             })->get();
 
-            $headers = [
+        $headers = [
             'Content-type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
@@ -264,6 +264,7 @@ class EventSampleController extends Controller
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not currently in storage');
         }
         $event_sample->samplestatus_id = 9;
+        $event_sample->loggedOutBy = auth()->user()->id;
         $event_sample->update();
         return back()->with('message', "Sample " . $validatedData['barcode'] . " logged out of storage");
     }

@@ -103,5 +103,4 @@ class EventSubjectController extends Controller
             ['pse' => $pse]
         )->with('message', 'Event status updated');
     }
-
 }

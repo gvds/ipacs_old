@@ -4,8 +4,6 @@ namespace App;
 
 use Exception;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class event_sample extends Pivot
 {
