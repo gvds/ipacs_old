@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\event_subject;
+use App\project;
 use Carbon\Carbon;
 use Exception;
 
@@ -45,7 +46,7 @@ class EventSubjectController extends Controller
                 default:
                     break;
             }
-            if ($event_subject->eventstatus_id < 2) {
+            if ($event_subject->eventstatus_id < 2 & !auth()->user()->isAbleTo('administer-project', $request->currentProject->team->name)) {
                 throw new Exception("This event has not yet been scheduled");
             }
             if ($event_subject->eventstatus_id == 4) {

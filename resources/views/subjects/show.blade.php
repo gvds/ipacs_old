@@ -200,9 +200,10 @@
             @if (($event->pivot->eventstatus_id !== 6 and $event->pivot->labelStatus === 2) or
             (in_array($event->pivot->eventstatus_id,[0,1,2]) and $event->pivot->labelStatus !== 1))
             <span x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
-              <button href="/labels/{{$event->pivot->id}}/queue" class='bg-blue-200 text-blue-900 font-semibold py-1 px-2 rounded'>
+              <a href="/labels/{{$event->pivot->id}}/queue"
+                class='bg-blue-200 text-blue-900 font-semibold text-xs py-1 px-2 rounded shadow-md cursor-pointer hover:text-indigo-600'>
                 Q
-              </button>
+              </a>
               <span x-show="open" class='absolute text-xs bg-blue-700 border border-blue-900 text-white rounded shadow ml-1 px-2'>
                 Add to label queue
               </span>

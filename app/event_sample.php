@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Events\event_sampleUpdated;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Facades\Route;
 
 class event_sample extends Pivot
 {
@@ -44,6 +46,28 @@ class event_sample extends Pivot
         return \App\User::find($user_id);
     }
 
+    public function updateVolume($volume)
+    {
+        $this->volume = $volume;
+        $this->save();
+        $this->logChange(__FUNCTION__);
+    }
+
+    public function logOut()
+    {
+        $this->samplestatus_id = 9;
+        $this->loggedOutBy = auth()->user()->id;
+        $this->update();
+        $this->logChange(__FUNCTION__);
+    }
+
+    public function logReturn()
+    {
+        $this->thawcount += 1;
+        $this->samplestatus_id = 3;
+        $this->update();
+        $this->logChange(__FUNCTION__);
+    }
     public function logAsUsed()
     {
         if (in_array($this->samplestatus_id, [3, 9])) {
@@ -53,6 +77,7 @@ class event_sample extends Pivot
         }
         $this->samplestatus_id = 5;
         $this->update();
+        $this->logChange(__FUNCTION__);
     }
 
     public function logAsLost()
@@ -64,6 +89,7 @@ class event_sample extends Pivot
         }
         $this->samplestatus_id = 8;
         $this->update();
+        $this->logChange(__FUNCTION__);
     }
 
     public function logAsTransferred()
@@ -113,5 +139,16 @@ class event_sample extends Pivot
             $location->freelocation();
         }
         $this->delete();
+        $this->logChange(__FUNCTION__);
+    }
+
+    public function logChange($action)
+    {
+        samplelog::create([
+            'event_sample_id' => $this->id,
+            'user_id' => auth()->user()->id,
+            'action' => $action,
+            'detail' => json_encode($this)
+        ]);
     }
 }

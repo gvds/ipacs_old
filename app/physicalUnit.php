@@ -12,7 +12,7 @@ class physicalUnit extends Model
 
     public function administrator()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function virtualUnits()
@@ -24,5 +24,4 @@ class physicalUnit extends Model
     {
         return $this->belongsTo(unitDefinition::class, 'unitDefinition_id', 'id');
     }
-
 }
