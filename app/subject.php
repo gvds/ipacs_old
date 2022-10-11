@@ -358,4 +358,11 @@ class subject extends Model
       ]);
     }
   }
+
+  public function transferTo(User $transferee)
+  {
+    $this->update([
+      'user_id' => $transferee->id
+    ]);
+  }
 }

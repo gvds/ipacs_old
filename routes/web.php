@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/team/{user}/permissions', 'TeamController@editpermissions');
         Route::patch('/team/{user}/permissions', 'TeamController@updatepermissions');
         Route::delete('/teammember/{user}', 'TeamController@destroymember');
+        Route::post('/team/{user}/transfersubjects', 'TeamController@transfersubjects');
     });
 
     Route::middleware('project.auth:administer-project')->group(function () {
