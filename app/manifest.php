@@ -40,7 +40,7 @@ class manifest extends Model
             ->whereIn('samplestatus_id', [2, 3])
             ->whereHas('sampletype', function ($query) {
                 return $query->where('project_id', session('currentProject'))
-                    ->where('transferDestination', $this->destination->name);
+                    ->whereJsonContains('transferDestination', $this->destination->name);
             })
             ->whereHas('site', function ($query) {
                 return $query->where('id', auth()->user()->currentsite[0]->id);

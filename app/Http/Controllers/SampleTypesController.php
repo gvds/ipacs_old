@@ -42,8 +42,7 @@ class SampleTypesController extends Controller
 
         $tubeLabelTypes = $generic_tubeLabelTypes->union($project_tubeLabelTypes);
         $destinations = site::where('project_id', session('currentProject'))
-            ->pluck('name', 'name')
-            ->prepend('', '');
+            ->pluck('name', 'name');
 
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
 
@@ -66,7 +65,8 @@ class SampleTypesController extends Controller
             'pooled' => 'required|boolean',
             'defaultVolume' => 'nullable|numeric',
             'volumeUnit' => 'nullable',
-            'transferDestination' => 'nullable|max:25',
+            'transferDestination' => 'nullable|array',
+            'transferDestination.*' => 'max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
             'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',
@@ -74,6 +74,7 @@ class SampleTypesController extends Controller
             'parentSampleType_id' => 'nullable|integer'
         ]);
         $validatedData['project_id'] = $currentProject->id;
+        // dd($validatedData);
         sampletype::create($validatedData);
         return redirect('sampletypes');
     }
@@ -114,8 +115,7 @@ class SampleTypesController extends Controller
         $sampleTypes = $currentProject->sampletypes->pluck('name', 'id')->prepend('', '');
 
         $destinations = site::where('project_id', session('currentProject'))
-            ->pluck('name', 'name')
-            ->prepend('', '');
+            ->pluck('name', 'name');
 
         return view('sampletypes.edit', compact('sampletype', 'tubeLabelTypes', 'sampleTypes', 'destinations'));
     }
@@ -136,7 +136,8 @@ class SampleTypesController extends Controller
             'pooled' => 'required|boolean',
             'defaultVolume' => 'nullable|numeric',
             'volumeUnit' => 'nullable',
-            'transferDestination' => 'nullable|max:25',
+            'transferDestination' => 'nullable|array',
+            'transferDestination.*' => 'max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
             'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',

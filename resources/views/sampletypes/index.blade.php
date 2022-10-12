@@ -32,7 +32,7 @@
             <td>{{$sampletype->aliquots}}</td>
             <td>{{$sampletype->pooled}}</td>
             <td>{{$sampletype->defaultVolume}} {{$sampletype->volumeUnit}}</td>
-            <td>{{$sampletype->transferDestination}}</td>
+            <td>{{implode(',',json_decode($sampletype->transferDestination))}}</td>
             <td>{{$sampletype->sampleGroup}}</td>
             <td>{{$sampletype->tubeLabelType->tubeLabelType ?? ''}}</td>
             <td>{{$sampletype->storageDestination}}</td>

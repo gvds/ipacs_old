@@ -5,13 +5,12 @@
             <div x-data="deleteModal()">
                 <x-modals.deleteModal />
                 <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'
-                    @click="deleteconf('sampletype','{{$sampletype->name}}',{{$sampletype->id}})">Delete</button>
+                    @click="deleteconf('sampletypes','{{$sampletype->name}}',{{$sampletype->id}})">Delete</button>
             </div>
         </x-slot>
     </x-pageheader>
 
     @include('layouts.message')
-
     {{ Form::model($sampletype, ['route' => ['sampletypes.update', $sampletype], 'method' => 'PATCH', 'class'=>'form']) }}
     {{ Form::label('name', 'Sample Name') }}
     {{ Form::text('name', null, ['required'=>'required']) }}
@@ -26,7 +25,13 @@
     {{ Form::label('volumeUnit', 'Volume Unit') }}
     {{ Form::text('volumeUnit', null) }}
     {{ Form::label('transferDestination', 'Transfer Destination') }}
-    {{ Form::select('transferDestination', $destinations) }}
+    <select name="transferDestination[]" multiple>
+        @foreach ($destinations as $key => $destination)
+        <option value="{{$key}}" {{in_array($key,json_decode($sampletype->transferDestination)) ? "selected=selected" : null}}>
+            {{$destination}}
+        </option>
+        @endforeach
+    </select>
     {{ Form::label('sampleGroup', 'Sample Group') }}
     {{ Form::text('sampleGroup', null) }}
     {{ Form::label('tubeLabelType_id', 'Tube Label Type') }}
