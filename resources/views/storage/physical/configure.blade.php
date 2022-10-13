@@ -50,8 +50,7 @@
                     </div>
                     <div class='flex flex-row justify-between space-x-4'>
                         <input type='radio' name='selection_type' value='full' x-model='selection_type'
-                            :disabled="partial_lock==true && selection_type=='partial'"
-                            x-on:change='boxSelectionReset()' checked />No
+                            :disabled="partial_lock==true && selection_type=='partial'" x-on:change='boxSelectionReset()' checked />No
                         <input type='radio' , name='selection_type' value='partial' x-model='selection_type'
                             :disabled="partial_lock==true && selection_type=='full'" />Yes
                     </div>
@@ -62,14 +61,14 @@
                         {{ Form::label('endBox', 'End Box', ['class'=>'text-sm']) }}
                     </div>
                     <div class='flex flex-row justify-between space-x-4'>
-                        <select name="startBox" id='startBox' x-model.number='startBox'
-                            x-bind:disabled="selection_type=='full'" x-on:change='boxSelectionCheck()'>
+                        <select name="startBox" id='startBox' x-model.number='startBox' x-bind:disabled="selection_type=='full'"
+                            x-on:change='boxSelectionCheck()'>
                             <template x-for="(box, id) in boxes" :key="id">
                                 <option :value="id" x-text="box" x-bind:disabled="boxes_disabled[id]"></option>
                             </template>
                         </select>
-                        <select name="endBox" id='endBox' x-model.number='endBox'
-                            x-bind:disabled="selection_type=='full'" x-on:change='boxSelectionCheck()'>
+                        <select name="endBox" id='endBox' x-model.number='endBox' x-bind:disabled="selection_type=='full'"
+                            x-on:change='boxSelectionCheck()'>
                             <template x-for="(box, id) in boxes" :key="id">
                                 <option :value="id" x-text="box" x-bind:disabled="boxes_disabled[id]"></option>
                             </template>
@@ -117,8 +116,7 @@
                                     <td class='border border-gray-700 px-2 py-1 cursor-pointer' :class="{'bg-white':selectedracks[{{$rack-1}}]==0,
                                         'bg-green-600':selectedracks[{{$rack-1}}]&1,
                                         'bg-blue-700 text-white':selectedracks[{{$rack-1}}]==2,
-                                        'bg-blue-300':selectedracks[{{$rack-1}}]==4}"
-                                        x-on:click='rackselect({{$rack}})'>
+                                        'bg-blue-300':selectedracks[{{$rack-1}}]==4}" x-on:click='rackselect({{$rack}})'>
                                         {{$rack}}
                                     </td>
                                     @endfor
@@ -162,19 +160,24 @@
                     <td>
                         <a href="/virtualUnit/{{$virtualUnit->id}}/toggleActive">
                             @if ($virtualUnit->active)
-                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none"
-                                viewBox="0 0 20 20" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
+                            <svg class="h-6 w-6 text-green-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
                             @else
-                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none"
-                                viewBox="0 0 20 20" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
+                            <svg class="h-6 w-6 text-red-600 bg-gray-200 p-1 border rounded shadow" fill="none" viewBox="0 0 20 20"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                             @endif
                         </a>
+                    </td>
+                    <td>
+                        <x-buttonlink href='/storageconsolidation?virtualunit={{$virtualUnit->id}}'
+                            class='bg-blue-900 text-blue-100 py-1 px-2 rounded-md font-bold'>Consolidation</x-buttonlink>
+                        {{-- <x-buttonlink href='/virtualUnit/{{$virtualUnit->id}}/consolidate'
+                            class='bg-blue-900 text-blue-100 py-1 px-2 rounded-md font-bold'>
+                            Consolidate</x-buttonlink> --}}
                     </td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'

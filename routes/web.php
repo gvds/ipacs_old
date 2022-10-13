@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/physicalUnit/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
         Route::get('/virtualUnit/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
         Route::resource('/virtualUnit', 'VirtualUnitController');
+        Route::resource('/storageconsolidation', 'StorageconsolidationController');
     });
 
     Route::group(['middleware' => ['project.auth:manage-subjects,manage-teams']], function () {

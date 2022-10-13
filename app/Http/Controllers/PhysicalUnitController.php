@@ -38,8 +38,8 @@ class PhysicalUnitController extends Controller
             'unitDefinition_id' => 'required|exists:unitDefinitions,id'
         ]);
         $unitDefinition = \App\unitDefinition::find($request->unitDefinition_id);
-        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name','id');
-        return view('/storage.physical.create', compact('unitDefinition','adminlist'));
+        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name', 'id');
+        return view('/storage.physical.create', compact('unitDefinition', 'adminlist'));
     }
 
     /**
@@ -144,5 +144,4 @@ class PhysicalUnitController extends Controller
         $physicalUnit->update(['available' => !$physicalUnit->available]);
         return back();
     }
-
 }

@@ -43,8 +43,7 @@
                                     <td class='border border-gray-700 px-2 py-1' :class="{'bg-white':selectedracks[{{$rack-1}}]==0,
                                         'bg-green-600':selectedracks[{{$rack-1}}]&1,
                                         'bg-blue-700 text-white':selectedracks[{{$rack-1}}]==2,
-                                        'bg-blue-300':selectedracks[{{$rack-1}}]==4}"
-                                        x-on:click='rackselect({{$rack}})'>
+                                        'bg-blue-300':selectedracks[{{$rack-1}}]==4}" x-on:click='rackselect({{$rack}})'>
                                         {{$rack}}
                                     </td>
                                     @endfor
@@ -91,8 +90,7 @@
                     </svg>
                     @else
                     <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     @endif
                 </td>
