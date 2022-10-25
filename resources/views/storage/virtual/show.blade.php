@@ -9,34 +9,58 @@
     @include('layouts.message')
 
     <x-table>
-        <x-slot name='head'>
+        <tr>
             <th>Unit Name</th>
-            <th>Project</th>
-            <th>Section</th>
-            <th>Start Rack</th>
-            <th>End Rack</th>
-            <th>Start Box</th>
-            <th>End Box</th>
-            <th>Sample Type</th>
-            <th>Rack Capacity</th>
-            <th>Box Capacity</th>
-            <th>Active</th>
-        </x-slot>
-        @foreach ($virtualUnits as $virtualUnit)
-        <tr class="odd:bg-gray-100">
             <td>{{$virtualUnit->virtualUnit}}</td>
+        </tr>
+        <tr>
+            <th>Project</th>
             <td>{{$virtualUnit->project}}</td>
-            <td>{{$virtualUnit->sections}}</td>
+        </tr>
+        <tr>
+            <th>Section</th>
+            <td>{{$virtualUnit->section}}</td>
+        </tr>
+        <tr>
+            <th>Start Rack</th>
             <td>{{$virtualUnit->startRack}}</td>
+        </tr>
+        <tr>
+            <th>End Rack</th>
             <td>{{$virtualUnit->endRack}}</td>
+        </tr>
+        <tr>
+            <th>Start Box</th>
             <td>{{$virtualUnit->startBox}}</td>
+        </tr>
+        <tr>
+            <th>End Box</th>
             <td>{{$virtualUnit->endBox}}</td>
-            <td>{{$virtualUnit->sampleType}}</td>
+        </tr>
+        <tr>
+            <th>Sample Type</th>
+            <td>{{$virtualUnit->storageSampleType}}</td>
+        </tr>
+        <tr>
+            <th>Rack Capacity</th>
             <td>{{$virtualUnit->rackCapacity}}</td>
+        </tr>
+        <tr>
+            <th>Box Capacity</th>
             <td>{{$virtualUnit->boxCapacity}}</td>
+        </tr>
+        <tr>
+            <th>Active</th>
             <td>{{$virtualUnit->active}}</td>
         </tr>
-        @endforeach
+        <tr>
+            <td>
+                <x-buttonlink href='/physicalUnit/{{$virtualUnit->physicalUnit_id}}'>
+                    Return
+                </x-buttonlink>
+            </td>
+        </tr>
     </x-table>
+
 
 </x-layout>

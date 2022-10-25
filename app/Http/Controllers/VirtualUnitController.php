@@ -19,10 +19,10 @@ class VirtualUnitController extends Controller
      */
     public function index()
     {
-        $physicalUnits = \App\physicalUnit::orderBy('unitType')
-            ->orderBy('unitID')
-            ->get('unitID', 'id');
-        return view('storage.virtual.index', compact('physicalUnits'));
+        // $physicalUnits = \App\physicalUnit::orderBy('unitType')
+        //     ->orderBy('unitID')
+        //     ->get('unitID', 'id');
+        // return view('storage.virtual.index', compact('physicalUnits'));
     }
 
     /**
@@ -78,7 +78,7 @@ class VirtualUnitController extends Controller
             } else {
                 if ($unitDefinition->boxDesignation === 'Alpha') {
                     $validatedData['startBox'] = 'A';
-                    $validatedData['endBox'] = chr(64 + $validatedData['rackCapacity'] - 1);
+                    $validatedData['endBox'] = chr(65 + $validatedData['rackCapacity'] - 1);
                 } else {
                     $validatedData['startBox'] = '1';
                     $validatedData['endBox'] = $validatedData['rackCapacity'] - 1;
@@ -114,10 +114,9 @@ class VirtualUnitController extends Controller
      * @param  \App\virtualUnit  $virtualUnit
      * @return \Illuminate\Http\Response
      */
-    public function show(physicalUnit $physicalUnit)
+    public function show(virtualUnit $virtualUnit)
     {
-        $virtualUnits = virtualUnit::all();
-        return view('storage.virtual.index', compact('virtualUnits'));
+        return view('storage.virtual.show', compact('virtualUnit'));
     }
 
     /**

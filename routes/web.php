@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/physicalUnit', 'PhysicalUnitController', ['except' => ['show']]);
     Route::group(['middleware' => ['permission:manage-storage']], function () {
         Route::get('/physicalUnit/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
+        Route::get('/physicalUnit/{physicalUnit}', 'PhysicalUnitController@show');
         Route::get('/virtualUnit/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
         Route::resource('/virtualUnit', 'VirtualUnitController');
         Route::resource('/storageconsolidation', 'StorageconsolidationController');
@@ -208,7 +209,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/samplestore/{storageReport}/report', 'SamplestoreController@report');
         Route::get('/samplestore/status', 'SamplestoreController@storageStatusReport');
         Route::get('/samplestore/nexus', 'SamplestoreController@nexusReport');
-        Route::get('/physicalUnit/{physicalUnit}', 'PhysicalUnitController@show');
     });
 
     Route::middleware('project.auth:monitor-progress')->group(function () {

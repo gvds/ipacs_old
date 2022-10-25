@@ -136,6 +136,7 @@
                     <th>Unit Name</th>
                     <th>Project</th>
                     <th>Section</th>
+                    <th>Rack Usage</th>
                     <th>Start Rack</th>
                     <th>End Rack</th>
                     <th>Start Box</th>
@@ -150,8 +151,14 @@
                     <td>{{$virtualUnit->virtualUnit}}</td>
                     <td>{{$virtualUnit->project}}</td>
                     <td class='text-center'>{{$virtualUnit->section}}</td>
+                    {{-- <td class='text-center'>{{$virtualUnit->startBox ? 'Partial' : $virtualUnit->endRack}}</td> --}}
+                    <td class='text-center'>{{$virtualUnit->rackusage}}</td>
                     <td class='text-center'>{{$virtualUnit->startRack}}</td>
-                    <td class='text-center'>{{$virtualUnit->startBox ? 'Partial' : $virtualUnit->endRack}}</td>
+                    {{-- <td class='text-center'>{{(ord($virtualUnit->endBox) - ord($virtualUnit->startBox) + 1 < $virtualUnit->
+                            rackCapacity) ?
+                            'Partial' :
+                            $virtualUnit->endRack}}</td> --}}
+                    <td class='text-center'>{{$virtualUnit->endRack}}</td>
                     <td class='text-center'>{{$virtualUnit->startBox ?? '-'}}</td>
                     <td class='text-center'>{{$virtualUnit->endBox?? '-'}}</td>
                     <td>{{$virtualUnit->storageSampleType}}</td>
@@ -175,9 +182,10 @@
                     <td>
                         <x-buttonlink href='/storageconsolidation?virtualunit={{$virtualUnit->id}}'
                             class='bg-blue-900 text-blue-100 py-1 px-2 rounded-md font-bold'>Consolidation</x-buttonlink>
-                        {{-- <x-buttonlink href='/virtualUnit/{{$virtualUnit->id}}/consolidate'
-                            class='bg-blue-900 text-blue-100 py-1 px-2 rounded-md font-bold'>
-                            Consolidate</x-buttonlink> --}}
+                    </td>
+                    <td>
+                        <x-buttonlink href='/virtualUnit/{{$virtualUnit->id}}'
+                            class='bg-blue-900 text-blue-100 py-1 px-2 rounded-md font-bold'>Details</x-buttonlink>
                     </td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold'

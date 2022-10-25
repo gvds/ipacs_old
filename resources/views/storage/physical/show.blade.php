@@ -62,6 +62,7 @@
                 <th>Unit Name</th>
                 <th>Project</th>
                 <th>Section</th>
+                <th>Rack Usage</th>
                 <th>Start Rack</th>
                 <th>End Rack</th>
                 <th>Start Box</th>
@@ -76,8 +77,10 @@
                 <td>{{$virtualUnit->virtualUnit}}</td>
                 <td>{{$virtualUnit->project}}</td>
                 <td class='text-center'>{{$virtualUnit->section}}</td>
+                <td class='text-center'>{{$virtualUnit->rackusage}}</td>
                 <td class='text-center'>{{$virtualUnit->startRack}}</td>
-                <td class='text-center'>{{$virtualUnit->startBox ? 'Partial' : $virtualUnit->endRack}}</td>
+                <td class='text-center'>{{$virtualUnit->endRack}}</td>
+                {{-- <td class='text-center'>{{$virtualUnit->startBox ? 'Partial' : $virtualUnit->endRack}}</td> --}}
                 <td class='text-center'>{{$virtualUnit->startBox ?? '-'}}</td>
                 <td class='text-center'>{{$virtualUnit->endBox?? '-'}}</td>
                 <td>{{$virtualUnit->storageSampleType}}</td>
