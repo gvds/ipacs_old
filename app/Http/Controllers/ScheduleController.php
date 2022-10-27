@@ -41,7 +41,7 @@ class ScheduleController extends Controller
             // $result = $conn->query($query);
             $field_arr = array();
 
-            $this->fpdf = new Fpdf;
+            $this->fpdf = new Fpdf('L');
             $this->fpdf->AddFont('Calibri', 'B', 'calibrib.php');
             $this->fpdf->SetDisplayMode('fullpage');
             $this->fpdf->SetMargins(5, 5);
@@ -50,9 +50,9 @@ class ScheduleController extends Controller
             $this->fpdf->Cell(0, 9, "$currentProject->project project Followup Schedule - $header", 0, 1, 'C');
             $this->fpdf->SetFont('Calibri', 'B', 11);
             $this->fpdf->Cell(0, 0, '', 'T', 1, 'L');
-            $this->fpdf->Cell(23, 7, "Subject", '', 0, 'C');
-            $this->fpdf->Cell(23, 7, "Name", '', 0, 'C');
-            $this->fpdf->Cell(25, 7, "Event", '', 0, 'C');
+            $this->fpdf->Cell(26, 7, "Subject", '', 0, 'C');
+            $this->fpdf->Cell(50, 7, "Name", '', 0, 'C');
+            $this->fpdf->Cell(35, 7, "Event", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "Due Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "Start Date", '', 0, 'C');
             $this->fpdf->Cell(25, 7, "End Date", '', 0, 'C');
@@ -104,15 +104,15 @@ class ScheduleController extends Controller
                     $address = implode(', ', array_filter([$subject->address1, $subject->address2, $subject->address3]));
                     $fill = $fill ? 0 : 1;
                     $this->fpdf->SetFont('Arial', '', 10);
-                    $this->fpdf->Cell(23, 9, $subject->subjectID, 0, 0, 'C', $fill);
-                    $this->fpdf->Cell(23, 9, $subject->fullname, 0, 0, 'C', $fill);
-                    $this->fpdf->Cell(25, 9, $event->name, 0, 0, 'C', $fill);
+                    $this->fpdf->Cell(26, 9, $subject->subjectID, 0, 0, 'C', $fill);
+                    $this->fpdf->Cell(50, 9, $subject->fullname, 0, 0, 'C', $fill);
+                    $this->fpdf->Cell(35, 9, $event->name, 0, 0, 'C', $fill);
                     $this->fpdf->SetFont('Arial', 'B', 10);
                     $this->fpdf->Cell(25, 9, $event->pivot->eventDate, 0, 0, 'C', $fill);
                     $this->fpdf->SetFont('Arial', '', 10);
                     $this->fpdf->Cell(25, 9, $event->pivot->minDate, 0, 0, 'C', $fill);
                     $this->fpdf->Cell(25, 9, $event->pivot->maxDate, 0, 0, 'C', $fill);
-                    $this->fpdf->SetFont('Arial', '', 8);
+                    $this->fpdf->SetFont('Arial', '', 9);
                     $this->fpdf->Cell(0, 9, $address, 0, 1, 'L', $fill);
                 }
             }
