@@ -22,8 +22,8 @@ class PhysicalUnitController extends Controller
         // ->orderBy('unitDefinitions.storageType')
         // ->orderBy('unitDefinition_id')
         // ->orderBy('unitID')
-        // ->get();
-        $physicalUnits = physicalUnit::orderBy('unitID')->get();
+        $physicalUnits = physicalUnit::orderBy('unitID')
+            ->get();
         return view('storage.physical.index', compact('physicalUnits'));
     }
 
@@ -38,8 +38,8 @@ class PhysicalUnitController extends Controller
             'unitDefinition_id' => 'required|exists:unitDefinitions,id'
         ]);
         $unitDefinition = \App\unitDefinition::find($request->unitDefinition_id);
-        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name','id');
-        return view('/storage.physical.create', compact('unitDefinition','adminlist'));
+        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name', 'id');
+        return view('/storage.physical.create', compact('unitDefinition', 'adminlist'));
     }
 
     /**
@@ -52,7 +52,8 @@ class PhysicalUnitController extends Controller
     {
         $validatedData = $request->validate([
             'unitDefinition_id' => 'required|exists:unitDefinitions,id',
-            'unitID' => 'required|min:5',
+            'unitID' => 'required|min:3',
+            'serial' => 'nullable|min:5|max:40',
             'user_id' => 'required|integer|exists:users,id',
         ]);
         try {
@@ -75,16 +76,20 @@ class PhysicalUnitController extends Controller
         foreach ($physicalUnit->unitType->sections as $key => $section) {
             $rackCount += $section->rows * $section->columns;
         }
-        $racks = array_fill_keys(range(1,$rackCount,1),0);
+        $racks = array_fill_keys(range(1, $rackCount, 1), 0);
         $virtualUnits = $physicalUnit->virtualUnits;
         $boxDesignation = $physicalUnit->unitType->boxDesignation;
         foreach ($virtualUnits as $key => $virtualUnit) {
-            for ($i=$virtualUnit->startRack; $i <= $virtualUnit->endRack ; $i++) {
+            for ($i = $virtualUnit->startRack; $i <= $virtualUnit->endRack; $i++) {
                 $racks[$i] = is_null($virtualUnit->startBox) ? 1 : 2; // Full [1] or partial [2] rack
             }
         }
-        $projects = \App\project::where('active',1)->orderBy('project')->pluck('project','id')->prepend('','');
-        return view('storage.physical.show', compact('physicalUnit','virtualUnits','projects','racks'));
+        if (auth()->user()->isAbleTo('manage-storage')) {
+            $projects = \App\project::where('active', 1)->orderBy('project')->pluck('project', 'id')->prepend('', '');
+            return view('storage.physical.configure', compact('physicalUnit', 'virtualUnits', 'projects', 'racks'));
+        } else {
+            return view('storage.physical.show', compact('physicalUnit', 'virtualUnits', 'racks'));
+        }
     }
 
     /**
@@ -95,7 +100,8 @@ class PhysicalUnitController extends Controller
      */
     public function edit(physicalUnit $physicalUnit)
     {
-        //
+        $adminlist = User::whereRoleIs('freezer_admin')->selectRaw('concat_ws(" ",firstname,surname) AS name,id')->pluck('name', 'id');
+        return view('/storage.physical.edit', compact('physicalUnit', 'adminlist'));
     }
 
     /**
@@ -107,7 +113,17 @@ class PhysicalUnitController extends Controller
      */
     public function update(Request $request, physicalUnit $physicalUnit)
     {
-        //
+        $validatedData = $request->validate([
+            'unitID' => 'required|min:3',
+            'serial' => 'nullable|min:5|max:40',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+        try {
+            $physicalUnit->update($validatedData);
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Update of Physical Unit failed: ' . $th->getMessage());
+        }
+        return redirect("/unitDefinition/" . $physicalUnit->unitDefinition_id);
     }
 
     /**
@@ -128,5 +144,4 @@ class PhysicalUnitController extends Controller
         $physicalUnit->update(['available' => !$physicalUnit->available]);
         return back();
     }
-
 }

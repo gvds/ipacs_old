@@ -11,10 +11,14 @@
   <title>{{ config('app.name') }}</title>
 
   <!-- Scripts -->
-  <script src="{{ secure_asset('js/app.js') }}" defer></script>
+  {{-- <script src="{{ secure_asset('js/app.js') }}" defer></script> --}}
+  <script src="{{ asset('js/app.js') }}" defer></script>
+  <script src="{{ asset('js/phonemask.js') }}" defer></script>
 
   <!-- Styles -->
-  <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
+  {{--
+  <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet"> --}}
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
   @stack('scripts')
 

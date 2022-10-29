@@ -19,7 +19,7 @@
         {{ Form::hidden('event_subject_id',$event_subject_id)}}
         {{ Form::label('log', 'Log samples when registering')}}
         <div class='mb-1'>
-            No {{ Form::radio('log', 0, ['selected'])}} Yes {{ Form::radio('log', 1)}}
+            No {{ Form::radio('log', 0)}} Yes {{ Form::radio('log', 1, ['selected'])}}
         </div>
         <div>
             <x-table>
@@ -72,7 +72,7 @@
                 @endforeach
             </x-table>
         </div>
-        {{ Form::submit('Log Samples', ['class' => 'mt-2 w-40']) }}
+        {{ Form::submit('Log Samples', ['class' => 'mt-2 w-40','x-on:click'=>"buttonDisabled = true",'x-bind:disabled'=>"buttonDisabled"]) }}
         {{ Form::close() }}
     </div>
     @endif

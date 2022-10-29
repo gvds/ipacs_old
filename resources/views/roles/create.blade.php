@@ -5,7 +5,7 @@
 
   @include('layouts.message')
 
-  {{ Form::open(['url' => 'roles', 'class'=>'form']) }}
+  {{ Form::open(['url' => 'role', 'class'=>'form']) }}
   {{ Form::label('name', 'Role Name') }}
   {{ Form::text('name', null, ['required'=>'required']) }}
   {{ Form::label('display_name', 'Display Name') }}

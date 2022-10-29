@@ -6,7 +6,7 @@
 
   @include('layouts.message')
 
-        {!! Form::open(['url' => 'permissions', 'class'=>'form']) !!}
+        {!! Form::open(['url' => 'permission', 'class'=>'form']) !!}
         {!! Form::label('name', 'Permission Name') !!}
         {!! Form::text('name', null, ['required'=>'required']) !!}
         {{ Form::label('scope', 'Scope') }}

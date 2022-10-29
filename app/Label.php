@@ -6,10 +6,10 @@ use Carbon\Carbon;
 
 class Label
 {
-    
+
   public static function addEventsToLabelQueue($thresholdDate = null)
   {
-      $thresholdDate = Carbon::parse('next friday');
+      $thresholdDate = $thresholdDate ?? Carbon::parse('next friday');
       $records = event_subject::whereIn('eventstatus_id',[0,1,2])
           ->where('labelStatus', '0')
           ->join('events', 'event_id', 'events.id')

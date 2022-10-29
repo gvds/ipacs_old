@@ -26,9 +26,8 @@
                 </x-table>
                 @endif
             </div>
-            <div x-data="restrictSelection()">
-                {{ Form::open(['url' => '/samplestore', 'class' => 'form', 'method' => 'POST', 'class' => 'max-w-lg']) }}
-                {{ Form::hidden('storageDestination', null, ['x-model'=>'destination'])}}
+            <div x-data="{ buttonDisabled: false }">
+                {{ Form::open(['url' => '/samplestore', 'class' => 'form', 'method' => 'POST', 'class' => 'max-w-lg', '@submit' => 'buttonDisabled = true']) }}
                 <div class='mb-5 mt-2 flex items-center justify-between'>
                     <span class='font-semibold'>Allow Previously Used Locations</span>
                     <span class='flex border border-gray-300 bg-gray-200 px-3 py-1 ml-4 shaddow rounded space-x-3'>
@@ -39,29 +38,20 @@
 
                 <x-table class='w-full'>
                     <x-slot name='head'>
-                        <th>Destination</th>
                         <th>Sample Type</th>
                         <th>Samples</th>
                         <th>Select</th>
                     </x-slot>
-                    @foreach ($storageDestinations as $storageDestination => $sampleSets)
-                    <tr class="border-b border-gray-300">
-                        @foreach ($sampleSets as $sampleSet)
+                    @foreach ($sampleSets as $sampleSet)
                     <tr>
-                        @if ($loop->first)
-                        <th class="align-top" rowspan="{{count($sampleSets)}}">{{$storageDestination}}</th>
-                        @endif
-
-                        <td>{{$sampleSet['name']}}</td>
-                        <td>{{$sampleSet['count']}}</td>
-                        <td>{{Form::checkbox('sampletype[]', $sampleSet['sampletype_id'], false, ["x-bind:disabled" => "destination!='$storageDestination' && destination!=''", "x-ref" => "$sampleSet[sampletype_id]", "x-on:click" => "updateDestinations('$storageDestination','$sampleSet[sampletype_id]')"])}}
+                        <td>{{$sampleSet->name}}</td>
+                        <td>{{$sampleSet->total}}</td>
+                        <td>{{Form::checkbox('sampletype[]', $sampleSet->id, false)}}
                         </td>
                     </tr>
                     @endforeach
-                    </tr>
-                    @endforeach
                 </x-table>
-                {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2"]) }}
+                {{ Form::submit('Allocate Storage', ['class' => "w-full mt-2",'x-bind:disabled'=>"buttonDisabled"]) }}
                 {{ Form::close() }}
             </div>
         </div>
@@ -82,31 +72,5 @@
             @endif
         </div>
     </div>
-
-    <script>
-        function restrictSelection() {
-            return {
-                destinations: {},
-                destination: '',
-                updateDestinations(destination, element) {
-                    if (this.$refs[element].checked) {
-                        if (destination in this.destinations) {
-                            this.destinations[destination] = this.destinations[destination] + 1;
-                        } else {
-                            this.destinations[destination] = 1;
-                        }
-                        this.destination = destination;
-                    } else {
-                        this.destinations[destination] = this.destinations[destination] - 1;
-                        if (this.destinations[destination] == 0) {
-                            this.destination = '';
-                        }
-                    }
-                    console.log(this.$refs[element].checked)
-                    console.log(element);
-                }
-            }
-        }
-    </script>
 
 </x-layout>

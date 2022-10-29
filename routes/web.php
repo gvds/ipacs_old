@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +14,9 @@ use Illuminate\Support\Facades\URL;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+// Route::get('/welcome', function () {
+//     return view('welcome');
+// });
 
 Auth::routes(['register' => false]);
 
@@ -71,13 +70,18 @@ Route::middleware('auth')->group(function () {
         Route::resource('/permission', 'PermissionController');
     });
 
-    Route::group(['middleware' => ['permission:manage-storage']], function () {
+    Route::group(['middleware' => ['permission:manage-freezers']], function () {
         Route::resource('/unitDefinition', 'UnitDefinitionController');
         Route::resource('/section', 'SectionController', ['except' => ['index', 'show', 'edit', 'update']]);
-        Route::resource('/physicalUnit', 'PhysicalUnitController');
+    });
+
+    Route::resource('/physicalUnit', 'PhysicalUnitController', ['except' => ['show']]);
+    Route::group(['middleware' => ['permission:manage-storage']], function () {
         Route::get('/physicalUnit/{physicalUnit}/toggleActive', 'PhysicalUnitController@toggleActive');
+        Route::get('/physicalUnit/{physicalUnit}', 'PhysicalUnitController@show');
         Route::get('/virtualUnit/{virtualUnit}/toggleActive', 'VirtualUnitController@toggleActive');
         Route::resource('/virtualUnit', 'VirtualUnitController');
+        Route::resource('/storageconsolidation', 'StorageconsolidationController');
     });
 
     Route::group(['middleware' => ['project.auth:manage-subjects,manage-teams']], function () {
@@ -98,6 +102,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/team/{user}/permissions', 'TeamController@editpermissions');
         Route::patch('/team/{user}/permissions', 'TeamController@updatepermissions');
         Route::delete('/teammember/{user}', 'TeamController@destroymember');
+        Route::post('/team/{user}/transfersubjects', 'TeamController@transfersubjects');
     });
 
     Route::middleware('project.auth:administer-project')->group(function () {
@@ -132,6 +137,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/event_subject', 'EventSubjectController@index');
         Route::get('/event_subject/retrieve', 'EventSubjectController@show');
         Route::post('/event_subject/{event_subject}', 'EventSubjectController@update');
+    });
+
+    Route::middleware('project.auth:manage-subjects')->group(function () {
+        Route::get('/subjects/{subject}/changeDate', 'SubjectController@changeDate');
+        Route::post('/subjects/{subject}/changeDate', 'SubjectController@updateDate');
     });
 
     Route::middleware('project.auth:register-samples')->group(function () {
@@ -177,24 +187,28 @@ Route::middleware('auth')->group(function () {
         // Route::resource('/manifest', 'ManifestController');
         Route::get('/manifest', 'ManifestController@index');
         Route::get('/manifest/{manifest}/samplelist', 'ManifestController@samplelist');
+        Route::get('/manifest/{manifest}/itemlist', 'ManifestController@itemlist');
         Route::get('/manifest/receive', 'ManifestController@index_received');
         Route::get('/manifest/receive/{manifest}', 'ManifestController@show_received');
         Route::get('/manifest/{manifest}', 'ManifestController@show');
         Route::post('/manifest', 'ManifestController@store');
         Route::delete('/manifest/{manifest}', 'ManifestController@destroy');
         Route::post('/manifest/{manifest}/ship', 'ManifestController@ship');
+        Route::post('/manifest/{manifest}/receiveall', 'ManifestController@receiveall');
         Route::post('/manifest/{manifest}/receive', 'ManifestController@receive');
+        Route::post('/manifest/{manifest}/shipperLogReceived', 'ManifestController@shipperLogReceived');
         Route::post('/manifestitem', 'ManifestItemController@store');
         Route::patch('/manifestitem', 'ManifestItemController@update');
         Route::delete('/manifestitem/{manifestItem}', 'ManifestItemController@destroy');
     });
 
     Route::middleware('project.auth:store-samples')->group(function () {
-        Route::get('/samplestore', 'samplestoreController@listSamples');
-        Route::post('/samplestore', 'samplestoreController@allocateStorage');
-        Route::get('/samplestore/report', 'samplestoreController@reportList');
-        Route::get('/samplestore/{storageReport}/report', 'samplestoreController@report');
-        Route::get('/samplestore/nexus', 'samplestoreController@nexusReport');
+        Route::get('/samplestore', 'SamplestoreController@listSamples');
+        Route::post('/samplestore', 'SamplestoreController@allocateStorage');
+        Route::get('/samplestore/report', 'SamplestoreController@reportList');
+        Route::get('/samplestore/{storageReport}/report', 'SamplestoreController@report');
+        Route::get('/samplestore/status', 'SamplestoreController@storageStatusReport');
+        Route::get('/samplestore/nexus', 'SamplestoreController@nexusReport');
     });
 
     Route::middleware('project.auth:monitor-progress')->group(function () {
@@ -218,26 +232,3 @@ Route::middleware('auth')->group(function () {
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
 });
-
-
-Route::get('/nexus', function () {
-    try {
-        $response = Illuminate\Support\Facades\Http::withToken('5|Dp9nFldJbvuRnZ5OBSFTxOgGFNgRffXviZ1NfABA')
-            ->acceptJson()
-            ->timeout(5)
-            ->post('https://nexus.test/api/containers', [
-                'storageName' => 'TP'
-            ]);
-        if ($response->clientError()) {
-            throw new Exception('Could not get sample storage status data from Nexus: ' . $response['message'], 1);
-        }
-        if ($response->serverError()) {
-            throw new Exception('Nexus server error', 1);
-        }
-        return $response;
-    } catch (\Throwable $th) {
-        return redirect('/')->withErrors($th->getMessage());
-    }
-});
-
-URL::forceScheme('https');

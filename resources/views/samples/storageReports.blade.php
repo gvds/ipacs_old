@@ -5,6 +5,8 @@
 
     @include('layouts.message')
 
+    {{ $reports->links() }}
+
     <x-table class='w-full'>
         <x-slot name='head'>
             <th>User</th>

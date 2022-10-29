@@ -21,7 +21,6 @@
         </x-slot>
         <x-nav.dropdown-link href="/subjects">Manage Subjects</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/subjects/create">Generate Subject IDs</x-nav.dropdown-link>
-        {{-- <x-nav.dropdown-link href="#">Enrol Subject</x-nav.dropdown-link> --}}
         <x-nav.dropdown-submenu>
           <x-slot name="nav_item">
             <div>Follow-up Schedule</div>
@@ -33,9 +32,6 @@
         <x-nav.dropdown-link href="/labels/queue">Add Pending Labels to Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels">Manage Label Print Queue</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/labels/print">Print Labels</x-nav.dropdown-link>
-        {{-- <x-nav.dropdown-link href="#">Switch Arm</x-nav.dropdown-link> --}}
-        {{-- <x-nav.dropdown-link href="#">Update Switch Arm Date</x-nav.dropdown-link> --}}
-        {{-- <x-nav.dropdown-link href="#">Revert Arm Switch</x-nav.dropdown-link> --}}
       </x-nav.dropdown>
 
       <x-nav.dropdown>
@@ -63,6 +59,7 @@
         <hr />
         <x-nav.dropdown-link href="/samplestore">Allocate Storage</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/report">Storage Reports</x-nav.dropdown-link>
+        <x-nav.dropdown-link href="/samplestore/status">Sample Storage Status</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/samplestore/nexus">Nexus Storage Status</x-nav.dropdown-link>
         <hr />
         <x-nav.dropdown-link href="/sample/logout">Log Sample out of Storage</x-nav.dropdown-link>
@@ -96,7 +93,6 @@
         {{-- <x-nav.dropdown-link href="#">Schedule Labels</x-nav.dropdown-link> --}}
         <x-nav.dropdown-link href="/substitute">Colleague Substitution</x-nav.dropdown-link>
         <x-nav.dropdown-link href="/progress">Progress Report</x-nav.dropdown-link>
-        <x-nav.dropdown-link href="#">Sample Storage Status</x-nav.dropdown-link>
       </x-nav.dropdown>
 
       @endif

@@ -18,7 +18,8 @@ class CreatePhysicalUnitsTable extends Migration
             $table->foreignId('unitDefinition_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->string('unitID', 40);
-            $table->string('unitType', 100)->nullable();
+            $table->string('serial', 40)->nullable();
+            $table->string('unitType_', 100)->nullable();
             $table->boolean('available')->default(1);
             $table->timestamps();
         });

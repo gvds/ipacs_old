@@ -4,4 +4,4 @@ PreviewsShown=false
 Timestamp=2022,9,10,14,18,16.858
 Version=4
 ViewMode=1
-VisibleRoles=Details_text,Details_size,Details_modificationtime,Details_owner,Details_group,Details_permissions,Details_type,CustomizedDetails
+VisibleRoles=CustomizedDetails,Details_text,Details_size,Details_modificationtime,Details_owner,Details_group

@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
 
 class ManifestController extends Controller
 {
@@ -22,7 +21,6 @@ class ManifestController extends Controller
     {
         $manifests = manifest::where('project_id', session('currentProject'))
             ->where('sourceSite_id', Auth::user()->ProjectSite)
-            ->whereIn('manifestStatus_id', [1, 2])
             ->orderBy('created_at', 'desc')
             ->get();
         $sites = \App\site::where('project_id', session('currentProject'))
@@ -90,9 +88,7 @@ class ManifestController extends Controller
         if ($manifest->sourceSite_id !== Auth::user()->ProjectSite) {
             return back()->with('error', 'That manifest does not belong to your site');
         }
-        $manifestItems = manifestItem::where('manifest_id', $manifest->id)
-            ->orderBy('id')
-            ->get();
+        $manifestItems = $manifest->manifestItems;
         return view('manifests.show', compact('manifest', 'manifestItems'));
     }
 
@@ -107,9 +103,7 @@ class ManifestController extends Controller
         if ($manifest->destinationSite_id !== Auth::user()->ProjectSite) {
             return back()->with('error', 'That manifest does not belong to your site');
         }
-        $manifestItems = manifestItem::where('manifest_id', $manifest->id)
-            ->orderBy('id')
-            ->get();
+        $manifestItems = $manifest->manifestItems;
         return view('manifests.show_received', compact('manifest', 'manifestItems'));
     }
 
@@ -147,8 +141,7 @@ class ManifestController extends Controller
         if ($manifest->sourceSite_id !== Auth::user()->ProjectSite) {
             return back()->with('error', 'That manifest does not belong to your site');
         }
-        $manifestItems = manifestItem::where('manifest_id', $manifest->id)
-            ->get();
+        $manifestItems = $manifest->manifestItems;
         try {
             DB::beginTransaction();
             foreach ($manifestItems as $manifestItem) {
@@ -172,8 +165,7 @@ class ManifestController extends Controller
         try {
             DB::beginTransaction();
             $manifest->update(['manifestStatus_id' => 2, 'shippedDate' => now()]);
-            $manifestItems = manifestItem::where('manifest_id', $manifest->id)
-                ->pluck('event_sample_id');
+            $manifestItems = $manifest->manifestItems->pluck('event_sample_id');
             $event_samples = event_sample::whereIn('id', $manifestItems)
                 ->get();
             if (count($event_samples) !== count($manifestItems)) {
@@ -192,8 +184,14 @@ class ManifestController extends Controller
 
     public function receive(manifest $manifest)
     {
+        switch ($manifest->manifestStatus_id) {
+            case 1:
+                return back()->with('error', 'This manifest has not been shipped');
+            case 3:
+                return back()->with('error', 'This manifest has already been received ');
+        }
         if ($manifest->destinationSite_id !== Auth::user()->ProjectSite) {
-            return back()->with('error', 'That manifest does not belong to your site');
+            return back()->with('error', 'This manifest does not belong to your site');
         }
         try {
             DB::beginTransaction();
@@ -229,41 +227,64 @@ class ManifestController extends Controller
         return redirect('/manifest/receive');
     }
 
+    public function shipperLogReceived(manifest $manifest)
+    {
+        switch ($manifest->manifestStatus_id) {
+            case 1:
+                return back()->with('error', 'This manifest has not been shipped');
+            case 3:
+                return back()->with('error', 'This manifest has already been received ');
+        }
+        if ($manifest->sourceSite_id !== Auth::user()->ProjectSite) {
+            return back()->with('error', 'This manifest was not sent from your site');
+        }
+        try {
+            DB::beginTransaction();
+            $manifest->update([
+                'manifestStatus_id' => 3,
+                'received_user_id' => Auth::user()->id,
+                'receivedDate' => now()
+            ]);
+            manifestItem::where('manifest_id', $manifest->id)
+                ->update(['received' => 1]);
+
+            $receivedManifestItems = manifestItem::where('manifest_id', $manifest->id)
+                ->where('received', 1)
+                ->pluck('event_sample_id');
+            $event_samples = event_sample::whereIn('id', $receivedManifestItems)
+                ->get();
+            if (count($event_samples) !== count($receivedManifestItems)) {
+                throw new Exception("Not all the received manifest items could be found", 1);
+            }
+            foreach ($event_samples as $event_sample) {
+                $event_sample->logIntoSite(Auth::user()->ProjectSite);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+        return redirect('/manifest');
+    }
+
+    public function receiveall(manifest $manifest)
+    {
+        if ($manifest->destinationSite_id !== Auth::user()->ProjectSite) {
+            return back()->with('error', 'This manifest does not belong to your site');
+        }
+        $timestamp = now();
+        manifestItem::where('manifest_id', $manifest->id)
+            ->update(['received' => 1, 'receivedTime' => $timestamp]);
+        return redirect("/manifest/receive/$manifest->id");
+    }
+
     public function samplelist(manifest $manifest)
     {
-        // dd($manifest->destination->name);
-        $event_samples = event_sample::with('storagelocation', 'sampletype')
-            ->whereIn('samplestatus_id', [2,3])
-            ->whereHas('sampletype', function ($query) use ($manifest) {
-                return $query->where('project_id', session('currentProject'))
-                    ->where('transferDestination', $manifest->destination->name);
-            })
-            ->whereHas('site', function ($query) {
-                return $query->where('id', auth()->user()->currentsite[0]->id);
-            })
-            ->get();
-        $headers = [
-            'Content-type'        => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="samplelist.csv"',
-        ];
+        return $manifest->samplelist();
+    }
 
-        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tLocation\n";
-        foreach ($event_samples as $key => $sample) {
-            $sampledata = [
-                $sample->barcode,
-                $sample->sampletype->name,
-                $sample->event_subject->event->arm->name,
-                $sample->event_subject->event->name,
-                $sample->aliquot,
-                $sample->volume . $sample->sampletype->volumeUnit,
-                $sample->status->samplestatus,
-                $sample->event_subject->subject->subjectID
-            ];
-            if (!empty($sample->storagelocation)) {
-                array_push($sampledata, '(' . $sample->storagelocation->virtualUnit->physicalUnit->unitID . ') ' . $sample->storagelocation->virtualUnit->virtualUnit . ' - ' . $sample->storagelocation->rack . ':' . $sample->storagelocation->box . ':' . $sample->storagelocation->position);
-            }
-            $data .= implode("\t", $sampledata) . "\n";
-        }
-        return Response::make($data, 200, $headers);
+    public function itemlist(manifest $manifest)
+    {
+        return $manifest->itemlist();
     }
 }

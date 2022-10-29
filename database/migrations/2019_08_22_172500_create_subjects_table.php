@@ -15,7 +15,7 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('subjectID',10);
+            $table->string('subjectID',10)->unique();
             $table->bigInteger('project_id')->unsigned();
             $table->bigInteger('site_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
@@ -31,7 +31,7 @@ class CreateSubjectsTable extends Migration
             $table->date('previousArmBaselineDate')->nullable();
             $table->tinyInteger('subject_status')->unsigned()->default(0);
             $table->timestamps();
-            
+
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }

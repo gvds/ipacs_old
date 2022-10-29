@@ -83,25 +83,29 @@
           </tr>
         </x-table>
       </div>
-      @if ($subject->subject_status === 1)
-      <span x-data="confirmDrop()"">
+      <div class='flex space-x-2' x-data="confirmDrop()">
+        @if ($subject->subject_status === 1)
+        @permission('administer-project',$currentProject->team->name)
+        <x-buttonlink href="/subjects/{{$subject->id}}/changeDate" class="bg-blue-700 text-blue-50">Change Arm Date
+        </x-buttonlink>
+        @endpermission
         {{ Form::open(['url' => "/subjects/$subject->id/drop", 'method' => 'POST', 'x-on:click.away'=>'clear()']) }}
-        <x-buttonlink @click=" del()" x-text=" getDeleteText()" class="text-red-50" x-bind:class="getDeleteBg()">Drop
-        Subject</x-buttonlink>
-        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-red-600 text-red-50 text-sm font-bold px-2 py-1 rounded shadow-md leading-tight hover:text-indigo-500"]) }}
+        <x-buttonlink @click="del()" x-text=" getDeleteText()" class="text-red-50" x-bind:class="getDeleteBg()">Drop
+          Subject</x-buttonlink>
+        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-red-600 text-red-50 text-sm font-bold px-2
+        py-1
+        mt-1
+        rounded shadow-md leading-tight hover:text-indigo-500"]) }}
         {{ Form::close() }}
-      </span>
-
-      @endif
-      @if ($subject->subject_status === 2)
-      <span x-data="confirmDrop()"">
+        @elseif ($subject->subject_status === 2)
         {{ Form::open(['url' => "/subjects/$subject->id/restore", 'method' => 'POST', 'x-on:click.away'=>'clear()']) }}
-        <x-buttonlink @click=" restore()" x-text=" getRestoreText()" class="text-red-50"
-        x-bind:class="getRestoreBg()">Restore Subject</x-buttonlink>
-        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-indigo-600 text-red-50 text-sm font-bold px-2 py-1 rounded shadow-md leading-tight hover:text-white"]) }}
+        <x-buttonlink @click="restore()" x-text=" getRestoreText()" class="text-red-50" x-bind:class="getRestoreBg()">Restore Subject
+        </x-buttonlink>
+        {{ Form::button('Confirm', ['type'=>'submit', "x-show"=>"confirming()", "class"=>"bg-indigo-600 text-red-50 text-sm font-bold px-2
+        py-1 rounded shadow-md leading-tight hover:text-white"]) }}
         {{ Form::close() }}
-      </span>
-      @endif
+        @endif
+      </div>
     </div>
 
     <div class='ml-20'>
@@ -182,26 +186,30 @@
         </td>
         <td>{{$eventstatus[$event->pivot->eventstatus_id]->eventstatus}}</td>
         <td>
-          @switch($event->pivot->labelStatus)
-          @case(1)
-          Queued
-          @break
-          @case(2)
-          Printed
-          @break
-          @default
-          Pending
-          @endswitch
-          @if ($event->pivot->labelStatus === 2)
-          <span class='text-blue-700' x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
-            <x-buttonlink href="/labels/{{$event->pivot->id}}/queue" class='ml-2 inline-block'>
-              Q
-            </x-buttonlink>
-            <span x-show="open" class='absolute text-xs bg-gray-200 border border-gray-200 rounded shadow ml-1 px-2'>
-              Add to label queue
+          <div class='flex items-center justify-between'>
+            @switch($event->pivot->labelStatus)
+            @case(1)
+            Queued
+            @break
+            @case(2)
+            Printed
+            @break
+            @default
+            Pending
+            @endswitch
+            @if (($event->pivot->eventstatus_id !== 6 and $event->pivot->labelStatus === 2) or
+            (in_array($event->pivot->eventstatus_id,[0,1,2]) and $event->pivot->labelStatus !== 1))
+            <span x-data="{ open: false }" @mouseover="open = true" @mouseleave="open = false">
+              <a href="/labels/{{$event->pivot->id}}/queue"
+                class='bg-blue-200 text-blue-900 font-semibold text-xs py-1 px-2 rounded shadow-md cursor-pointer hover:text-indigo-600'>
+                Q
+              </a>
+              <span x-show="open" class='absolute text-xs bg-blue-700 border border-blue-900 text-white rounded shadow ml-1 px-2'>
+                Add to label queue
+              </span>
             </span>
-          </span>
-          @endif
+            @endif
+          </div>
         </td>
         <td>
           {{$event->pivot->minDate}}

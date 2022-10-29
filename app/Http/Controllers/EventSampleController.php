@@ -151,8 +151,7 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'volume' => 'required|numeric'
         ]);
-        $event_sample->volume = $validatedData['volume'];
-        $event_sample->save();
+        $event_sample->updateVolume($validatedData['volume']);
         return back()->with('message', "Volume has been updated");
     }
 
@@ -198,7 +197,7 @@ class EventSampleController extends Controller
             })
             ->when($subjectIDs, function ($query) use ($subjectIDs) {
                 return $query->whereHas('event_subject', function ($query) use ($subjectIDs) {
-                    return $query->whereHas('subject', function($query) use ($subjectIDs) {
+                    return $query->whereHas('subject', function ($query) use ($subjectIDs) {
                         return $query->whereIn('subjectID', $subjectIDs);
                     });
                 });
@@ -252,19 +251,21 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
-            ->where('barcode', $validatedData['barcode'])
-            ->where('project_id', session('currentProject'))
-            ->first('event_sample.id');
+        // $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+        //     ->where('barcode', $validatedData['barcode'])
+        //     ->where('project_id', session('currentProject'))
+        //     ->first('event_sample.id');
+        $event_sample = event_sample::where('barcode', $validatedData['barcode'])
+            ->whereRelation('sampletype', 'project_id', session('currentProject'))
+            ->first();
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
         }
-        $event_sample = event_sample::find($event_sample->id);
         if ($event_sample->samplestatus_id !== 3) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not currently in storage');
         }
-        $event_sample->samplestatus_id = 9;
-        $event_sample->update();
+        $event_sample->logOut();
+
         return back()->with('message', "Sample " . $validatedData['barcode'] . " logged out of storage");
     }
 
@@ -273,20 +274,20 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
-            ->where('barcode', $validatedData['barcode'])
-            ->where('project_id', session('currentProject'))
-            ->first('event_sample.id');
+        // $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+        //     ->where('barcode', $validatedData['barcode'])
+        //     ->where('project_id', session('currentProject'))
+        //     ->first('event_sample.id');
+        $event_sample = event_sample::where('barcode', $validatedData['barcode'])
+            ->whereRelation('sampletype', 'project_id', session('currentProject'))
+            ->first();
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
         }
-        $event_sample = event_sample::find($event_sample->id);
         if ($event_sample->samplestatus_id !== 9) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not currently logged out of storage');
         }
-        $event_sample->thawcount += 1;
-        $event_sample->samplestatus_id = 3;
-        $event_sample->update();
+        $event_sample->logReturn();
         $storagelocation = $event_sample->storagelocation->virtualUnit->virtualUnit . ' ' . $event_sample->storagelocation->rack . ' ' . $event_sample->storagelocation->box . ':' . $event_sample->storagelocation->position;
         return back()->with('message', "Sample " . $validatedData['barcode'] . " returned to storage: [" . $storagelocation . ']');
     }

@@ -1,13 +1,14 @@
 /node_modules
 /public/hot
 /public/storage
-/storage/*.key
+/storage
 /vendor
 .env
 .env.backup
 .phpunit.result.cache
 .directory
 .gitignore
+.vscode
 Homestead.json
 Homestead.yaml
 npm-debug.log

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\subject;
 use App\Team;
 use App\User;
 use Exception;
@@ -40,9 +41,9 @@ class TeamController extends Controller
     {
         $currentProject = $request->currentProject;
         $teammembers = Team::find($currentProject->id)->users()
-        ->select('users.*', 'name')
-        ->leftJoin('sites', 'site_id', 'sites.id')
-        ->get();
+            ->select('users.*', 'name')
+            ->leftJoin('sites', 'site_id', 'sites.id')
+            ->get();
 
         // dd($teammembers);
 
@@ -171,10 +172,47 @@ class TeamController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function showmember(User $user)
+    public function showmember(Request $request, User $user)
     {
+        $currentProject = $request->currentProject;
         $team = Team::findOrFail(session('currentProject'));
-        return view('projects.team.show', compact('user', 'team'));
+        $sites = $team->sites()->pluck('name', 'id')->prepend('', '');
+        $users = $team->subject_managers
+            ->where('id', '!=', $user->id)
+            ->where('pivot.site_id', 1)
+            ->pluck('fullname', 'id')
+            ->prepend('', '');
+        return view('projects.team.show', compact('user', 'team', 'users'));
+    }
+
+    public function transfersubjects(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'transferee' => 'required|exists:users,id'
+        ]);
+
+        $transferee = User::find($validated['transferee']);
+        if ($transferee->currentSite->first()->id !== $user->currentSite->first()->id) {
+            return back()->withErrors('The transferee is not in the same site as this user');
+        }
+        if (!$transferee->isAbleTo('manage-subjects', $request->currentProject->project)) {
+            return back()->withErrors('This transferee cannot manage subjects');
+        }
+        $subjects = subject::where('site_id', $user->currentSite->first()->id)
+            ->where('user_id', $user->id)
+            ->get();
+        try {
+            DB::beginTransaction();
+            foreach ($subjects as $subject) {
+                $subject->transferTo($transferee);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withErrors('Subject transfer failed: ' . $th->getMessage());
+        }
+
+        return redirect("/team/$user->id")->with('message', "All subjects transfered to $transferee->fullname");
     }
 
     /**

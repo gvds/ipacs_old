@@ -19,6 +19,7 @@
             <th>Creator</th>
             <th>Destination</th>
             <th>Shipped</th>
+            <th>Received</th>
         </x-slot>
         @foreach ($manifests as $manifest)
         <tr class='odd:bg-gray-200'>
@@ -33,8 +34,37 @@
             <td>{{$manifest->user->fullname}}</td>
             <td>{{$manifest->destination->name}}</td>
             <td>{{$manifest->shippedDate}}</td>
+            <td>
+                @if ($manifest->manifestStatus_id === 2)
+                <div x-data="confirmation()">
+                    {{ Form::open(['url' => "/manifest/$manifest->id/shipperLogReceived", 'class' => 'form', 'method' =>
+                    'POST',
+                    'x-on:submit.prevent'=>'finalise()', 'x-ref'=>'finaliseform']) }}
+                    {{ Form::submit('Confirm Manifest Receipt',['class'=>'text-red-600']) }}
+                    {{ Form::close() }}
+                </div>
+                @elseif ($manifest->manifestStatus_id === 3)
+                {{$manifest->receivedDate}} ({{$manifest->receiver->fullname}})
+                @endif
+            </td>
+            <td>
+                <x-buttonlink href="/manifest/{{$manifest->id}}/itemlist" class='bg-blue-200'>Download</x-buttonlink>
+            </td>
         </tr>
         @endforeach
     </x-table>
 
 </x-layout>
+
+<script>
+    function confirmation() {
+        return {
+            finalise() {
+                var response = confirm("Click OK to confirm receipt of manifest.\n\nNote that this step is irreversible!");
+                if (response === true) {
+                    this.$refs.finaliseform.submit();
+                }
+            }
+        }
+    }
+</script>

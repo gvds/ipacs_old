@@ -25,7 +25,7 @@ class CreateVirtualUnitsTable extends Migration
             $table->unsignedTinyInteger('endRack');
             $table->string('startBox', 3)->nullable();
             $table->string('endBox', 3)->nullable();
-            $table->string('storageSampleType', 50)->nullable();
+            $table->string('storageSampleType', 50)->nullable()->index();
             $table->unsignedSmallInteger('boxCapacity')->nullable();
             $table->unsignedSmallInteger('rackCapacity')->nullable();
             $table->boolean('active')->default(true);

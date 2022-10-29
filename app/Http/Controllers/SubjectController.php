@@ -84,11 +84,13 @@ class SubjectController extends Controller
      * @param  \App\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function show(subject $subject)
+    public function show(Request $request, subject $subject)
     {
         if (!$subject->checkAccessPermission()) {
             return redirect()->back()->with('error', 'You do not have permission to access this subject\'s record');
         }
+
+        $currentProject = $request->currentProject;
 
         $switcharms = is_null($subject->arm->switcharms) ? [] : json_decode($subject->arm->switcharms);
         $switcharms = \App\arm::whereIn('id', $switcharms)->pluck('name', 'id');
@@ -104,7 +106,7 @@ class SubjectController extends Controller
                 return $event->arm->arm_num;
             });
 
-        return view('subjects.show', compact('subject', 'events', 'eventstatus', 'switcharms'));
+        return view('subjects.show', compact('subject', 'events', 'eventstatus', 'switcharms', 'currentProject'));
     }
 
     /**
@@ -373,5 +375,27 @@ class SubjectController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
         return redirect()->back()->with('message', "New event iteration created");
+    }
+
+    public function changeDate(Subject $subject)
+    {
+        return view('subjects.changeDate', compact('subject'));
+    }
+
+    public function updateDate(Request $request, Subject $subject)
+    {
+        $request->validate([
+            'armBaselineDate' => 'required|date'
+        ]);
+        try {
+            DB::beginTransaction();
+            $subject->updateEventDates($request->armBaselineDate);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+
+        return redirect("/subjects/$subject->id");
     }
 }

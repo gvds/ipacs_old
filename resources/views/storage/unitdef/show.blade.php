@@ -103,12 +103,14 @@
             <x-table>
                 <x-slot name='head'>
                     <th>Unit ID</th>
+                    <th>Serial Number</th>
                     <th>Administrator</th>
                     <th>Available</th>
                 </x-slot>
                 @foreach ($physicalUnits as $physicalUnit)
                 <tr class="odd:bg-gray-100">
                     <td><a class='text-blue-800 font-semibold' href='/physicalUnit/{{$physicalUnit->id}}'>{{$physicalUnit->unitID}}</a></td>
+                    <td>{{$physicalUnit->serial}}</td>
                     <td>{{$physicalUnit->administrator->fullname}}</td>
                     <td>
                         <a href="/physicalUnit/{{$physicalUnit->id}}/toggleActive">
@@ -126,6 +128,9 @@
                             </svg>
                             @endif
                         </a>
+                    </td>
+                    <td>
+                        <x-buttonlink href="/physicalUnit/{{$physicalUnit->id}}/edit">Edit</x-buttonlink>
                     </td>
                     <td>
                         <button class='bg-red-700 text-red-100 py-1 px-2 rounded-md font-bold leading-none'
