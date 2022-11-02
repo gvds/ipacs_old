@@ -16,7 +16,7 @@ class SiteController extends Controller
     public function index(Request $request)
     {
         $currentProject = $request->currentProject;
-        $sites = site::where('project_id',$currentProject->id)->orderBy('name')->get();
+        $sites = site::where('project_id', $currentProject->id)->orderBy('name')->get();
         return view('sites.index', compact('sites'));
     }
 
@@ -39,7 +39,7 @@ class SiteController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|min:3|max:20',
+            'name' => 'required|min:2|max:20',
         ]);
         $currentProject = $request->currentProject;
         $validatedData['project_id'] = $currentProject->id;
@@ -79,7 +79,7 @@ class SiteController extends Controller
     public function update(Request $request, site $site)
     {
         $validatedData = $request->validate([
-            'name' => 'required|min:3|max:20',
+            'name' => 'required|min:2|max:20',
         ]);
         $site->update($validatedData);
         return redirect('/sites');
