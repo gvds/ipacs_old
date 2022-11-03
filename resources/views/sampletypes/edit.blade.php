@@ -27,7 +27,7 @@
     {{ Form::label('transferDestination', 'Transfer Destination') }}
     <select name="transferDestination[]" multiple>
         @foreach ($destinations as $key => $destination)
-        <option value="{{$key}}" {{in_array($key,json_decode($sampletype->transferDestination)) ? "selected=selected" : null}}>
+        <option value="{{$key}}" {{in_array($key,json_decode($sampletype->transferDestination) ?? []) ? "selected=selected" : null}}>
             {{$destination}}
         </option>
         @endforeach

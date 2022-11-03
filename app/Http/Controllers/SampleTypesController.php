@@ -136,7 +136,7 @@ class SampleTypesController extends Controller
             'pooled' => 'required|boolean',
             'defaultVolume' => 'nullable|numeric',
             'volumeUnit' => 'nullable',
-            'transferDestination' => 'nullable|array',
+            'transferDestination' => 'array',
             'transferDestination.*' => 'max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
@@ -145,6 +145,7 @@ class SampleTypesController extends Controller
             'parentSampleType_id' => 'nullable|integer',
             'active' => 'required|boolean'
         ]);
+        $validatedData['transferDestination'] = $validatedData['transferDestination'] ?? [];
         $sampletype->update($validatedData);
         return redirect('sampletypes');
     }
