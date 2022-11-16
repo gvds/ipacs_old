@@ -257,7 +257,7 @@ class ManifestController extends Controller
                 throw new Exception("Not all the received manifest items could be found", 1);
             }
             foreach ($event_samples as $event_sample) {
-                $event_sample->logIntoSite($manifest->destination_site);
+                $event_sample->logIntoSite($manifest->destinationSite_id);
             }
             DB::commit();
         } catch (\Throwable $th) {

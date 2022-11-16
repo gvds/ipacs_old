@@ -106,7 +106,7 @@ class event_sample extends Pivot
         }
     }
 
-    public function logIntoSite(int $site)
+    public function logIntoSite(int $site_id)
     {
         if ($this->location) {
             $location = \App\location::find($this->location);
@@ -114,7 +114,7 @@ class event_sample extends Pivot
         }
         $response = $this->update([
             'samplestatus_id' => 3,
-            'site_id' => $site,
+            'site_id' => $site_id,
             'location' => null
         ]);
         if (!$response) {
