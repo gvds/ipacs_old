@@ -249,7 +249,6 @@ class ManifestController extends Controller
                 ->update(['received' => 1]);
 
             $receivedManifestItems = manifestItem::where('manifest_id', $manifest->id)
-                ->where('received', 1)
                 ->pluck('event_sample_id');
             $event_samples = event_sample::whereIn('id', $receivedManifestItems)
                 ->get();
@@ -273,8 +272,25 @@ class ManifestController extends Controller
             return back()->with('error', 'This manifest does not belong to your site');
         }
         $timestamp = now();
-        manifestItem::where('manifest_id', $manifest->id)
-            ->update(['received' => 1, 'receivedTime' => $timestamp]);
+        try {
+            DB::beginTransaction();
+            manifestItem::where('manifest_id', $manifest->id)
+                ->update(['received' => 1, 'receivedTime' => $timestamp]);
+            $receivedManifestItems = manifestItem::where('manifest_id', $manifest->id)
+                ->pluck('event_sample_id');
+            $event_samples = event_sample::whereIn('id', $receivedManifestItems)
+                ->get();
+            if (count($event_samples) !== count($receivedManifestItems)) {
+                throw new Exception("Not all the received manifest items could be found", 1);
+            }
+            foreach ($event_samples as $event_sample) {
+                $event_sample->logIntoSite($manifest->destinationSite_id);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
         return redirect("/manifest/receive/$manifest->id");
     }
 
