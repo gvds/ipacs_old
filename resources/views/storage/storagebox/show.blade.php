@@ -26,8 +26,12 @@
             @if ($used===0)
             <tr>
                 <td>
-                    <x-buttonlink href='/storagebox/{{$storagebox->id}}/delete' class='bg-red-500 text-red-50'>Delete
-                    </x-buttonlink>
+                    <form action="/storagebox/{{$storagebox->id}}" method='POST'>
+                        @csrf
+                        @method('DELETE')
+                        <x-button class='bg-red-500 text-red-50'>Delete
+                        </x-button>
+                    </form>
                 </td>
             </tr>
             @endif

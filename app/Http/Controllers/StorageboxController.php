@@ -126,13 +126,14 @@ class StorageboxController extends Controller
      */
     public function destroy(storagebox $storagebox)
     {
-        //
+        $storagebox->delete();
+        return redirect('/storagebox')->withMessage("Storagebox $storagebox->barcode deleted");
     }
 
     public function search(Request $request)
     {
         $validated = $request->validate([
-            'barcode' => 'required'
+            'barcode' => 'required|exists:storageboxes,barcode'
         ]);
         $storagebox = storagebox::where('barcode', $validated['barcode'])->first();
         return redirect("/storagebox/$storagebox->id");

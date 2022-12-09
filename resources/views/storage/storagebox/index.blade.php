@@ -20,7 +20,7 @@
     <x-buttonlink href='/storagebox?sampletype={{$sampletype->id}}'>{{$sampletype->name}}</x-buttonlink>
     @endforeach
     @foreach ($storageboxes as $storagebox)
-    <div>{{$storagebox->barcode}} {{$storagebox->sampletype->name}}</div>
+    <div><a href="/storagebox/{{$storagebox->id}}">{{$storagebox->barcode}}</a> {{$storagebox->sampletype->name}}</div>
     @endforeach
 
 </x-layout>
