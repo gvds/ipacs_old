@@ -134,8 +134,14 @@ class EventSampleController extends Controller
         if (in_array($event_sample->samplestatus_id, [5, 8])) {
             return back()->with('error', 'This sample cannot be unlogged as it no longer exists');
         }
-
-        $event_sample->unlog();
+        try {
+            DB::beginTransaction();
+            $event_sample->unlog();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withError("Sample unlogging failed - " . $th->getMessage());
+        }
         return redirect('/samples')->with('message', "Sample $event_sample->barcode has been unlogged");
     }
 

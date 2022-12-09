@@ -36,12 +36,14 @@
         </tr>
         <tr>
             <th class='text-left'>Logged</th>
-            <td>{{($event_sample->samplestatus_id >= 2) ? $event_sample->sampleActor($event_sample->loggedBy)->fullname . ' (' . Carbon\Carbon::parse($event_sample->logTime)->format('Y-m-d H:i') . ')' : 'NA'}}
+            <td>{{($event_sample->samplestatus_id >= 2) ? $event_sample->sampleActor($event_sample->loggedBy)->fullname . ' (' .
+                Carbon\Carbon::parse($event_sample->logTime)->format('Y-m-d H:i') . ')' : 'NA'}}
             </td>
         </tr>
         <tr>
             <th class='text-left'>Used</th>
-            <td>{{$event_sample->usedBy ? $event_sample->sampleActor($event_sample->usedBy)->fullname . ' (' . Carbon\Carbon::parse($event_sample->usedTime)->format('Y-m-y H:i') . ')' : 'NA'}}
+            <td>{{$event_sample->usedBy ? $event_sample->sampleActor($event_sample->usedBy)->fullname . ' (' .
+                Carbon\Carbon::parse($event_sample->usedTime)->format('Y-m-y H:i') . ')' : 'NA'}}
             </td>
         </tr>
         <tr>
@@ -84,8 +86,7 @@
                 </div>
             </td>
             <td>
-                <x-buttonlink href="/samples/{{$event_sample->id}}/unlog" x-show='confirm'
-                    class='bg-red-600 text-red-50'>
+                <x-buttonlink href="/samples/{{$event_sample->id}}/unlog" x-show='confirm' class='bg-red-600 text-red-50'>
                     Confirm Unlog
                 </x-buttonlink>
             </td>
