@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/welcome', function () {
-//     return view('welcome');
-// });
-
 Auth::routes(['register' => false]);
 
 Route::get('/', 'HomeController@index')->name('home');
@@ -231,4 +227,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/redcap/project', 'RedcapController@project');
         Route::get('/redcap/projects', 'RedcapController@projectlist');
     });
+
+    Route::post('/storagebox/search', 'StorageboxController@search');
+    Route::resource('/storagebox', 'StorageboxController');
 });

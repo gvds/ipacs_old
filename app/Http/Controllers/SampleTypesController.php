@@ -69,8 +69,8 @@ class SampleTypesController extends Controller
             'transferDestination.*' => 'max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
-            'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',
-            'storageSampleType' => 'nullable|required_if:storageDestination,Internal,Nexus|min:3|max:25',
+            'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus,StorageBox',
+            'storageSampleType' => 'nullable|required_if:storageDestination,Internal,Nexus,StorageBox|min:3|max:25',
             'parentSampleType_id' => 'nullable|integer'
         ]);
         $validatedData['project_id'] = $currentProject->id;
@@ -140,8 +140,8 @@ class SampleTypesController extends Controller
             'transferDestination.*' => 'max:25',
             'sampleGroup' => 'nullable|max:25',
             'tubeLabelType_id' => 'nullable|integer',
-            'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus',
-            'storageSampleType' => 'nullable|required_if:storageDestination,Internal,Nexus|min:3|max:25',
+            'storageDestination' => 'nullable|required_with:storageSampleType|in:Internal,BiOS,Nexus,StorageBox',
+            'storageSampleType' => 'nullable|required_if:storageDestination,Internal,Nexus,StorageBox|min:3|max:25',
             'parentSampleType_id' => 'nullable|integer',
             'active' => 'required|boolean'
         ]);
