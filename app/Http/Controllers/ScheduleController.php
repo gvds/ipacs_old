@@ -93,10 +93,12 @@ class ScheduleController extends Controller
             $subjects = \App\subject::with(['events' => function ($query) {
                 $query->where('eventstatus_id', 2);
                 $query->where('active', true);
+                $query->orderBy('eventDate')
             }])
                 ->where('project_id', $currentProject->id)
                 ->where('user_id', auth()->user()->id)
                 ->where('subject_status', 1)
+                ->orderBy('subjectID')
                 ->get();
             $fill = 1;
             foreach ($subjects as $subject) {
