@@ -91,9 +91,9 @@ class ScheduleController extends Controller
                 ->update(['eventstatus_id' => 2]);
 
             $subjects = \App\subject::with(['events' => function ($query) {
-                $query->where('eventstatus_id', 2);
-                $query->where('active', true);
-                $query->orderBy('eventDate')
+                $query->where('eventstatus_id', 2)
+                    ->where('active', true)
+                    ->orderBy('eventDate');
             }])
                 ->where('project_id', $currentProject->id)
                 ->where('user_id', auth()->user()->id)
