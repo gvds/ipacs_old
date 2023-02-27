@@ -113,7 +113,7 @@ class event_sample extends Pivot
             $location->freelocation();
         }
         $response = $this->update([
-            'samplestatus_id' => 3,
+            'samplestatus_id' => 2,
             'site_id' => $site_id,
             'location' => null
         ]);
@@ -122,10 +122,10 @@ class event_sample extends Pivot
         }
     }
 
-    public function returnToSource()
+    public function returnToSource(int $prior_samplestatus)
     {
         $response = $this->update([
-            'samplestatus_id' => 3
+            'samplestatus_id' => $prior_samplestatus
         ]);
         if (!$response) {
             throw new Exception("Error returning sample $this->barcode to source site", 1);

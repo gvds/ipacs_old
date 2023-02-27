@@ -213,11 +213,12 @@ class ManifestController extends Controller
             }
             $nonReceivedManifestItems = manifestItem::where('manifest_id', $manifest->id)
                 ->where('received', 0)
-                ->pluck('event_sample_id');
-            $event_samples = event_sample::whereIn('id', $nonReceivedManifestItems)
+                ->pluck('prio_sampletatus_id', 'event_sample_id')
+                ->toArray();
+            $event_samples = event_sample::whereIn('id', array_keys($nonReceivedManifestItems))
                 ->get();
             foreach ($event_samples as $event_sample) {
-                $event_sample->returnToSource();
+                $event_sample->returnToSource($nonReceivedManifestItems[$event_sample->id]);
             }
             DB::commit();
         } catch (\Throwable $th) {
