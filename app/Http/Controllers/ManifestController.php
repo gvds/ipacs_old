@@ -213,7 +213,7 @@ class ManifestController extends Controller
             }
             $nonReceivedManifestItems = manifestItem::where('manifest_id', $manifest->id)
                 ->where('received', 0)
-                ->pluck('prio_sampletatus_id', 'event_sample_id')
+                ->pluck('prior_sampletatus_id', 'event_sample_id')
                 ->toArray();
             $event_samples = event_sample::whereIn('id', array_keys($nonReceivedManifestItems))
                 ->get();
