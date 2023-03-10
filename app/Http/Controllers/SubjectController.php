@@ -177,7 +177,7 @@ class SubjectController extends Controller
             $subject->enrol($validatedData);
 
             // Schedule event dates
-            $events = $subject->arm()->first()->events()->get();
+            $events = $subject->arm()->orderBy('arm_num')->first()->events()->get();
 
             foreach ($events as $event) {
                 $response = $subject->setEventDates($event, $validatedData['enrolDate']);
