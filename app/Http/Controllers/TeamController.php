@@ -176,10 +176,9 @@ class TeamController extends Controller
     {
         $currentProject = $request->currentProject;
         $team = Team::findOrFail(session('currentProject'));
-        $sites = $team->sites()->pluck('name', 'id')->prepend('', '');
         $users = $team->subject_managers
             ->where('id', '!=', $user->id)
-            ->where('pivot.site_id', 1)
+            ->where('pivot.site_id', $user->currentSite[0]->id)
             ->pluck('fullname', 'id')
             ->prepend('', '');
         return view('projects.team.show', compact('user', 'team', 'users'));
