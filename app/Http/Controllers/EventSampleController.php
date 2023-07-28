@@ -229,13 +229,14 @@ class EventSampleController extends Controller
             'Content-Disposition' => 'attachment; filename="samplelist.csv"',
         ];
 
-        $data = "Barcode\tSampleType\tArm\tEvent\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLogged\tLocation\n";
+        $data = "Barcode\tSampleType\tArm\tEvent\tIteration\tAlquot\tVolume\tStatus\tSubjectID\tSite\tParent\tLogged\tLocation\n";
         foreach ($samples as $key => $sample) {
             $sampledata = [
                 $sample->barcode,
                 $sample->sampletype->name,
                 $sample->event_subject->event->arm->name,
                 $sample->event_subject->event->name,
+                $sample->event_subject->iteration,
                 $sample->aliquot,
                 $sample->volume . $sample->sampletype->volumeUnit,
                 $sample->status->samplestatus,
