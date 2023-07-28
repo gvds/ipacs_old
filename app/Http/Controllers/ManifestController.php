@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ManifestController extends Controller
 {
@@ -303,5 +304,77 @@ class ManifestController extends Controller
     public function itemlist(manifest $manifest)
     {
         return $manifest->itemlist();
+    }
+
+    function import(Request $request, manifest $manifest)
+    {
+
+        $validatedData = $request->validate([
+            'samplelistfile' => 'required|file'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            if ($manifest->user->ProjectSite !== $manifest->sourceSite_id) {
+                throw new Exception('This manifest does not originate at your site');
+            }
+
+            $samplelist = $validatedData['samplelistfile']->get();
+            $sampleArray = preg_split("/\r\n|\n|\r/", $samplelist);
+            if (count($sampleArray) < 2) {
+                throw new Exception("No barcodes found in uploaded file", 1);
+            }
+            $header = array_shift($sampleArray);
+            if (!Str::startsWith($header, '"Barcode"')) {
+                throw new Exception("Invalid file format", 1);
+            }
+
+            foreach ($sampleArray as $key => $line) {
+                $record = explode(',', $line);
+                $barcode = Str::of($record[0])->replace('"', '');
+                if ($barcode == "") {
+                    continue;
+                }
+                $barcodes[] = $barcode;
+            }
+            $event_samples = \App\event_sample::with('site')
+                ->join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+                ->whereIn('barcode', $barcodes)
+                ->where('project_id', session('currentProject'))
+                ->get();
+            if (count($barcodes) !== $event_samples->count()) {
+                throw new Exception(count($barcodes) . ' barcodes were submitted and ' . $event_samples->count() . ' samples were found in this project');
+            }
+            $barcodeCount = 0;
+            foreach ($event_samples as $event_sample) {
+                $barcode = $event_sample->barcode;
+
+                if ($event_sample->site->id !== Auth::user()->ProjectSite) {
+                    throw new Exception('Sample ' . $barcode . ' is not logged to your site');
+                }
+                if ($event_sample->samplestatus_id === 4) {
+                    throw new Exception('Sample ' . $barcode . ' has already been added to a manifest');
+                }
+                if (!in_array($event_sample->samplestatus_id, [2, 3])) {
+                    throw new Exception('Sample ' . $barcode . ' has a status of ' . $event_sample->status->samplestatus . ' and is not available for shipping');
+                }
+
+                $manifestItem = new manifestItem([
+                    'manifest_id' => $manifest->id,
+                    'event_sample_id' => $event_sample->id,
+                    'user_id' => Auth::user()->id,
+                    'prior_samplestatus_id' => $event_sample->samplestatus_id
+                ]);
+                $manifestItem->save();
+                $event_sample->update(['samplestatus_id' => 4]);
+                $barcodeCount = ++$barcodeCount;
+            }
+            // DB::rollBack();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withErrors('The uploaded file could not be processed: ' . $th->getMessage());
+        }
+        return redirect("/manifest/$manifest->id")->with('message', $barcodeCount . " samples were added to the manifest");
     }
 }

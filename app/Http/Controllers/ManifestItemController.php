@@ -46,15 +46,16 @@ class ManifestItemController extends Controller
         if ($manifest->user->ProjectSite !== $manifest->sourceSite_id) {
             return back()->with('error', 'This manifest does not originate at your site');
         }
-        $event_sample = \App\event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+        $event_sample = \App\event_sample::with('site')
+            ->join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
             ->where('barcode', $validatedData['barcode'])
             ->where('project_id', session('currentProject'))
-            ->select('event_sample.id', 'samplestatus_id')
+            // ->select('event_sample.id', 'samplestatus_id')
             ->first();
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found in this project');
         }
-        $event_sample = \App\event_sample::find($event_sample->id);
+        // $event_sample = \App\event_sample::find($event_sample->id);
         if ($event_sample->site->id !== Auth::user()->ProjectSite) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' is not logged to your site');
         }

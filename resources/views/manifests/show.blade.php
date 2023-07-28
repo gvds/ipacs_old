@@ -4,7 +4,8 @@
         Shipping Manifest
         <x-slot name='secondary'>
             <div x-data="confirmation()">
-                {{ Form::open(['url' => "/manifest/$manifest->id", 'class' => 'form', 'method' => 'DELETE', 'x-on:submit.prevent'=>'del()', 'x-ref'=>'delform']) }}
+                {{ Form::open(['url' => "/manifest/$manifest->id", 'class' => 'form', 'method' => 'DELETE', 'x-on:submit.prevent'=>'del()',
+                'x-ref'=>'delform']) }}
                 {{ Form::submit('Delete Manifest', ['class'=>'text-red-600']) }}
                 {{ Form::close() }}
             </div>
@@ -31,8 +32,16 @@
             {{ Form::text('barcode',null,['placeholder'=>'Scan sample barcode...'])}}
             {{ Form::close() }}
         </div>
+        <div x-data={}>
+            {{ Form::open(['url' => "/manifest/$manifest->id/import", 'class' => 'form', 'method' => 'POST', 'files' => true, 'x-ref' =>
+            'samplelistform']) }}
+            {{ Form::label('samplelistfile', 'Import Sample List')}}
+            {{ Form::file('samplelistfile', ['x-on:change' => '$refs.samplelistform.submit()']) }}
+            {{ Form::close() }}
+        </div>
         <div x-data="confirmation()">
-            {{ Form::open(['url' => "/manifest/$manifest->id/ship", 'class' => 'form', 'method' => 'POST', 'x-on:submit.prevent'=>'ship()', 'x-ref'=>'shipform']) }}
+            {{ Form::open(['url' => "/manifest/$manifest->id/ship", 'class' => 'form', 'method' => 'POST', 'x-on:submit.prevent'=>'ship()',
+            'x-ref'=>'shipform']) }}
             {{ Form::submit('Ship Samples',['class'=>'text-blue-700']) }}
             {{ Form::close() }}
         </div>
