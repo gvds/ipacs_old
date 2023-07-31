@@ -155,8 +155,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('project.auth:log-samples')->group(function () {
         Route::view('/derivative/parent', 'derivativesamples.parent');
         Route::view('/derivative/pse', 'derivativesamples.pse');
+        Route::get('/derivative/file', 'DerivativeSampleController@file');
         Route::post('/derivative/pse', 'DerivativeSampleController@primaries');
         Route::post('/derivative/parent', 'DerivativeSampleController@parent');
+        Route::post('/derivative/file', 'DerivativeSampleController@bulklog');
         Route::get('/derivative/{event_sample}', 'DerivativeSampleController@retrieve');
         Route::post('/derivative', 'DerivativeSampleController@log');
 

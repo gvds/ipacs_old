@@ -7,6 +7,8 @@ use App\event_sample;
 use App\Rules\BarcodeFormat;
 use App\sampletype;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class DerivativeSampleController extends Controller
@@ -80,6 +82,89 @@ class DerivativeSampleController extends Controller
             'DerivativeSampleController@retrieve',
             ['event_sample' => $parentsample->id]
         );
+    }
+
+    function file()
+    {
+        $sampletypes = sampletype::where('project_id', session('currentProject'))
+            ->where('primary', 0)
+            ->pluck('name', 'id')->prepend('', '');
+        return view('derivativesamples.file', compact('sampletypes'));
+    }
+    public function bulklog(Request $request)
+    {
+        $validatedData = $request->validate([
+            'sampletype' => 'required|exists:sampletypes,id',
+            'samplefile' => 'required|file'
+        ]);
+        $sampletype = sampletype::where('project_id', session('currentProject'))
+            ->where('primary', 0)
+            ->where('id', $validatedData['sampletype'])
+            ->firstOrFail();
+        $derivativeCount = 0;
+        $aliquots = [];
+        try {
+            DB::begintransaction();
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $reader->setReadDataOnly(true);
+            $reader->setLoadSheetsOnly(["Run_Report"]);
+            $spreadsheet = $reader->load($validatedData['samplefile']);
+            $sheet = $spreadsheet->getSheet(0)->toArray();
+            $header = array_shift($sheet);
+            // $sourceCol = array_search('Position Barcode Source', $header) or throw new Exception("Parent barcode column not found in sample file", 1);
+            // $targetCol = array_search('Position Barcode Target', $header) or throw new Exception("Derivative barcode column not found in sample file", 1);
+            // $volumeCol = array_search('Transfer Volume', $header) or throw new Exception("Volume column not found in sample file", 1);
+            $sourceCol = array_search('Position Barcode Source', $header);
+            $targetCol = array_search('Position Barcode Target', $header);
+            $volumeCol = array_search('Transfer Volume', $header);
+            foreach ($sheet as $key => $row) {
+                if (!is_null($row[$sourceCol]) && !is_null($row[$targetCol])) {
+                    $parent = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+                        ->where('barcode', $row[$sourceCol])
+                        ->where('project_id', session('currentProject'))
+                        ->first();
+                    if (is_null($parent)) {
+                        throw new Exception('Sample ' . $row[$sourceCol] . ' was not found in this project');
+                    }
+                    if ($parent->site_id !== Auth::user()->ProjectSite) {
+                        throw new Exception('Sample ' . $row[$sourceCol] . ' is not logged to your site');
+                    }
+                    if ($parent->sampletype_id !== $sampletype->parentSampleType_id) {
+                        throw new Exception('Sample ' . $row[$sourceCol] . ' is of sample-type \'' . $parent->name . '\' which is not the correct parent for this derivative type');
+                    }
+                    $derivative = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+                        ->where('barcode', $row[$targetCol])
+                        ->where('project_id', session('currentProject'))
+                        ->where('samplestatus_id', '!=', 0)
+                        ->first();
+                    if (!is_null($derivative)) {
+                        throw new Exception('The derivative barcode, ' . $row[$targetCol] . ', has already been assigned');
+                    }
+                    $aliquots[$parent->barcode] = array_key_exists($parent->barcode, $aliquots) ? $aliquots[$parent->barcode] + 1 : 1;
+                    $sample = new event_sample([
+                        'sampletype_id' => $sampletype->id,
+                        'event_subject_id' => $parent->event_subject_id,
+                        'barcode' => $row[$targetCol],
+                        'volume' => $row[$volumeCol],
+                        'volumeUnit' => $sampletype->volumeUnit,
+                        'site_id' => Auth::user()->ProjectSite,
+                        'loggedBy' => Auth::user()->id,
+                        'logTime' => now(),
+                        'samplestatus_id' => 2,
+                        'aliquot' => $aliquots[$parent->barcode],
+                        'parentBarcode' => $parent->barcode
+                    ]);
+                    $sample->save();
+                    $derivativeCount += 1;
+                }
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withErrors($th->getMessage());
+        }
+
+        return redirect('/derivative/file')->with('message', "$derivativeCount derivatives logged successfully");
     }
 
     public function retrieve(event_sample $event_sample)

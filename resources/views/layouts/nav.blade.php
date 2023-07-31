@@ -4,7 +4,9 @@
 
     <!-- Left Side Of Navbar -->
     <div class="flex space-x-5 text-indigo-200">
-      {{-- <x-nav.link href="/"><x-logo class="w-8 h-8 mx-auto text-gray-50" /></x-nav.link> --}}
+      {{-- <x-nav.link href="/">
+        <x-logo class="w-8 h-8 mx-auto text-gray-50" />
+      </x-nav.link> --}}
       <x-nav.link href="/">{{ config('app.name') }}</x-nav.link>
       @auth
       <x-nav.link href="/project/select">My Projects</x-nav.link>
@@ -46,6 +48,7 @@
           </x-slot>
           <x-nav.dropdown-link href="/derivative/parent">Log By Parent Sample</x-nav.dropdown-link>
           <x-nav.dropdown-link href="/derivative/pse">Log By Event</x-nav.dropdown-link>
+          <x-nav.dropdown-link href="/derivative/file">Bulk Log From File</x-nav.dropdown-link>
         </x-nav.dropdown-submenu>
         <x-nav.dropdown-link href="/samples">Sample Details</x-nav.dropdown-link>
       </x-nav.dropdown>
@@ -131,9 +134,9 @@
       <x-nav.dropdown alignment="right">
         <x-slot name="nav_item">
           @if( Session::has('original_user') )
-            <div class="bg-red-600 px-2 rounded-md">{{Auth::user()->firstname}}</div>
+          <div class="bg-red-600 px-2 rounded-md">{{Auth::user()->firstname}}</div>
           @else
-            <div>{{Auth::user()->firstname}}</div>
+          <div>{{Auth::user()->firstname}}</div>
           @endif
         </x-slot>
         <x-nav.dropdown-link href="/changePassword">Change Password</x-nav.dropdown-link>
@@ -156,10 +159,9 @@
       @else
 
       {{-- @if (Route::has('login'))
-      <a href="/{{ route('login') }}"
-      class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out
+      <a href="/{{ route('login') }}" class="font-medium text-indigo-200 hover:text-indigo-300 focus:outline-none focus:underline transition ease-in-out
       duration-150">
-      Log in
+        Log in
       </a>
       @endif
 

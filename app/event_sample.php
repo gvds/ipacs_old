@@ -2,10 +2,8 @@
 
 namespace App;
 
-use App\Events\event_sampleUpdated;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Support\Facades\Route;
 
 class event_sample extends Pivot
 {
