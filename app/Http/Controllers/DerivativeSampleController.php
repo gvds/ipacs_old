@@ -107,16 +107,19 @@ class DerivativeSampleController extends Controller
             DB::begintransaction();
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $reader->setReadDataOnly(true);
-            $reader->setLoadSheetsOnly(["Run_Report"]);
+            $reader->setLoadSheetsOnly("Run_Report");
             $spreadsheet = $reader->load($validatedData['samplefile']);
             $sheet = $spreadsheet->getSheet(0)->toArray();
             $header = array_shift($sheet);
-            // $sourceCol = array_search('Position Barcode Source', $header) or throw new Exception("Parent barcode column not found in sample file", 1);
-            // $targetCol = array_search('Position Barcode Target', $header) or throw new Exception("Derivative barcode column not found in sample file", 1);
-            // $volumeCol = array_search('Transfer Volume', $header) or throw new Exception("Volume column not found in sample file", 1);
+            // $sourceCol = array_search('Position Barcode Source', $header) ?: throw new Exception("Parent barcode column not found in sample file", 1);
+            // $targetCol = array_search('Position Barcode Target', $header) ?: throw new Exception("Derivative barcode column not found in sample file", 1);
+            // $volumeCol = array_search('Transfer Volume', $header) ?: throw new Exception("Volume column not found in sample file", 1);
             $sourceCol = array_search('Position Barcode Source', $header);
+            if (!$sourceCol) throw new Exception("Parent barcode column not found in sample file", 1);
             $targetCol = array_search('Position Barcode Target', $header);
+            if (!$targetCol) throw new Exception("Derivative barcode column not found in sample file", 1);
             $volumeCol = array_search('Transfer Volume', $header);
+            if (!$volumeCol) throw new Exception("Volume column not found in sample file", 1);
             foreach ($sheet as $key => $row) {
                 if (!is_null($row[$sourceCol]) && !is_null($row[$targetCol])) {
                     $parent = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
@@ -130,7 +133,7 @@ class DerivativeSampleController extends Controller
                         throw new Exception('Sample ' . $row[$sourceCol] . ' is not logged to your site');
                     }
                     if ($parent->sampletype_id !== $sampletype->parentSampleType_id) {
-                        throw new Exception('Sample ' . $row[$sourceCol] . ' is of sample-type \'' . $parent->name . '\' which is not the correct parent for this derivative type');
+                        throw new Exception("Sample $row[$sourceCol] is of sample-type '$parent->name' which is not the correct parent for this derivative type");
                     }
                     $derivative = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
                         ->where('barcode', $row[$targetCol])
