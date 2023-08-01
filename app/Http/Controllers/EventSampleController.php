@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\event_sample;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -258,12 +259,14 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        // $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
-        //     ->where('barcode', $validatedData['barcode'])
-        //     ->where('project_id', session('currentProject'))
-        //     ->first('event_sample.id');
+        // This can only be implemented in Laravel 8+
+        // $event_sample = event_sample::where('barcode', $validatedData['barcode'])
+        //     ->whereRelation('sampletype', 'project_id', session('currentProject'))
+        //     ->first();
         $event_sample = event_sample::where('barcode', $validatedData['barcode'])
-            ->whereRelation('sampletype', 'project_id', session('currentProject'))
+            ->whereHas('sampletype', function (Builder $query) {
+                $query->where('project_id', session('currentProject'));
+            })
             ->first();
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
@@ -281,12 +284,14 @@ class EventSampleController extends Controller
         $validatedData = $request->validate([
             'barcode' => 'required|string|exists:event_sample,barcode'
         ]);
-        // $event_sample = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
-        //     ->where('barcode', $validatedData['barcode'])
-        //     ->where('project_id', session('currentProject'))
-        //     ->first('event_sample.id');
+        // This can only be implemented in Laravel 8+
+        // $event_sample = event_sample::where('barcode', $validatedData['barcode'])
+        //     ->whereRelation('sampletype', 'project_id', session('currentProject'))
+        //     ->first();
         $event_sample = event_sample::where('barcode', $validatedData['barcode'])
-            ->whereRelation('sampletype', 'project_id', session('currentProject'))
+            ->whereHas('sampletype', function (Builder $query) {
+                $query->where('project_id', session('currentProject'));
+            })
             ->first();
         if (is_null($event_sample)) {
             return back()->with('error', 'Sample ' . $validatedData['barcode'] . ' was not found');
