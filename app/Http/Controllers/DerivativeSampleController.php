@@ -97,10 +97,12 @@ class DerivativeSampleController extends Controller
             'sampletype' => 'required|exists:sampletypes,id',
             'samplefile' => 'required|file'
         ]);
-        $sampletype = sampletype::where('project_id', session('currentProject'))
+        $sampletype = sampletype::with('tubeLabelType')
+            ->where('project_id', session('currentProject'))
             ->where('primary', 0)
             ->where('id', $validatedData['sampletype'])
             ->firstOrFail();
+        $format = $sampletype->tubeLabelType->barcodeFormat;
         $derivativeCount = 0;
         $aliquots = [];
         try {
@@ -122,6 +124,9 @@ class DerivativeSampleController extends Controller
             if (!$volumeCol) throw new Exception("Volume column not found in sample file", 1);
             foreach ($sheet as $key => $row) {
                 if (!is_null($row[$sourceCol]) && !is_null($row[$targetCol])) {
+                    if (!preg_match("/$format/", $row[$targetCol])) {
+                        throw new Exception("$row[$targetCol] is not a valid barcode for this derivative type", 1);
+                    }
                     $parent = event_sample::join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
                         ->where('barcode', $row[$sourceCol])
                         ->where('project_id', session('currentProject'))
