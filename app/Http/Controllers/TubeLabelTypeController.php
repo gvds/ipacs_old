@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\sampletype;
 use App\tubeLabelType;
 use Illuminate\Http\Request;
 
@@ -67,7 +68,19 @@ class TubeLabelTypeController extends Controller
             'barcodeFormat' => 'required|starts_with:^|ends_with:$|min:4'
         ]);
         $validatedData['project_id'] = session('currentProject');
-        tubeLabelType::create($validatedData);
+        $generic_tubeLabelType = tubeLabelType::whereNull('project_id')
+            ->where('tubeLabelType', $validatedData['tubeLabelType'])
+            ->first();
+        $overrideTubeLabelType = tubeLabelType::create($validatedData);
+        if ($generic_tubeLabelType) {
+            $sampletypes = sampletype::where('project_id', session('currentProject'))
+                ->where('tubeLabelType_id', $generic_tubeLabelType->id)
+                ->get();
+            foreach ($sampletypes as $sampletype) {
+                $sampletype->tubeLabelType_id = $overrideTubeLabelType->id;
+                $sampletype->save();
+            }
+        }
         return redirect('/tubelabeltype');
     }
 
@@ -111,13 +124,23 @@ class TubeLabelTypeController extends Controller
      */
     public function destroy(tubeLabelType $tubelabeltype)
     {
+        if ($tubelabeltype->project_id) {
+            $generic_tubeLabelType = tubeLabelType::whereNull('project_id')
+                ->where('tubeLabelType', $tubelabeltype->tubeLabelType)
+                ->first();
+            $sampletypes = sampletype::where('project_id', session('currentProject'))
+                ->where('tubeLabelType_id', $tubelabeltype->id)
+                ->get();
+            foreach ($sampletypes as $sampletype) {
+                $sampletype->tubeLabelType_id = $generic_tubeLabelType->id;
+                $sampletype->save();
+            }
+        }
         $tubelabeltype->delete();
         return redirect('/tubelabeltype');
     }
-
     public function override(tubeLabelType $tubelabeltype)
     {
         return view('tubelabeltypes.create', compact('tubelabeltype'));
     }
-
 }
