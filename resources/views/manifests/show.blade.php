@@ -46,7 +46,6 @@
             {{ Form::close() }}
         </div>
     </div>
-
     <x-table class='mt-4'>
         <x-slot name='head'>
             <th>Barcode</th>

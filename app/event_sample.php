@@ -16,7 +16,7 @@ class event_sample extends Pivot
 
     public function sampletype()
     {
-        return $this->belongsTo(sampletype::class, 'sampletype_id', 'id');
+        return $this->belongsTo(sampletype::class);
     }
 
     public function status()
