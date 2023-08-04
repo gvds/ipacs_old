@@ -324,8 +324,8 @@ class ManifestController extends Controller
             if (count($sampleArray) < 2) {
                 throw new Exception("No barcodes found in uploaded file", 1);
             }
-            $header = array_shift($sampleArray);
-            if (!Str::startsWith($header, '"Barcode"')) {
+            $header = Str::replace('"', '', array_shift($sampleArray));
+            if (!Str::startsWith($header, 'Barcode')) {
                 throw new Exception("Invalid file format", 1);
             }
 
