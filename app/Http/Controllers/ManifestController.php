@@ -338,10 +338,11 @@ class ManifestController extends Controller
                 }
                 $barcodes[] = $barcode;
             }
-            $event_samples = \App\event_sample::with('site')
-                ->join('sampletypes', 'sampletype_id', '=', 'sampletypes.id')
+            $event_samples = \App\event_sample::with(['site', 'sampletype'])
+                ->whereHas('sampletype', function ($query) {
+                    $query->where('project_id', session('currentProject'));
+                })
                 ->whereIn('barcode', $barcodes)
-                ->where('project_id', session('currentProject'))
                 ->get();
             if (count($barcodes) !== $event_samples->count()) {
                 throw new Exception(count($barcodes) . ' barcodes were submitted and ' . $event_samples->count() . ' samples were found in this project');
@@ -370,7 +371,6 @@ class ManifestController extends Controller
                 $event_sample->update(['samplestatus_id' => 4]);
                 $barcodeCount = ++$barcodeCount;
             }
-            // DB::rollBack();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
