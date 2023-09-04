@@ -68,7 +68,7 @@ class event_sample extends Pivot
     }
     public function logAsUsed()
     {
-        if (in_array($this->samplestatus_id, [3, 9])) {
+        if (in_array($this->samplestatus_id, [3, 9]) & $this->location !== 0) {
             $location = \App\location::find($this->location);
             $location->freelocation();
             $this->location = null;
