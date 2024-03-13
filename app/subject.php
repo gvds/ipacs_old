@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class subject extends Model
 {
@@ -237,6 +238,7 @@ class subject extends Model
 
   private function curl(array $params, array $data = [])
   {
+
     $user = Auth::user()->teams()->where('teams.id', session('currentProject'))->first();
     $token = $user->pivot->redcap_api_token;
     if (empty($token)) {
@@ -264,6 +266,7 @@ class subject extends Model
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields, '', '&'));
+
     return curl_exec($ch);
   }
 
@@ -276,6 +279,7 @@ class subject extends Model
     ];
     $events = $this->curl($params);
     $events = json_decode($events, true);
+
     if (array_key_exists('error', $events)) {
       throw new Exception('REDCap Error: ' . $events['error']);
     }

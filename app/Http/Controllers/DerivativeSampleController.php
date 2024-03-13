@@ -7,9 +7,11 @@ use App\event_sample;
 use App\Rules\BarcodeFormat;
 use App\sampletype;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class DerivativeSampleController extends Controller
 {
@@ -214,7 +216,8 @@ class DerivativeSampleController extends Controller
                 new BarcodeFormat,
                 // 'regex:/^[A-Z]{0,6}\d{3,12}$/',
                 'distinct',
-                'unique:event_sample,barcode',
+                Rule::unique('event_sample', 'barcode')->where(fn (Builder $query) => $query->whereIn('sampletype_id', fn (Builder $query) => $query->where('project_id', $request->currentProject->id))),
+                // 'unique:event_sample,barcode',
             ],
             // 'vol.*.*' => 'required_with:type.*.*|numeric',
             'vol.*.*' => 'required_with:type.*.*',
