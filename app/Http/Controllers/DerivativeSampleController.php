@@ -7,7 +7,7 @@ use App\event_sample;
 use App\Rules\BarcodeFormat;
 use App\sampletype;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -205,6 +205,7 @@ class DerivativeSampleController extends Controller
 
     public function log(Request $request)
     {
+        $sampletype_ids = sampletype::where('project_id', session('currentProject'))->pluck('id')->toArray();
         $rules = [
             'event_subject_id' => 'required|integer|exists:event_subject,id',
             'parent_sample_id' => 'required|integer|exists:event_sample,id',
@@ -216,8 +217,7 @@ class DerivativeSampleController extends Controller
                 new BarcodeFormat,
                 // 'regex:/^[A-Z]{0,6}\d{3,12}$/',
                 'distinct',
-                Rule::unique('event_sample', 'barcode')->where(fn (Builder $query) => $query->whereIn('sampletype_id', fn (Builder $query) => $query->where('project_id', $request->currentProject->id))),
-                // 'unique:event_sample,barcode',
+                Rule::unique('event_sample', 'barcode')->where(fn (Builder $query) => $query->whereIn('sampletype_id', $sampletype_ids)),
             ],
             // 'vol.*.*' => 'required_with:type.*.*|numeric',
             'vol.*.*' => 'required_with:type.*.*',
