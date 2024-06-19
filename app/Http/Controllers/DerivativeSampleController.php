@@ -112,19 +112,15 @@ class DerivativeSampleController extends Controller
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $reader->setReadDataOnly(true);
             $reader->setLoadSheetsOnly("Run_Report");
-            dd($reader);
             $spreadsheet = $reader->load($validatedData['samplefile']);
             $sheet = $spreadsheet->getSheet(0)->toArray();
             $header = array_shift($sheet);
-            // $sourceCol = array_search('Position Barcode Source', $header) ?: throw new Exception("Parent barcode column not found in sample file", 1);
-            // $targetCol = array_search('Position Barcode Target', $header) ?: throw new Exception("Derivative barcode column not found in sample file", 1);
-            // $volumeCol = array_search('Transfer Volume', $header) ?: throw new Exception("Volume column not found in sample file", 1);
             $sourceCol = array_search('Position Barcode Source', $header);
-            if (!$sourceCol) throw new Exception("Parent barcode column not found in sample file", 1);
+            if ($sourceCol !== 0) throw new Exception("Parent barcode column not found in sample file", 1);
             $targetCol = array_search('Position Barcode Target', $header);
-            if (!$targetCol) throw new Exception("Derivative barcode column not found in sample file", 1);
+            if ($targetCol !== 1) throw new Exception("Derivative barcode column not found in sample file", 1);
             $volumeCol = array_search('Transfer Volume', $header);
-            if (!$volumeCol) throw new Exception("Volume column not found in sample file", 1);
+            if ($volumeCol !== 2) throw new Exception("Volume column not found in sample file", 1);
             foreach ($sheet as $key => $row) {
                 if (!is_null($row[$sourceCol]) && !is_null($row[$targetCol])) {
                     if (!preg_match("/$format/", $row[$targetCol])) {
