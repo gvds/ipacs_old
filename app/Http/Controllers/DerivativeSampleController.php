@@ -112,6 +112,7 @@ class DerivativeSampleController extends Controller
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             $reader->setReadDataOnly(true);
             $reader->setLoadSheetsOnly("Run_Report");
+            dd($reader);
             $spreadsheet = $reader->load($validatedData['samplefile']);
             $sheet = $spreadsheet->getSheet(0)->toArray();
             $header = array_shift($sheet);
