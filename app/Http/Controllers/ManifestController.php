@@ -332,7 +332,7 @@ class ManifestController extends Controller
 
             foreach ($sampleArray as $key => $line) {
                 $record = explode(',', $line);
-                if (count($record != 2)) {
+                if (count($record) != 2) {
                     continue;
                 }
                 $barcode = Str::of($record[0])->replace('"', '');
