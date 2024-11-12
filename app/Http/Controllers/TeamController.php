@@ -190,13 +190,14 @@ class TeamController extends Controller
             'transferee' => 'required|exists:users,id'
         ]);
 
+
         $transferee = User::find($validated['transferee']);
         if ($transferee->currentSite->first()->id !== $user->currentSite->first()->id) {
             return back()->withErrors('The transferee is not in the same site as this user');
         }
-        if (!$transferee->isAbleTo('manage-subjects', $request->currentProject->project)) {
-            return back()->withErrors('This transferee cannot manage subjects');
-        }
+        // if (!$transferee->isAbleTo('manage-subjects', $request->currentProject->project)) {
+        //     return back()->withErrors('This transferee cannot manage subjects');
+        // }
         $subjects = subject::where('site_id', $user->currentSite->first()->id)
             ->where('user_id', $user->id)
             ->get();
