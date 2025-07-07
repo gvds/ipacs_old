@@ -103,7 +103,7 @@ class SubjectController extends Controller
             ->orderBy('iteration')
             ->get()
             ->sortBy(function ($event) {
-                return $event->arm->arm_num;
+                return $event->arm->arm_num * 10000 + $event->offset * 100 + $event->iteration;
             });
 
         return view('subjects.show', compact('subject', 'events', 'eventstatus', 'switcharms', 'currentProject'));
